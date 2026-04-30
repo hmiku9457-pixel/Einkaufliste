@@ -39,7 +39,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+	cursor: pointer;
 }
+
+/* Popup für Zutaten */
+.popup {
+    position: absolute;
+    background: white;
+    border: 1px solid #333;
+    padding: 6px 10px;
+    font-size: 12px;
+    display: none;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+	}
 
 /* ===================== LAYOUT ===================== */
 #listen-container {
@@ -152,6 +165,43 @@ body {
             </div>
         </div>
     </div>
+	
+	
+<script>
+	/* ===================== Zutaten und Positionen ===================== */
+const maps = {
+    edeka: {
+        image: "karte-edeka.png",
+        zutaten: {
+            Tomate: { name: "Tomate", top: 40, left: 30 },
+            Käse:  { name: "Käse",    top: 55, left: 35 },
+            Nudeln: { name: "Nudeln",  top: 60, left: 60 },
+            Salat:  { name: "Salat",   top: 25, left: 50 },
+			Hähnchenbrust:	{ name: "Hähnchenbrust", top: 40, left: 30 }
+        }
+    },
+    lidl: {
+        image: "karte-lidl.png",
+        zutaten: {
+            Tomate: { name: "Tomate", top: 30, left: 50 },
+            Käse:  { name: "Käse",    top: 45, left: 20 },
+            Nudeln: { name: "Nudeln",  top: 65, left: 40 },
+            Salat:  { name: "Salat",   top: 20, left: 60 },
+			Hähnchenbrust:	{ name: "Hähnchenbrust", top: 30, left: 50 }
+        }
+    }
+};
+
+/* ===================== Gerichte ===================== */
+const gerichte = {
+    gericht1: ["Tomate", "Nudeln"],
+    gericht2: ["Tomate", "Käse"],
+    gericht3: ["Hähnchenbrust", "Kartoffel festkochend 750g", "Brokkoli", "Tomate", "Tomate", "Zwiebel", "Zwiebel", "Knoblauchzehen", "Knoblauchzehen", "Creme Fraíche", "Tomatepesto 50g", "Hühnerbrühe"],
+	gericht4: ["Hähnchenbrust", "Kartoffel festkochend 750g", "Salatmischung", "Knoblauchzehen", "Knoblauchzehen", "Buttermilch-Zitronen-Dressing 100ml", "Pflaumenkonfitüre 160g", "Sriracha Soße 8ml", "Sojasoße 20ml"],
+    gericht5: ["Tomate", "Käse"],
+    gericht6: ["Salat", "Tomate"]
+};
+</script>
 
     <!-- ZUTATENLISTE -->
     <div style="flex:1;">
@@ -190,6 +240,7 @@ body {
 <div id="map-container" class="hidden">
     <img id="mapImage" src="">
     <div id="markers"></div>
+	<div id="popup" class="popup"></div>
 </div>
 
 <script>
@@ -207,36 +258,7 @@ document.querySelectorAll(".icon").forEach(icon => {
 
 overlay.addEventListener("click", () => overlay.style.display = "none");
 
-/* ===================== DATEN ===================== */
-const maps = {
-    edeka: {
-        image: "karte-edeka.png",
-        zutaten: {
-            tomate: { name: "Tomaten", top: 40, left: 30 },
-            kaese:  { name: "Käse",    top: 55, left: 35 },
-            nudeln: { name: "Nudeln",  top: 60, left: 60 },
-            salat:  { name: "Salat",   top: 25, left: 50 }
-        }
-    },
-    lidl: {
-        image: "karte-lidl.png",
-        zutaten: {
-            tomate: { name: "Tomaten", top: 30, left: 50 },
-            kaese:  { name: "Käse",    top: 45, left: 20 },
-            nudeln: { name: "Nudeln",  top: 65, left: 40 },
-            salat:  { name: "Salat",   top: 20, left: 60 }
-        }
-    }
-};
 
-const gerichte = {
-    gericht1: ["tomate", "nudeln"],
-    gericht2: ["tomate", "kaese"],
-    gericht3: ["Hähnchenbrust 500g", "Kartoffel festkochend 750g", "Brokkoli", "Tomate 2stk", "Zwiebel 2stk", "Knoblauchzehen 2stk", "Knoblauchzehen 2stk", "Creme Fraíche 200g", "Tomatenpesto 50g", "Hühnerbrühe"],
-	gericht4: ["Hähnchenbrust 500g", "Kartoffel festkochend 750g", "Salatmischung", "Knoblauchzehen 2stk", "Buttermilch-Zitronen-Dressing 100ml", "Pflaumenkonfitüre 160g", "Sriracha Soße 8ml", "Sojasoße 20ml"],
-    gericht5: ["tomate", "kaese"],
-    gericht6: ["salat", "tomate"]
-};
 
 let currentMap = "none";
 
@@ -250,6 +272,7 @@ function updateMap() {
     markersDiv.innerHTML = "";
 
     const counter = {};
+	const positions = {}; // sammelt Zutaten pro Koordinate
 
     document.querySelectorAll("#controls input:checked").forEach(cb => {
         gerichte[cb.value].forEach(z => counter[z] = (counter[z] || 0) + 1);
@@ -278,17 +301,51 @@ function updateMap() {
     mapContainer.classList.remove("hidden");
     document.getElementById("mapImage").src = maps[currentMap].image;
 
-    Object.keys(counter).forEach(key => {
-        const z = maps[currentMap].zutaten[key];
-        if (!z) return;
+    // Zutaten nach Position gruppieren
+Object.keys(counter).forEach(key => {
+    const z = maps[currentMap].zutaten[key];
+    if (!z) return;
 
-        const marker = document.createElement("div");
-        marker.className = "marker";
-        marker.style.top = z.top + "%";
-        marker.style.left = z.left + "%";
-        marker.innerText = counter[key];
-        markersDiv.appendChild(marker);
+    const posKey = `${z.top}-${z.left}`;
+
+    if (!positions[posKey]) {
+        positions[posKey] = {
+            top: z.top,
+            left: z.left,
+            items: []
+        };
+    }
+
+    positions[posKey].items.push({
+        name: z.name,
+        amount: counter[key]
     });
+});
+
+// Für jede Position genau EIN Marker
+Object.values(positions).forEach(pos => {
+    const marker = document.createElement("div");
+    marker.className = "marker";
+    marker.style.top = pos.top + "%";
+    marker.style.left = pos.left + "%";
+
+    // Gesamtanzahl als Zahl im Marker
+    const total = pos.items.reduce((sum, i) => sum + i.amount, 0);
+    marker.innerText = total;
+
+    marker.onclick = (e) => {
+        e.stopPropagation();
+
+        const text = pos.items
+            .map(i => `${i.amount}× ${i.name}`)
+            .join("\n");
+
+        showPopup(marker, text);
+    };
+
+    markersDiv.appendChild(marker);
+});
+	
 }
 
 /* ===================== EVENTS ===================== */
@@ -310,6 +367,18 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 });
 
 updateMap();
+function showPopup(marker, text) {
+    const popup = document.getElementById("popup");
+    popup.innerText = text;
+    popup.style.display = "block";
+    popup.style.top = (marker.offsetTop - 30) + "px";
+    popup.style.left = (marker.offsetLeft + 25) + "px";
+}
+
+// Klick irgendwo → Popup schließen
+document.addEventListener("click", () => {
+    document.getElementById("popup").style.display = "none";
+});
 
 /* ===================== LOCAL STORAGE ===================== */
 const STORAGE_KEY = "eingekaufteGerichte";
