@@ -1,0 +1,13 @@
+[
+  {
+    "id": "gerichtX",
+    "name": "Name des Gerichts",
+    "zutaten": [
+      {
+        "zutat": "Zutat A",
+        "menge": "1",
+        "einheit": "Stk"
+      }
+    ]
+  }
+]    
