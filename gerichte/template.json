@@ -2,6 +2,7 @@
   {
     "id": "gerichtX",
     "name": "Name des Gerichts",
+    "bild": "bilder/icon2.png",
     "zutaten": [
       {
         "zutat": "Zutat A",
