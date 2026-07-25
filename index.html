@@ -1,422 +1,95 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>Einkaufsliste</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-	font-size: 24px; /* Base font size */
-    padding: 20px;
-}
-
-/* ===================== KARTE ===================== */
-#map-container {
-    position: relative;
-    max-width: 1200px;
-    margin-top: 20px;
-}
-
-#map-container.hidden {
-    display: none;
-}
-
-#map-container img {
-    width: 100%;
-    display: block;
-}
-
-.marker {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    background: red;
-    border-radius: 50%;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-	cursor: pointer;
-}
-
-/* Popup für Zutaten */
-.popup {
-    position: absolute;
-    background: white;
-    border: 1px solid #333;
-    padding: 6px 10px;
-    font-size: 12px;
-    display: none;
-    z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-	}
-
-/* ===================== LAYOUT ===================== */
-#listen-container {
-    display: flex;
-    gap: 30px;
-    margin-top: 20px;
-    align-items: flex-start;
-}
-
-#controls {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.gericht {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-}
-
-.gericht label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
-
-.icon {
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-}
-
-/* ===================== FULLSCREEN OVERLAY ===================== */
-#iconOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-#iconOverlay img {
-    max-width: 90vw;
-    max-height: 90vh;
-}
-/* ===================== FULLSCREEN OVERLAY END ===================== */
-
-#zutatenListe {
-    padding: 10px;
-    min-width: 200px;
-}
-
-#zutatenListe li {
-    margin-bottom: 6px;
-}
-
-/* ===================== MARKTAUSWAHL ===================== */
-#marktAuswahl label {
-    display: block;
-    margin-bottom: 6px;
-    cursor: pointer;
-}
-</style>
-</head>
-
-<body>
-
-<h1>Einkaufsliste</h1>
-<button id="resetBtn"; style="padding:24px 24px;">Zurücksetzen</button>
-<a href="rezepte.html"><button id="rezeptBtn"; style="padding:24px 24px;">Rezepte</button> </a>
-<br><br>
-
-<!-- ===================== LISTEN ===================== -->
-<div id="listen-container">
-
-    <!-- GERICHTE -->
-    <div style="flex:1; max-width: 600px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <h3 style="margin:0;">Gerichte</h3>	
-        </div>
-
-        <div id="controls">
-            <div class="gericht">
-                <label><input type="checkbox" id="gericht1" value="gericht1"> Mustergericht</label>
-                <img src="gericht1.png" class="icon">
-            </div>
-            <div class="gericht">
-                <label><input type="checkbox" id="gericht2" value="gericht2"> Mustergericht</label>
-                <img src="gericht2.png" class="icon">
-            </div>
-            <div class="gericht">
-                <label><input type="checkbox" id="gericht3" value="gericht3"> Hähnchen mit Brokkoli und Kartoffelspalten</label>
-                <img src="gericht3.png" class="icon">
-            </div>
-			<div class="gericht">
-                <label><input type="checkbox" id="gericht4" value="gericht4"> Hähnchen mit Pflaumen-Sriracha-Soße</label>
-                <img src="gericht4.png" class="icon">
-            </div>
-            <div class="gericht">
-                <label><input type="checkbox" id="gericht5" value="gericht5"> Mustergericht</label>
-                <img src="gericht5.png" class="icon">
-            </div>
-            <div class="gericht">
-                <label><input type="checkbox" id="gericht6" value="gericht6"> Mustergericht</label>
-                <img src="gericht6.png" class="icon">
-            </div>
-        </div>
-    </div>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="assets/css/main.css">
+		
+		<title>Einkaufsliste</title>
+	</head>
 	
-	
-<script>
-	/* ===================== Zutaten und Positionen ===================== */
-const maps = {
-    edeka: {
-        image: "karte-edeka.png",
-        zutaten: {
-            Tomate: { name: "Tomate", top: 60, left: 65 },
-            Käse:  { name: "Käse",    top: 35, left: 94 },
-            Nudeln: { name: "Nudeln",  top: 34, left: 75 },
-            Salat:  { name: "Salat",   top: 65, left: 55 },
-			Hähnchenbrust:	{ name: "Hähnchenbrust", top: 19, left: 78 }
-        }
-    },
-    lidl: {
-        image: "karte-lidl.png",
-        zutaten: {
-            Tomate: { name: "Tomate", top: 30, left: 49 },
-            Käse:  { name: "Käse",    top: 45, left: 20 },
-            Nudeln: { name: "Nudeln",  top: 65, left: 45 },
-            Salat:  { name: "Salat",   top: 20, left: 60 },
-			Hähnchenbrust:	{ name: "Hähnchenbrust", top: 35, left: 60 }
-        }
-    }
-};
-
-/* ===================== Gerichte ===================== */
-const gerichte = {
-    gericht1: ["Tomate", "Nudeln"],
-    gericht2: ["Tomate", "Käse"],
-    gericht3: ["Hähnchenbrust", "Kartoffel festkochend 750g", "Brokkoli", "Tomate", "Tomate", "Zwiebel", "Zwiebel", "Knoblauchzehen", "Knoblauchzehen", "Creme Fraíche", "Tomatepesto 50g", "Hühnerbrühe"],
-	gericht4: ["Hähnchenbrust", "Kartoffel festkochend 750g", "Salatmischung", "Knoblauchzehen", "Knoblauchzehen", "Buttermilch-Zitronen-Dressing 100ml", "Pflaumenkonfitüre 160g", "Sriracha Soße 8ml", "Sojasoße 20ml"],
-    gericht5: ["Tomate", "Käse"],
-    gericht6: ["Salat", "Tomate"]
-};
-</script>
-
-    <!-- ZUTATENLISTE -->
-    <div style="flex:1;">
-        <h3>Zutatenliste</h3>
-        <ul id="zutatenListe">
-            <li><em>Keine Zutaten ausgewählt</em></li>
-        </ul>
-    </div>
-
-    <!-- MARKTAUSWAHL -->
-    <div>
-        <h3>Markt</h3>
-        <div id="marktAuswahl">
-            <label>
-                <input type="radio" name="markt" value="none" checked>
-                Keine Karte
-            </label>
-            <label>
-                <input type="radio" name="markt" value="edeka">
-                Edeka
-            </label>
-            <label>
-                <input type="radio" name="markt" value="lidl">
-                Lidl
-            </label>
-        </div>
-    </div>
-
-</div>
-
-<!-- ===================== ICON OVERLAY ===================== -->
-<div id="iconOverlay">
-    <img id="iconOverlayImg">
-</div>
-<!-- ===================== KARTE ===================== -->
-<div id="map-container" class="hidden">
-    <img id="mapImage" src="">
-    <div id="markers"></div>
-	<div id="popup" class="popup"></div>
-</div>
-
-<script>
-/* ===================== ICON OVERLAY ===================== */
-const overlay = document.getElementById("iconOverlay");
-const overlayImg = document.getElementById("iconOverlayImg");
-
-document.querySelectorAll(".icon").forEach(icon => {
-    icon.addEventListener("click", e => {
-        e.stopPropagation();
-        overlayImg.src = icon.src;
-        overlay.style.display = "flex";
-    });
-});
-
-overlay.addEventListener("click", () => overlay.style.display = "none");
-
-
-
-let currentMap = "none";
-
-/* ===================== UPDATE ===================== */
-function updateMap() {
-    const zutatenListe = document.getElementById("zutatenListe");
-    const markersDiv = document.getElementById("markers");
-    const mapContainer = document.getElementById("map-container");
-
-    zutatenListe.innerHTML = "";
-    markersDiv.innerHTML = "";
-
-    const counter = {};
-	const positions = {}; // sammelt Zutaten pro Koordinate
-
-    document.querySelectorAll("#controls input:checked").forEach(cb => {
-        gerichte[cb.value].forEach(z => counter[z] = (counter[z] || 0) + 1);
-    });
-
-    if (Object.keys(counter).length === 0) {
-        zutatenListe.innerHTML = "<li><em>Keine Zutaten ausgewählt</em></li>";
-    } else {
-        Object.keys(counter).forEach(key => {
-            const name =
-                currentMap !== "none"
-                ? maps[currentMap].zutaten[key]?.name || key
-                : key;
-
-            const li = document.createElement("li");
-            li.textContent = `${counter[key]}× ${name}`;
-            zutatenListe.appendChild(li);
-        });
-    }
-
-    if (currentMap === "none") {
-        mapContainer.classList.add("hidden");
-        return;
-    }
-
-    mapContainer.classList.remove("hidden");
-    document.getElementById("mapImage").src = maps[currentMap].image;
-
-    // Zutaten nach Position gruppieren
-Object.keys(counter).forEach(key => {
-    const z = maps[currentMap].zutaten[key];
-    if (!z) return;
-
-    const posKey = `${z.top}-${z.left}`;
-
-    if (!positions[posKey]) {
-        positions[posKey] = {
-            top: z.top,
-            left: z.left,
-            items: []
-        };
-    }
-
-    positions[posKey].items.push({
-        name: z.name,
-        amount: counter[key]
-    });
-});
-
-// Für jede Position genau EIN Marker
-Object.values(positions).forEach(pos => {
-    const marker = document.createElement("div");
-    marker.className = "marker";
-    marker.style.top = pos.top + "%";
-    marker.style.left = pos.left + "%";
-
-    // Gesamtanzahl als Zahl im Marker
-    const total = pos.items.reduce((sum, i) => sum + i.amount, 0);
-    marker.innerText = total;
-
-    marker.onclick = (e) => {
-        e.stopPropagation();
-
-        const text = pos.items
-            .map(i => `${i.amount}× ${i.name}`)
-            .join("\n");
-
-        showPopup(marker, text);
-    };
-
-    markersDiv.appendChild(marker);
-});
-	
-}
-
-/* ===================== EVENTS ===================== */
-document.querySelectorAll("#controls input").forEach(cb =>
-    cb.addEventListener("change", updateMap)
-);
-
-document.querySelectorAll("input[name='markt']").forEach(rb =>
-    rb.addEventListener("change", () => {
-        currentMap = rb.value;
-        updateMap();
-    })
-);
-
-document.getElementById("resetBtn").addEventListener("click", () => {
-    document.querySelectorAll("#controls input").forEach(cb => cb.checked = false);
-    localStorage.removeItem("eingekaufteGerichte");
-    updateMap();
-});
-
-updateMap();
-function showPopup(marker, text) {
-    const popup = document.getElementById("popup");
-    popup.innerText = text;
-    popup.style.display = "block";
-    popup.style.top = (marker.offsetTop - 30) + "px";
-    popup.style.left = (marker.offsetLeft + 25) + "px";
-}
-
-// Klick irgendwo → Popup schließen
-document.addEventListener("click", () => {
-    document.getElementById("popup").style.display = "none";
-});
-
-/* ===================== LOCAL STORAGE ===================== */
-const STORAGE_KEY = "eingekaufteGerichte";
-
-function saveState() {
-    const state = {};
-    document.querySelectorAll("#controls input").forEach(cb => {
-        state[cb.id] = cb.checked;
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-document.querySelectorAll("#controls input").forEach(cb => {
-    cb.addEventListener("change", () => {
-        saveState();
-        updateMap();
-    });
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        const state = JSON.parse(saved);
-        document.querySelectorAll("#controls input").forEach(cb => {
-            cb.checked = !!state[cb.id];
-        });
-    }
-    updateMap();
-});
-
-/* ===================== RESET ===================== */
-document.getElementById("resetBtn").addEventListener("click", () => {
-    document.querySelectorAll("#controls input").forEach(cb => cb.checked = false);
-    localStorage.removeItem(STORAGE_KEY);
-    updateMap();
-});
-</script>
-
-</body>
+	<body>
+		<h1>Einkaufsliste</h1>
+		<button id="resetBtn"; style="padding:24px 24px;">Zurücksetzen</button>
+		<a href="rezepte.html"><button id="rezeptBtn"; style="padding:24px 24px;">Rezepte</button></a>
+		<br><br>
+		
+		<!-- ===================== LISTEN ===================== -->
+		<div id="listen-container">
+		
+		    <!-- GERICHTE -->
+		    <div style="flex:1; max-width: 600px;">
+		        <div style="display:flex; align-items:center; gap:10px;">
+		            <h3 style="margin:0;">Gerichte</h3>	
+		        </div>
+		
+		        <div id="controls">
+		            <div class="gericht">
+		                <label><input type="checkbox" id="gericht1" value="gericht1"> Mustergericht</label>
+		                <img src="gericht1.png" class="icon">
+		            </div>
+		            <div class="gericht">
+		                <label><input type="checkbox" id="gericht2" value="gericht2"> Mustergericht</label>
+		                <img src="gericht2.png" class="icon">
+		            </div>
+		            <div class="gericht">
+		                <label><input type="checkbox" id="gericht3" value="gericht3"> Hähnchen mit Brokkoli und Kartoffelspalten</label>
+		                <img src="gericht3.png" class="icon">
+		            </div>
+					<div class="gericht">
+		                <label><input type="checkbox" id="gericht4" value="gericht4"> Hähnchen mit Pflaumen-Sriracha-Soße</label>
+		                <img src="gericht4.png" class="icon">
+		            </div>
+		            <div class="gericht">
+		                <label><input type="checkbox" id="gericht5" value="gericht5"> Mustergericht</label>
+		                <img src="gericht5.png" class="icon">
+		            </div>
+		            <div class="gericht">
+		                <label><input type="checkbox" id="gericht6" value="gericht6"> Mustergericht</label>
+		                <img src="gericht6.png" class="icon">
+		            </div>
+		        </div>
+		    </div>
+		
+		    <!-- ZUTATENLISTE -->
+		    <div style="flex:1;">
+		        <h3>Zutatenliste</h3>
+		        <ul id="zutatenListe">
+		            <li><em>Keine Zutaten ausgewählt</em></li>
+		        </ul>
+		    </div>
+		
+		    <!-- MARKTAUSWAHL -->
+		    <div>
+		        <h3>Markt</h3>
+		        <div id="marktAuswahl">
+		            <label>
+		                <input type="radio" name="markt" value="none" checked>
+		                Keine Karte
+		            </label>
+		            <label>
+		                <input type="radio" name="markt" value="edeka">
+		                Edeka
+		            </label>
+		            <label>
+		                <input type="radio" name="markt" value="lidl">
+		                Lidl
+		            </label>
+		        </div>
+		    </div>
+		
+		</div>
+		
+		<!-- ===================== ICON OVERLAY ===================== -->
+		<div id="iconOverlay">
+		    <img id="iconOverlayImg">
+		</div>
+		<!-- ===================== KARTE ===================== -->
+		<div id="map-container" class="hidden">
+		    <img id="mapImage" src="">
+		    <div id="markers"></div>
+			<div id="popup" class="popup"></div>
+		</div>
+		
+		<script type="module" src="assets/js/main.js"></script>
+	</body>
 </html>
