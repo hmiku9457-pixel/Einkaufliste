@@ -1,7 +1,7 @@
 {
   "id": "gericht3",
   "name": "Hähnchen mit Brokkoli und Kartoffelspalten",
-  "bild": "bilder/gericht3.png",
+  "bild": "/bilder/gericht3.png",
 
   "zutaten": [
     {
