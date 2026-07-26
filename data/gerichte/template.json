@@ -1,7 +1,7 @@
 {
   "id": "gerichtX",
   "name": "Name des Gerichts",
-  "bild": "bilder/icon2.png",
+  "bild": "data/gerichte/bilder/icon2.png",
 
   "zutaten": [
     {
