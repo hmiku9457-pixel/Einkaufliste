@@ -1,115 +1,363 @@
+/* =========================================================
+   Einkaufsliste
+   Main Stylesheet
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   1. Grundeinstellungen
+   --------------------------------------------------------- */
+
+* {
+	box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-	font-size: 24px; /* Base font size */
-    padding: 20px;
+	margin: 0;
+	padding: 20px;
+
+	font-family: Arial, sans-serif;
+	font-size: 24px;
 }
 
-/* ===================== KARTE ===================== */
-#map-container {
-    position: relative;
-    max-width: 1200px;
-    margin-top: 20px;
+
+/* ---------------------------------------------------------
+   2. Header
+   --------------------------------------------------------- */
+
+header h1 {
+	margin-top: 0;
 }
 
-#map-container.hidden {
-    display: none;
+header nav {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
-#map-container img {
-    width: 100%;
-    display: block;
-}
 
-.marker {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    background: red;
-    border-radius: 50%;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/*
+ * Reset-Button und Rezepte-Link sollen optisch
+ * gleich behandelt werden.
+ */
+#resetBtn,
+#rezeptBtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	padding: 24px;
+
+	font: inherit;
+	font-size: 1rem;
+
+	color: inherit;
+	background: #f0f0f0;
+
+	border: 1px solid #999;
+	border-radius: 4px;
+
+	text-decoration: none;
 	cursor: pointer;
 }
 
-/* Popup für Zutaten */
-.popup {
-    position: absolute;
-    background: white;
-    border: 1px solid #333;
-    padding: 6px 10px;
-    font-size: 12px;
-    display: none;
-    z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-	}
 
-/* ===================== LAYOUT ===================== */
+/* ---------------------------------------------------------
+   3. Hauptlayout
+   --------------------------------------------------------- */
+
 #listen-container {
-    display: flex;
-    gap: 30px;
-    margin-top: 20px;
-    align-items: flex-start;
+	display: flex;
+	align-items: flex-start;
+
+	gap: 30px;
+	margin-top: 20px;
 }
+
+
+/*
+ * Gerichte
+ *
+ * Entspricht dem früheren:
+ * style="flex:1; max-width:600px;"
+ */
+#listen-container > section:first-child {
+	flex: 1;
+	max-width: 600px;
+	min-width: 0;
+}
+
+
+/*
+ * Zutatenliste
+ *
+ * Entspricht dem früheren:
+ * style="flex:1;"
+ */
+#listen-container > section:nth-child(2) {
+	flex: 1;
+	min-width: 0;
+}
+
+
+/*
+ * Die Überschriften hatten vorher teilweise
+ * style="margin:0;".
+ */
+#listen-container h2 {
+	margin-top: 0;
+}
+
+
+/* ---------------------------------------------------------
+   4. Gerichte
+   --------------------------------------------------------- */
 
 #controls {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 10px;
+	max-height: 300px;
+
+	padding: 10px;
+
+	overflow-y: auto;
 }
+
 
 .gericht {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+
+	gap: 12px;
+	margin-bottom: 10px;
 }
+
+
+.gericht:last-child {
+	margin-bottom: 0;
+}
+
 
 .gericht label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
+	display: flex;
+	align-items: center;
+
+	gap: 6px;
+
+	cursor: pointer;
 }
+
+
+.gericht input[type="checkbox"] {
+	flex-shrink: 0;
+
+	cursor: pointer;
+}
+
 
 .icon {
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
+	width: 32px;
+	height: 32px;
+
+	object-fit: cover;
+
+	cursor: pointer;
 }
 
-/* ===================== FULLSCREEN OVERLAY ===================== */
-#iconOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
 
-#iconOverlay img {
-    max-width: 90vw;
-    max-height: 90vh;
-}
-/* ===================== FULLSCREEN OVERLAY END ===================== */
+/* ---------------------------------------------------------
+   5. Zutatenliste
+   --------------------------------------------------------- */
 
 #zutatenListe {
-    padding: 10px;
-    min-width: 200px;
+	min-width: 200px;
+
+	padding: 10px;
 }
+
 
 #zutatenListe li {
-    margin-bottom: 6px;
+	margin-bottom: 6px;
 }
 
-/* ===================== MARKTAUSWAHL ===================== */
+
+#zutatenListe li:last-child {
+	margin-bottom: 0;
+}
+
+
+/* ---------------------------------------------------------
+   6. Marktauswahl
+   --------------------------------------------------------- */
+
 #marktAuswahl label {
-    display: block;
-    margin-bottom: 6px;
-    cursor: pointer;
+	display: block;
+
+	margin-bottom: 6px;
+
+	cursor: pointer;
+}
+
+
+#marktAuswahl label:last-child {
+	margin-bottom: 0;
+}
+
+
+#marktAuswahl input[type="radio"] {
+	cursor: pointer;
+}
+
+
+/* ---------------------------------------------------------
+   7. Karte
+   --------------------------------------------------------- */
+
+#map-container {
+	position: relative;
+
+	max-width: 1200px;
+	margin-top: 20px;
+}
+
+
+#map-container.hidden {
+	display: none;
+}
+
+
+#map-container > img {
+	display: block;
+
+	width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   8. Kartenmarker
+   --------------------------------------------------------- */
+
+.marker {
+	position: absolute;
+
+	width: 22px;
+	height: 22px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	padding: 0;
+
+	color: white;
+	background: red;
+
+	border: 0;
+	border-radius: 50%;
+
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 1;
+
+	cursor: pointer;
+}
+
+
+/* ---------------------------------------------------------
+   9. Karten-Popup
+   --------------------------------------------------------- */
+
+.popup {
+	position: absolute;
+	z-index: 10;
+
+	display: none;
+
+	padding: 6px 10px;
+
+	color: #000;
+	background: white;
+
+	border: 1px solid #333;
+
+	font-size: 12px;
+	white-space: pre-line;
+
+	box-shadow:
+		0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ---------------------------------------------------------
+   10. Rezeptbild-Overlay
+   --------------------------------------------------------- */
+
+#iconOverlay {
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+
+	display: none;
+	align-items: center;
+	justify-content: center;
+
+	padding: 20px;
+
+	background: rgba(0, 0, 0, 0.8);
+
+	cursor: pointer;
+}
+
+
+#iconOverlay img {
+	display: block;
+
+	max-width: 90vw;
+	max-height: 90vh;
+
+	object-fit: contain;
+}
+
+
+/* ---------------------------------------------------------
+   11. Responsive Layout
+   --------------------------------------------------------- */
+
+@media (max-width: 800px) {
+
+	body {
+		font-size: 18px;
+		padding: 15px;
+	}
+
+
+	header nav {
+		flex-wrap: wrap;
+	}
+
+
+	#resetBtn,
+	#rezeptBtn {
+		padding: 16px;
+	}
+
+
+	#listen-container {
+		flex-direction: column;
+		gap: 20px;
+	}
+
+
+	#listen-container > section {
+		width: 100%;
+		max-width: none;
+	}
+
+
+	#controls {
+		max-height: none;
+	}
+
+
+	#zutatenListe {
+		min-width: 0;
+	}
 }
