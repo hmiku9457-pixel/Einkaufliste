@@ -10,5 +10,12 @@
       "menge": 1,
       "einheit": "Stk"
     }
-  ]
+  ],
+
+	"zubereitung": [
+		"Schritt 1",
+		"Schritt 2",
+		"Schritt 3",
+		"Schritt 4"
+	]
 }
