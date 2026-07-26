@@ -137,80 +137,110 @@ const marktAuswahl =
 /**
  * Lädt das Gerichte-Manifest und anschließend alle darin
  * aufgeführten Gericht-Dateien.
+ *
+ * Fehlende oder fehlerhafte Dateien werden übersprungen,
+ * ohne das Laden der übrigen Gerichte abzubrechen.
  */
 async function loadGerichte() {
-    const response =
-        await fetch(GERICHTE_MANIFEST);
-
-    if (!response.ok) {
-        throw new Error(
-            `Gerichte-Manifest konnte nicht geladen werden: ${response.status}`
-        );
-    }
-
-    const manifest = await response.json();
-
-    if (!Array.isArray(manifest.gerichte)) {
-        throw new Error(
-            "Das Gerichte-Manifest enthält keine gültige Gerichte-Liste."
-        );
-    }
+	const response =
+		await fetch(GERICHTE_MANIFEST);
 
 
-    const requests =
-        manifest.gerichte.map(async datei => {
-
-            const response =
-                await fetch(
-                    `${GERICHTE_PFAD}/${datei}`
-                );
-
-            if (!response.ok) {
-                throw new Error(
-                    `Gericht "${datei}" konnte nicht geladen werden: ${response.status}`
-                );
-            }
-
-            return response.json();
-        });
+	if (!response.ok) {
+		throw new Error(
+			`Gerichte-Manifest konnte nicht geladen werden: ${response.status}`
+		);
+	}
 
 
-    const geladeneGerichte =
-        await Promise.all(requests);
+	const manifest =
+		await response.json();
 
 
-    geladeneGerichte.forEach(gericht => {
-
-        if (
-            !gericht.id ||
-            !gericht.name ||
-            !Array.isArray(gericht.zutaten)
-        ) {
-            console.warn(
-                "Ungültiges Gericht wurde übersprungen:",
-                gericht
-            );
-
-            return;
-        }
+	if (!Array.isArray(manifest.gerichte)) {
+		throw new Error(
+			"Das Gerichte-Manifest enthält keine gültige Gerichte-Liste."
+		);
+	}
 
 
-        if (gerichte.has(gericht.id)) {
-            console.warn(
-                `Doppelte Gericht-ID "${gericht.id}" wurde gefunden.`
-            );
+	for (const datei of manifest.gerichte) {
 
-            return;
-        }
+		try {
+
+			const response =
+				await fetch(
+					`${GERICHTE_PFAD}/${datei}`
+				);
 
 
-        gerichte.set(
-            gericht.id,
-            gericht
-        );
-    });
+			/*
+			 * Fehlende oder anderweitig nicht erreichbare
+			 * Gericht-Dateien überspringen.
+			 */
+			if (!response.ok) {
+
+				console.warn(
+					`Gericht "${datei}" wurde übersprungen: HTTP ${response.status}`
+				);
+
+				continue;
+			}
+
+
+			const gericht =
+				await response.json();
+
+
+			/*
+			 * Grundlegende Struktur prüfen.
+			 */
+			if (
+				!gericht.id ||
+				!gericht.name ||
+				!Array.isArray(gericht.zutaten)
+			) {
+
+				console.warn(
+					`Gericht "${datei}" besitzt keine gültige Struktur und wurde übersprungen.`,
+					gericht
+				);
+
+				continue;
+			}
+
+
+			/*
+			 * Doppelte IDs verhindern.
+			 */
+			if (gerichte.has(gericht.id)) {
+
+				console.warn(
+					`Doppelte Gericht-ID "${gericht.id}" in "${datei}". Datei wurde übersprungen.`
+				);
+
+				continue;
+			}
+
+
+			gerichte.set(
+				gericht.id,
+				gericht
+			);
+
+		} catch (error) {
+
+			/*
+			 * Beispielsweise ungültiges JSON oder andere
+			 * Probleme beim Laden der Datei.
+			 */
+			console.warn(
+				`Gericht "${datei}" konnte nicht verarbeitet werden und wurde übersprungen.`,
+				error
+			);
+		}
+	}
 }
-
 
 /* ---------------------------------------------------------
    6. Gerichte darstellen
