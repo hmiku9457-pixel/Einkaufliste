@@ -25,7 +25,7 @@ const STORAGE_KEY =
 const maps = {
 
 	edeka: {
-		image: "date/laeden/karte-edeka.png",
+		image: "data/laeden/karte-edeka.png",
 
 		zutaten: {
 
@@ -58,7 +58,7 @@ const maps = {
 
 
 	lidl: {
-		image: "date/laeden/karte-lidl.png",
+		image: "data/laeden/karte-lidl.png",
 
 		zutaten: {
 
