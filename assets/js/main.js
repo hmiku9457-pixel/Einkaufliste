@@ -24,7 +24,7 @@ const STORAGE_KEY = "ausgewaehlteGerichte";
  */
 const maps = {
     edeka: {
-        image: "karte-edeka.png",
+        image: "data/laeden/karte-edeka.png",
 
         zutaten: {
             tomate: {
@@ -55,7 +55,7 @@ const maps = {
     },
 
     lidl: {
-        image: "karte-lidl.png",
+        image: "data/laeden/karte-lidl.png",
 
         zutaten: {
             tomate: {
