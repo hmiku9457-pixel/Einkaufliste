@@ -2,94 +2,141 @@
 <html lang="de">
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 		<link rel="stylesheet" href="assets/css/main.css">
-		
+
 		<title>Einkaufsliste</title>
 	</head>
-	
+
 	<body>
-		<h1>Einkaufsliste</h1>
-		<button id="resetBtn"; style="padding:24px 24px;">Zurücksetzen</button>
-		<a href="rezepte.html"><button id="rezeptBtn"; style="padding:24px 24px;">Rezepte</button></a>
-		<br><br>
-		
-		<!-- ===================== LISTEN ===================== -->
-		<div id="listen-container">
-		
-		    <!-- GERICHTE -->
-		    <div style="flex:1; max-width: 600px;">
-		        <div style="display:flex; align-items:center; gap:10px;">
-		            <h3 style="margin:0;">Gerichte</h3>	
-		        </div>
-		
-		        <div id="controls">
-		            <div class="gericht">
-		                <label><input type="checkbox" id="gericht1" value="gericht1"> Mustergericht</label>
-		                <img src="gericht1.png" class="icon">
-		            </div>
-		            <div class="gericht">
-		                <label><input type="checkbox" id="gericht2" value="gericht2"> Mustergericht</label>
-		                <img src="gericht2.png" class="icon">
-		            </div>
-		            <div class="gericht">
-		                <label><input type="checkbox" id="gericht3" value="gericht3"> Hähnchen mit Brokkoli und Kartoffelspalten</label>
-		                <img src="gericht3.png" class="icon">
-		            </div>
-					<div class="gericht">
-		                <label><input type="checkbox" id="gericht4" value="gericht4"> Hähnchen mit Pflaumen-Sriracha-Soße</label>
-		                <img src="gericht4.png" class="icon">
-		            </div>
-		            <div class="gericht">
-		                <label><input type="checkbox" id="gericht5" value="gericht5"> Mustergericht</label>
-		                <img src="gericht5.png" class="icon">
-		            </div>
-		            <div class="gericht">
-		                <label><input type="checkbox" id="gericht6" value="gericht6"> Mustergericht</label>
-		                <img src="gericht6.png" class="icon">
-		            </div>
-		        </div>
-		    </div>
-		
-		    <!-- ZUTATENLISTE -->
-		    <div style="flex:1;">
-		        <h3>Zutatenliste</h3>
-		        <ul id="zutatenListe">
-		            <li><em>Keine Zutaten ausgewählt</em></li>
-		        </ul>
-		    </div>
-		
-		    <!-- MARKTAUSWAHL -->
-		    <div>
-		        <h3>Markt</h3>
-		        <div id="marktAuswahl">
-		            <label>
-		                <input type="radio" name="markt" value="none" checked>
-		                Keine Karte
-		            </label>
-		            <label>
-		                <input type="radio" name="markt" value="edeka">
-		                Edeka
-		            </label>
-		            <label>
-		                <input type="radio" name="markt" value="lidl">
-		                Lidl
-		            </label>
-		        </div>
-		    </div>
-		
+
+		<!-- ===================== HEADER ===================== -->
+		<header>
+			<h1>Einkaufsliste</h1>
+
+			<nav aria-label="Seitennavigation">
+				<button type="button" id="resetBtn">
+					Zurücksetzen
+				</button>
+
+				<a href="rezepte.html" id="rezeptBtn">
+					Rezepte
+				</a>
+			</nav>
+		</header>
+
+
+		<!-- ===================== HAUPTINHALT ===================== -->
+		<main>
+
+			<!-- ===================== LISTEN ===================== -->
+			<div id="listen-container">
+
+				<!-- ===================== GERICHTE ===================== -->
+				<section>
+					<h2>Gerichte</h2>
+
+					<!--
+						Wird automatisch durch main.js
+						aus data/gerichte/manifest.json gefüllt.
+					-->
+					<div id="controls"></div>
+				</section>
+
+
+				<!-- ===================== ZUTATENLISTE ===================== -->
+				<section>
+					<h2>Zutatenliste</h2>
+
+					<ul id="zutatenListe">
+						<li>
+							<em>Keine Zutaten ausgewählt</em>
+						</li>
+					</ul>
+				</section>
+
+
+				<!-- ===================== MARKTAUSWAHL ===================== -->
+				<section>
+					<h2>Markt</h2>
+
+					<div id="marktAuswahl">
+
+						<label>
+							<input
+								type="radio"
+								name="markt"
+								value="none"
+								checked
+							>
+							Keine Karte
+						</label>
+
+						<label>
+							<input
+								type="radio"
+								name="markt"
+								value="edeka"
+							>
+							Edeka
+						</label>
+
+						<label>
+							<input
+								type="radio"
+								name="markt"
+								value="lidl"
+							>
+							Lidl
+						</label>
+
+					</div>
+				</section>
+
+			</div>
+
+
+			<!-- ===================== KARTE ===================== -->
+			<section
+				id="map-container"
+				class="hidden"
+				aria-label="Marktkarte"
+			>
+				<img
+					id="mapImage"
+					src=""
+					alt="Karte des ausgewählten Marktes"
+				>
+
+				<div id="markers"></div>
+
+				<div
+					id="popup"
+					class="popup"
+				></div>
+			</section>
+
+		</main>
+
+
+		<!-- ===================== BILD-OVERLAY ===================== -->
+		<div
+			id="iconOverlay"
+			role="dialog"
+			aria-modal="true"
+			aria-label="Rezeptbild"
+		>
+			<img
+				id="iconOverlayImg"
+				src=""
+				alt=""
+			>
 		</div>
-		
-		<!-- ===================== ICON OVERLAY ===================== -->
-		<div id="iconOverlay">
-		    <img id="iconOverlayImg">
-		</div>
-		<!-- ===================== KARTE ===================== -->
-		<div id="map-container" class="hidden">
-		    <img id="mapImage" src="">
-		    <div id="markers"></div>
-			<div id="popup" class="popup"></div>
-		</div>
-		
-		<script type="module" src="assets/js/main.js"></script>
+
+
+		<!-- ===================== JAVASCRIPT ===================== -->
+		<script src="assets/js/main.js"></script>
+
 	</body>
 </html>
