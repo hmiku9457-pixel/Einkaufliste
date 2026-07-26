@@ -4,12 +4,9 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<link
-			rel="stylesheet"
-			href="assets/css/main.css"
-		>
+		<link rel="stylesheet" href="assets/css/main.css">
 
-		<title>Rezepte</title>
+		<title>Rezeptübersicht</title>
 	</head>
 
 	<body>
@@ -24,17 +21,27 @@
 			</nav>
 		</header>
 
+
 		<main>
 
-			<section>
-				<h2>Gerichte</h2>
+			<section aria-labelledby="rezept-heading">
 
+				<h2 id="rezept-heading">
+					Rezeptübersicht
+				</h2>
+
+				<!--
+					Wird automatisch durch main.js aus
+					data/gerichte/manifest.json gefüllt.
+				-->
 				<div id="rezeptListe"></div>
+
 			</section>
 
 		</main>
 
-		<script src="assets/js/rezepte.js"></script>
+
+		<script src="assets/js/main.js"></script>
 
 	</body>
 </html>
