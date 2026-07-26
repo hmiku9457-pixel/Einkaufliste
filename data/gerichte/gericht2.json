@@ -1,0 +1,14 @@
+{
+  "id": "gericht2",
+  "name": "Name des Gerichts",
+  "bild": "bilder/icon2.png",
+
+  "zutaten": [
+    {
+      "id": "zutatA",
+      "name": "Zutat A",
+      "menge": 1,
+      "einheit": "Stk"
+    }
+  ]
+}
