@@ -1,5 +1,5 @@
 /* =========================================================
-   Einkaufsliste
+   Einkaufsliste & Rezepte
    Main JavaScript
    ========================================================= */
 
@@ -8,145 +8,131 @@
    1. Konfiguration
    --------------------------------------------------------- */
 
-const GERICHTE_MANIFEST = "data/gerichte/manifest.json";
-const GERICHTE_PFAD = "data/gerichte";
+const GERICHTE_MANIFEST =
+	"data/gerichte/manifest.json";
 
-const STORAGE_KEY = "ausgewaehlteGerichte";
+const GERICHTE_PFAD =
+	"data/gerichte";
+
+const STORAGE_KEY =
+	"ausgewaehlteGerichte";
 
 
 /* ---------------------------------------------------------
    2. Marktdaten
    --------------------------------------------------------- */
 
-/*
- * Die Zutaten werden über ihre technische ID mit den
- * Zutaten aus den Gericht-JSON-Dateien verknüpft.
- */
 const maps = {
-    edeka: {
-        image: "data/laeden/karte-edeka.png",
 
-        zutaten: {
-            tomate: {
-                top: 60,
-                left: 65
-            },
+	edeka: {
+		image: "karte-edeka.png",
 
-            kaese: {
-                top: 35,
-                left: 94
-            },
+		zutaten: {
 
-            nudeln: {
-                top: 34,
-                left: 75
-            },
+			tomate: {
+				top: 60,
+				left: 65
+			},
 
-            salat: {
-                top: 65,
-                left: 55
-            },
+			kaese: {
+				top: 35,
+				left: 94
+			},
 
-            haehnchenbrust: {
-                top: 19,
-                left: 78
-            }
-        }
-    },
+			nudeln: {
+				top: 34,
+				left: 75
+			},
 
-    lidl: {
-        image: "data/laeden/karte-lidl.png",
+			salat: {
+				top: 65,
+				left: 55
+			},
 
-        zutaten: {
-            tomate: {
-                top: 30,
-                left: 49
-            },
+			haehnchenbrust: {
+				top: 19,
+				left: 78
+			}
+		}
+	},
 
-            kaese: {
-                top: 45,
-                left: 20
-            },
 
-            nudeln: {
-                top: 65,
-                left: 45
-            },
+	lidl: {
+		image: "karte-lidl.png",
 
-            salat: {
-                top: 20,
-                left: 60
-            },
+		zutaten: {
 
-            haehnchenbrust: {
-                top: 35,
-                left: 60
-            }
-        }
-    }
+			tomate: {
+				top: 30,
+				left: 49
+			},
+
+			kaese: {
+				top: 45,
+				left: 20
+			},
+
+			nudeln: {
+				top: 65,
+				left: 45
+			},
+
+			salat: {
+				top: 20,
+				left: 60
+			},
+
+			haehnchenbrust: {
+				top: 35,
+				left: 60
+			}
+		}
+	}
 };
 
 
 /* ---------------------------------------------------------
-   3. Zustand
+   3. Globaler Zustand
    --------------------------------------------------------- */
 
-const gerichte = new Map();
+const gerichte =
+	new Map();
 
-let currentMap = "none";
+let currentMap =
+	"none";
+
+
+/* =========================================================
+   GEMEINSAME FUNKTIONEN
+   ========================================================= */
 
 
 /* ---------------------------------------------------------
-   4. DOM-Elemente
-   --------------------------------------------------------- */
-
-const controls = document.getElementById("controls");
-
-const zutatenListe =
-    document.getElementById("zutatenListe");
-
-const mapContainer =
-    document.getElementById("map-container");
-
-const mapImage =
-    document.getElementById("mapImage");
-
-const markersDiv =
-    document.getElementById("markers");
-
-const popup =
-    document.getElementById("popup");
-
-const resetButton =
-    document.getElementById("resetBtn");
-
-const overlay =
-    document.getElementById("iconOverlay");
-
-const overlayImg =
-    document.getElementById("iconOverlayImg");
-
-const marktAuswahl =
-    document.getElementById("marktAuswahl");
-
-
-/* ---------------------------------------------------------
-   5. Gerichte laden
+   4. Gerichte laden
    --------------------------------------------------------- */
 
 /**
  * Lädt das Gerichte-Manifest und anschließend alle darin
  * aufgeführten Gericht-Dateien.
  *
- * Fehlende oder fehlerhafte Dateien werden übersprungen,
- * ohne das Laden der übrigen Gerichte abzubrechen.
+ * Fehlende, fehlerhafte oder ungültige Dateien werden
+ * übersprungen.
+ *
+ * @returns {Promise<Map<string, Object>>}
  */
 async function loadGerichte() {
+
+	gerichte.clear();
+
+
 	const response =
-		await fetch(GERICHTE_MANIFEST);
+		await fetch(
+			GERICHTE_MANIFEST
+		);
 
 
 	if (!response.ok) {
+
 		throw new Error(
 			`Gerichte-Manifest konnte nicht geladen werden: ${response.status}`
 		);
@@ -157,14 +143,23 @@ async function loadGerichte() {
 		await response.json();
 
 
-	if (!Array.isArray(manifest.gerichte)) {
+	if (
+		!manifest ||
+		!Array.isArray(
+			manifest.gerichte
+		)
+	) {
+
 		throw new Error(
 			"Das Gerichte-Manifest enthält keine gültige Gerichte-Liste."
 		);
 	}
 
 
-	for (const datei of manifest.gerichte) {
+	for (
+		const datei
+		of manifest.gerichte
+	) {
 
 		try {
 
@@ -174,10 +169,6 @@ async function loadGerichte() {
 				);
 
 
-			/*
-			 * Fehlende oder anderweitig nicht erreichbare
-			 * Gericht-Dateien überspringen.
-			 */
 			if (!response.ok) {
 
 				console.warn(
@@ -192,13 +183,10 @@ async function loadGerichte() {
 				await response.json();
 
 
-			/*
-			 * Grundlegende Struktur prüfen.
-			 */
 			if (
-				!gericht.id ||
-				!gericht.name ||
-				!Array.isArray(gericht.zutaten)
+				!isValidGericht(
+					gericht
+				)
 			) {
 
 				console.warn(
@@ -210,10 +198,11 @@ async function loadGerichte() {
 			}
 
 
-			/*
-			 * Doppelte IDs verhindern.
-			 */
-			if (gerichte.has(gericht.id)) {
+			if (
+				gerichte.has(
+					gericht.id
+				)
+			) {
 
 				console.warn(
 					`Doppelte Gericht-ID "${gericht.id}" in "${datei}". Datei wurde übersprungen.`
@@ -230,83 +219,177 @@ async function loadGerichte() {
 
 		} catch (error) {
 
-			/*
-			 * Beispielsweise ungültiges JSON oder andere
-			 * Probleme beim Laden der Datei.
-			 */
 			console.warn(
 				`Gericht "${datei}" konnte nicht verarbeitet werden und wurde übersprungen.`,
 				error
 			);
 		}
 	}
+
+
+	return gerichte;
 }
 
+
+/**
+ * Prüft die grundlegende Struktur eines Gerichts.
+ *
+ * Zusätzliche Rezeptfelder wie "portionen",
+ * "zubereitungszeit" und "zubereitung" sind optional.
+ *
+ * @param {Object} gericht
+ * @returns {boolean}
+ */
+function isValidGericht(
+	gericht
+) {
+
+	return Boolean(
+		gericht &&
+		typeof gericht.id === "string" &&
+		gericht.id.trim() !== "" &&
+		typeof gericht.name === "string" &&
+		gericht.name.trim() !== "" &&
+		Array.isArray(
+			gericht.zutaten
+		)
+	);
+}
+
+
 /* ---------------------------------------------------------
-   6. Gerichte darstellen
+   5. Mengen formatieren
    --------------------------------------------------------- */
 
 /**
- * Erstellt die Gericht-Auswahl dynamisch aus den
- * geladenen JSON-Dateien.
+ * Formatiert Mengen für die deutsche Darstellung.
+ *
+ * @param {number} menge
+ * @returns {string}
  */
-function renderGerichte() {
-    controls.innerHTML = "";
+function formatMenge(
+	menge
+) {
+
+	return new Intl.NumberFormat(
+		"de-DE",
+		{
+			maximumFractionDigits: 2
+		}
+	).format(
+		menge
+	);
+}
 
 
-    gerichte.forEach(gericht => {
-
-        const container =
-            document.createElement("div");
-
-        container.className = "gericht";
+/* =========================================================
+   EINKAUFSLISTE
+   ========================================================= */
 
 
-        const label =
-            document.createElement("label");
+/* ---------------------------------------------------------
+   6. Gerichte für Einkaufsliste darstellen
+   --------------------------------------------------------- */
+
+/**
+ * Erstellt die Gericht-Auswahl auf der Startseite.
+ *
+ * @param {HTMLElement} controls
+ */
+function renderGerichte(
+	controls
+) {
+
+	controls.innerHTML =
+		"";
 
 
-        const checkbox =
-            document.createElement("input");
+	gerichte.forEach(
+		gericht => {
 
-        checkbox.type = "checkbox";
-        checkbox.value = gericht.id;
-        checkbox.id = `gericht-${gericht.id}`;
+			const container =
+				document.createElement(
+					"div"
+				);
 
-
-        const name =
-            document.createTextNode(
-                ` ${gericht.name}`
-            );
+			container.className =
+				"gericht";
 
 
-        label.appendChild(checkbox);
-        label.appendChild(name);
+			const label =
+				document.createElement(
+					"label"
+				);
 
 
-        container.appendChild(label);
+			const checkbox =
+				document.createElement(
+					"input"
+				);
+
+			checkbox.type =
+				"checkbox";
+
+			checkbox.value =
+				gericht.id;
+
+			checkbox.id =
+				`gericht-${gericht.id}`;
 
 
-        /*
-         * Bild nur erstellen, wenn im JSON auch
-         * tatsächlich eines angegeben wurde.
-         */
-        if (gericht.bild) {
-
-            const bild =
-                document.createElement("img");
-
-            bild.src = gericht.bild;
-            bild.alt = gericht.name;
-            bild.className = "icon";
-            bild.loading = "lazy";
-
-            container.appendChild(bild);
-        }
+			const text =
+				document.createTextNode(
+					` ${gericht.name}`
+				);
 
 
-        controls.appendChild(container);
-    });
+			label.appendChild(
+				checkbox
+			);
+
+			label.appendChild(
+				text
+			);
+
+
+			container.appendChild(
+				label
+			);
+
+
+			if (
+				gericht.bild
+			) {
+
+				const image =
+					document.createElement(
+						"img"
+					);
+
+				image.src =
+					gericht.bild;
+
+				image.alt =
+					gericht.name;
+
+				image.className =
+					"icon";
+
+				image.loading =
+					"lazy";
+
+
+				container.appendChild(
+					image
+				);
+			}
+
+
+			controls.appendChild(
+				container
+			);
+		}
+	);
 }
 
 
@@ -315,33 +398,45 @@ function renderGerichte() {
    --------------------------------------------------------- */
 
 /**
- * Gibt alle momentan ausgewählten Gerichte zurück.
+ * Gibt alle aktuell ausgewählten Gerichte zurück.
  *
+ * @param {HTMLElement} controls
  * @returns {Array<Object>}
  */
-function getSelectedGerichte() {
-    const selected = [];
+function getSelectedGerichte(
+	controls
+) {
+
+	const selected =
+		[];
 
 
-    controls
-        .querySelectorAll(
-            'input[type="checkbox"]:checked'
-        )
-        .forEach(checkbox => {
+	controls
+		.querySelectorAll(
+			'input[type="checkbox"]:checked'
+		)
+		.forEach(
+			checkbox => {
 
-            const gericht =
-                gerichte.get(
-                    checkbox.value
-                );
-
-
-            if (gericht) {
-                selected.push(gericht);
-            }
-        });
+				const gericht =
+					gerichte.get(
+						checkbox.value
+					);
 
 
-    return selected;
+				if (
+					gericht
+				) {
+
+					selected.push(
+						gericht
+					);
+				}
+			}
+		);
+
+
+	return selected;
 }
 
 
@@ -354,691 +449,1797 @@ function getSelectedGerichte() {
  *
  * Gleiche Zutaten mit gleicher Einheit werden addiert.
  *
+ * @param {HTMLElement} controls
  * @returns {Array<Object>}
  */
-function createShoppingList() {
-    const einkaufsliste =
-        new Map();
+function createShoppingList(
+	controls
+) {
+
+	const einkaufsliste =
+		new Map();
 
 
-    const selectedGerichte =
-        getSelectedGerichte();
+	const selectedGerichte =
+		getSelectedGerichte(
+			controls
+		);
 
 
-    selectedGerichte.forEach(gericht => {
+	selectedGerichte.forEach(
+		gericht => {
 
-        gericht.zutaten.forEach(zutat => {
+			gericht.zutaten.forEach(
+				zutat => {
 
-            const menge =
-                Number(zutat.menge);
+					if (
+						!zutat ||
+						!zutat.id ||
+						!zutat.name
+					) {
 
+						console.warn(
+							`Ungültige Zutat in "${gericht.name}" wurde übersprungen.`,
+							zutat
+						);
 
-            if (!Number.isFinite(menge)) {
-                console.warn(
-                    `Ungültige Menge bei "${zutat.name}" in "${gericht.name}".`
-                );
-
-                return;
-            }
-
-
-            /*
-             * Einheit ist Teil des Schlüssels.
-             *
-             * Dadurch werden beispielsweise
-             *
-             * 2 Stk Tomaten
-             *
-             * nicht versehentlich mit
-             *
-             * 500 g Tomaten
-             *
-             * verrechnet.
-             */
-            const key =
-                `${zutat.id}::${zutat.einheit}`;
+						return;
+					}
 
 
-            if (!einkaufsliste.has(key)) {
-
-                einkaufsliste.set(
-                    key,
-                    {
-                        id: zutat.id,
-                        name: zutat.name,
-                        menge: 0,
-                        einheit: zutat.einheit
-                    }
-                );
-            }
+					const menge =
+						Number(
+							zutat.menge
+						);
 
 
-            einkaufsliste.get(key).menge += menge;
-        });
-    });
+					if (
+						!Number.isFinite(
+							menge
+						)
+					) {
+
+						console.warn(
+							`Ungültige Menge bei "${zutat.name}" in "${gericht.name}".`
+						);
+
+						return;
+					}
 
 
-    return Array.from(
-        einkaufsliste.values()
-    );
+					const einheit =
+						zutat.einheit ?? "";
+
+
+					const key =
+						`${zutat.id}::${einheit}`;
+
+
+					if (
+						!einkaufsliste.has(
+							key
+						)
+					) {
+
+						einkaufsliste.set(
+							key,
+							{
+								id:
+									zutat.id,
+
+								name:
+									zutat.name,
+
+								menge:
+									0,
+
+								einheit:
+									einheit
+							}
+						);
+					}
+
+
+					einkaufsliste
+						.get(
+							key
+						)
+						.menge +=
+							menge;
+				}
+			);
+		}
+	);
+
+
+	return Array.from(
+		einkaufsliste.values()
+	);
 }
 
 
 /* ---------------------------------------------------------
-   9. Mengen formatieren
+   9. Einkaufsliste darstellen
    --------------------------------------------------------- */
 
 /**
- * Formatiert Zahlen für die deutsche Darstellung.
+ * Rendert die Einkaufsliste.
  *
- * @param {number} menge
- * @returns {string}
- */
-function formatMenge(menge) {
-    return new Intl.NumberFormat(
-        "de-DE",
-        {
-            maximumFractionDigits: 2
-        }
-    ).format(menge);
-}
-
-
-/* ---------------------------------------------------------
-   10. Einkaufsliste darstellen
-   --------------------------------------------------------- */
-
-/**
- * Zeigt die berechnete Einkaufsliste an.
- *
+ * @param {HTMLElement} zutatenListe
  * @param {Array<Object>} einkaufsliste
  */
 function renderShoppingList(
-    einkaufsliste
+	zutatenListe,
+	einkaufsliste
 ) {
-    zutatenListe.innerHTML = "";
+
+	zutatenListe.innerHTML =
+		"";
 
 
-    if (einkaufsliste.length === 0) {
+	if (
+		einkaufsliste.length === 0
+	) {
 
-        const li =
-            document.createElement("li");
-
-        const em =
-            document.createElement("em");
-
-        em.textContent =
-            "Keine Zutaten ausgewählt";
+		const li =
+			document.createElement(
+				"li"
+			);
 
 
-        li.appendChild(em);
-        zutatenListe.appendChild(li);
+		const em =
+			document.createElement(
+				"em"
+			);
 
-        return;
-    }
-
-
-    einkaufsliste.forEach(zutat => {
-
-        const li =
-            document.createElement("li");
+		em.textContent =
+			"Keine Zutaten ausgewählt";
 
 
-        li.textContent =
-            `${formatMenge(zutat.menge)} ${zutat.einheit} ${zutat.name}`;
+		li.appendChild(
+			em
+		);
+
+		zutatenListe.appendChild(
+			li
+		);
+
+		return;
+	}
 
 
-        zutatenListe.appendChild(li);
-    });
+	einkaufsliste.forEach(
+		zutat => {
+
+			const li =
+				document.createElement(
+					"li"
+				);
+
+
+			const einheit =
+				zutat.einheit
+					? ` ${zutat.einheit}`
+					: "";
+
+
+			li.textContent =
+				`${formatMenge(zutat.menge)}${einheit} ${zutat.name}`;
+
+
+			zutatenListe.appendChild(
+				li
+			);
+		}
+	);
 }
 
 
 /* ---------------------------------------------------------
-   11. Karte darstellen
+   10. Karte darstellen
    --------------------------------------------------------- */
 
 /**
  * Aktualisiert die Marktkarte.
  *
+ * @param {HTMLElement} mapContainer
+ * @param {HTMLImageElement} mapImage
+ * @param {HTMLElement} markersDiv
+ * @param {HTMLElement} popup
  * @param {Array<Object>} einkaufsliste
  */
 function renderMap(
-    einkaufsliste
+	mapContainer,
+	mapImage,
+	markersDiv,
+	popup,
+	einkaufsliste
 ) {
-    markersDiv.innerHTML = "";
+
+	markersDiv.innerHTML =
+		"";
 
 
-    if (currentMap === "none") {
+	if (
+		currentMap === "none"
+	) {
 
-        mapContainer.classList.add(
-            "hidden"
-        );
+		mapContainer.classList.add(
+			"hidden"
+		);
 
-        return;
-    }
-
-
-    const map =
-        maps[currentMap];
+		return;
+	}
 
 
-    if (!map) {
-        console.warn(
-            `Unbekannte Karte: ${currentMap}`
-        );
-
-        mapContainer.classList.add(
-            "hidden"
-        );
-
-        return;
-    }
+	const map =
+		maps[currentMap];
 
 
-    mapContainer.classList.remove(
-        "hidden"
-    );
+	if (
+		!map
+	) {
 
-    mapImage.src = map.image;
+		console.warn(
+			`Unbekannte Karte: ${currentMap}`
+		);
+
+		mapContainer.classList.add(
+			"hidden"
+		);
+
+		return;
+	}
 
 
-    renderMarkers(
-        einkaufsliste,
-        map
-    );
+	mapContainer.classList.remove(
+		"hidden"
+	);
+
+
+	mapImage.src =
+		map.image;
+
+
+	renderMarkers(
+		markersDiv,
+		popup,
+		einkaufsliste,
+		map
+	);
 }
 
 
 /* ---------------------------------------------------------
-   12. Kartenmarker
+   11. Kartenmarker
    --------------------------------------------------------- */
 
 /**
- * Erstellt die Marker für die Zutaten auf der Karte.
+ * Erstellt die Marker auf der Marktkarte.
  *
  * Zutaten mit identischer Position werden zu einem Marker
  * zusammengefasst.
  *
+ * @param {HTMLElement} markersDiv
+ * @param {HTMLElement} popup
  * @param {Array<Object>} einkaufsliste
  * @param {Object} map
  */
 function renderMarkers(
-    einkaufsliste,
-    map
+	markersDiv,
+	popup,
+	einkaufsliste,
+	map
 ) {
-    const positions = {};
+
+	const positions =
+		{};
 
 
-    einkaufsliste.forEach(zutat => {
+	einkaufsliste.forEach(
+		zutat => {
 
-        const position =
-            map.zutaten[zutat.id];
-
-
-        /*
-         * Zutat ist für diesen Markt nicht auf
-         * der Karte hinterlegt.
-         */
-        if (!position) {
-            return;
-        }
+			const position =
+				map.zutaten[
+					zutat.id
+				];
 
 
-        const positionKey =
-            `${position.top}-${position.left}`;
+			if (
+				!position
+			) {
+
+				return;
+			}
 
 
-        if (!positions[positionKey]) {
-
-            positions[positionKey] = {
-                top: position.top,
-                left: position.left,
-                items: []
-            };
-        }
+			const positionKey =
+				`${position.top}-${position.left}`;
 
 
-        positions[positionKey].items.push(
-            zutat
-        );
-    });
+			if (
+				!positions[
+					positionKey
+				]
+			) {
+
+				positions[
+					positionKey
+				] = {
+
+					top:
+						position.top,
+
+					left:
+						position.left,
+
+					items:
+						[]
+				};
+			}
 
 
-    Object.values(
-        positions
-    ).forEach(position => {
-
-        const marker =
-            document.createElement("button");
-
-        marker.type = "button";
-        marker.className = "marker";
-
-        marker.style.top =
-            `${position.top}%`;
-
-        marker.style.left =
-            `${position.left}%`;
+			positions[
+				positionKey
+			].items.push(
+				zutat
+			);
+		}
+	);
 
 
-        /*
-         * Die Zahl zeigt jetzt die Anzahl verschiedener
-         * Zutaten an dieser Position.
-         *
-         * Die Mengen können nicht mehr sinnvoll addiert
-         * werden, weil beispielsweise Gramm und Stück
-         * unterschiedliche Einheiten sind.
-         */
-        marker.textContent =
-            position.items.length;
+	Object.values(
+		positions
+	).forEach(
+		position => {
+
+			const marker =
+				document.createElement(
+					"button"
+				);
+
+			marker.type =
+				"button";
+
+			marker.className =
+				"marker";
 
 
-        marker.addEventListener(
-            "click",
-            event => {
+			marker.style.top =
+				`${position.top}%`;
 
-                event.stopPropagation();
-
-                showPopup(
-                    marker,
-                    position.items
-                );
-            }
-        );
+			marker.style.left =
+				`${position.left}%`;
 
 
-        markersDiv.appendChild(
-            marker
-        );
-    });
+			/*
+			 * Anzahl unterschiedlicher Einkaufspositionen
+			 * an dieser Position.
+			 */
+			marker.textContent =
+				position.items.length;
+
+
+			marker.addEventListener(
+				"click",
+				event => {
+
+					event.stopPropagation();
+
+
+					showPopup(
+						popup,
+						marker,
+						position.items
+					);
+				}
+			);
+
+
+			markersDiv.appendChild(
+				marker
+			);
+		}
+	);
 }
 
 
 /* ---------------------------------------------------------
-   13. Popup
+   12. Karten-Popup
    --------------------------------------------------------- */
 
 /**
- * Zeigt die Zutaten eines Kartenmarkers an.
+ * Öffnet das Zutaten-Popup eines Markers.
  *
+ * @param {HTMLElement} popup
  * @param {HTMLElement} marker
  * @param {Array<Object>} items
  */
 function showPopup(
-    marker,
-    items
+	popup,
+	marker,
+	items
 ) {
-    const text =
-        items
-            .map(
-                item =>
-                    `${formatMenge(item.menge)} ${item.einheit} ${item.name}`
-            )
-            .join("\n");
+
+	const text =
+		items
+			.map(
+				item => {
+
+					const einheit =
+						item.einheit
+							? ` ${item.einheit}`
+							: "";
 
 
-    popup.textContent = text;
+					return (
+						`${formatMenge(item.menge)}${einheit} ${item.name}`
+					);
+				}
+			)
+			.join(
+				"\n"
+			);
 
-    popup.style.display =
-        "block";
 
-    popup.style.top =
-        `${marker.offsetTop - 30}px`;
+	popup.textContent =
+		text;
 
-    popup.style.left =
-        `${marker.offsetLeft + 25}px`;
+
+	popup.style.display =
+		"block";
+
+
+	popup.style.top =
+		`${marker.offsetTop - 30}px`;
+
+
+	popup.style.left =
+		`${marker.offsetLeft + 25}px`;
 }
 
 
 /**
- * Schließt das Karten-Popup.
+ * Schließt das Zutaten-Popup.
+ *
+ * @param {HTMLElement} popup
  */
-function hidePopup() {
-    popup.style.display =
-        "none";
+function hidePopup(
+	popup
+) {
+
+	if (
+		popup
+	) {
+
+		popup.style.display =
+			"none";
+	}
 }
 
 
 /* ---------------------------------------------------------
-   14. Bild-Overlay
+   13. Bild-Overlay
    --------------------------------------------------------- */
 
 /**
- * Öffnet das große Rezeptbild.
+ * Öffnet das Rezeptbild im Overlay.
  *
+ * @param {HTMLElement} overlay
+ * @param {HTMLImageElement} overlayImg
  * @param {HTMLImageElement} image
  */
-function openOverlay(image) {
-    overlayImg.src =
-        image.src;
+function openOverlay(
+	overlay,
+	overlayImg,
+	image
+) {
 
-    overlayImg.alt =
-        image.alt;
+	overlayImg.src =
+		image.src;
 
-    overlay.style.display =
-        "flex";
+
+	overlayImg.alt =
+		image.alt;
+
+
+	overlay.style.display =
+		"flex";
 }
 
 
 /**
  * Schließt das Rezeptbild.
+ *
+ * @param {HTMLElement} overlay
+ * @param {HTMLImageElement} overlayImg
  */
-function closeOverlay() {
-    overlay.style.display =
-        "none";
+function closeOverlay(
+	overlay,
+	overlayImg
+) {
 
-    overlayImg.src = "";
+	if (
+		!overlay ||
+		!overlayImg
+	) {
+
+		return;
+	}
+
+
+	overlay.style.display =
+		"none";
+
+
+	overlayImg.src =
+		"";
+
+
+	overlayImg.alt =
+		"";
 }
 
 
 /* ---------------------------------------------------------
-   15. LocalStorage
+   14. LocalStorage
    --------------------------------------------------------- */
 
 /**
- * Speichert die IDs der momentan ausgewählten Gerichte.
+ * Speichert die IDs der ausgewählten Gerichte.
+ *
+ * @param {HTMLElement} controls
  */
-function saveState() {
-    const selectedIds =
-        getSelectedGerichte()
-            .map(
-                gericht => gericht.id
-            );
+function saveState(
+	controls
+) {
+
+	const selectedIds =
+		getSelectedGerichte(
+			controls
+		)
+			.map(
+				gericht =>
+					gericht.id
+			);
 
 
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(selectedIds)
-    );
+	localStorage.setItem(
+		STORAGE_KEY,
+		JSON.stringify(
+			selectedIds
+		)
+	);
 }
 
 
 /**
- * Stellt die zuvor gespeicherte Auswahl wieder her.
+ * Lädt die gespeicherte Auswahl.
+ *
+ * @param {HTMLElement} controls
  */
-function loadState() {
-    try {
+function loadState(
+	controls
+) {
 
-        const saved =
-            localStorage.getItem(
-                STORAGE_KEY
-            );
+	try {
 
-
-        if (!saved) {
-            return;
-        }
+		const saved =
+			localStorage.getItem(
+				STORAGE_KEY
+			);
 
 
-        const selectedIds =
-            JSON.parse(saved);
+		if (
+			!saved
+		) {
+
+			return;
+		}
 
 
-        if (!Array.isArray(selectedIds)) {
-            return;
-        }
+		const selectedIds =
+			JSON.parse(
+				saved
+			);
 
 
-        controls
-            .querySelectorAll(
-                'input[type="checkbox"]'
-            )
-            .forEach(checkbox => {
+		if (
+			!Array.isArray(
+				selectedIds
+			)
+		) {
 
-                checkbox.checked =
-                    selectedIds.includes(
-                        checkbox.value
-                    );
-            });
+			return;
+		}
 
-    } catch (error) {
 
-        console.error(
-            "Gespeicherte Gerichte konnten nicht geladen werden:",
-            error
-        );
-    }
+		controls
+			.querySelectorAll(
+				'input[type="checkbox"]'
+			)
+			.forEach(
+				checkbox => {
+
+					checkbox.checked =
+						selectedIds.includes(
+							checkbox.value
+						);
+				}
+			);
+
+	} catch (
+		error
+	) {
+
+		console.error(
+			"Gespeicherte Gerichte konnten nicht geladen werden:",
+			error
+		);
+	}
 }
 
 
 /* ---------------------------------------------------------
-   16. Ansicht aktualisieren
+   15. Einkaufsliste aktualisieren
+   --------------------------------------------------------- */
+
+function updateEinkaufslisteView(
+	controls,
+	zutatenListe,
+	mapContainer,
+	mapImage,
+	markersDiv,
+	popup
+) {
+
+	const einkaufsliste =
+		createShoppingList(
+			controls
+		);
+
+
+	renderShoppingList(
+		zutatenListe,
+		einkaufsliste
+	);
+
+
+	renderMap(
+		mapContainer,
+		mapImage,
+		markersDiv,
+		popup,
+		einkaufsliste
+	);
+}
+
+
+/* ---------------------------------------------------------
+   16. Einkaufsliste zurücksetzen
+   --------------------------------------------------------- */
+
+function resetSelection(
+	controls,
+	zutatenListe,
+	mapContainer,
+	mapImage,
+	markersDiv,
+	popup
+) {
+
+	controls
+		.querySelectorAll(
+			'input[type="checkbox"]'
+		)
+		.forEach(
+			checkbox => {
+
+				checkbox.checked =
+					false;
+			}
+		);
+
+
+	localStorage.removeItem(
+		STORAGE_KEY
+	);
+
+
+	hidePopup(
+		popup
+	);
+
+
+	updateEinkaufslisteView(
+		controls,
+		zutatenListe,
+		mapContainer,
+		mapImage,
+		markersDiv,
+		popup
+	);
+}
+
+
+/* ---------------------------------------------------------
+   17. Einkaufsliste initialisieren
+   --------------------------------------------------------- */
+
+async function initEinkaufsliste() {
+
+	const controls =
+		document.getElementById(
+			"controls"
+		);
+
+	const zutatenListe =
+		document.getElementById(
+			"zutatenListe"
+		);
+
+	const mapContainer =
+		document.getElementById(
+			"map-container"
+		);
+
+	const mapImage =
+		document.getElementById(
+			"mapImage"
+		);
+
+	const markersDiv =
+		document.getElementById(
+			"markers"
+		);
+
+	const popup =
+		document.getElementById(
+			"popup"
+		);
+
+	const resetButton =
+		document.getElementById(
+			"resetBtn"
+		);
+
+	const overlay =
+		document.getElementById(
+			"iconOverlay"
+		);
+
+	const overlayImg =
+		document.getElementById(
+			"iconOverlayImg"
+		);
+
+	const marktAuswahl =
+		document.getElementById(
+			"marktAuswahl"
+		);
+
+
+	if (
+		!controls ||
+		!zutatenListe ||
+		!mapContainer ||
+		!mapImage ||
+		!markersDiv ||
+		!popup ||
+		!resetButton ||
+		!overlay ||
+		!overlayImg ||
+		!marktAuswahl
+	) {
+
+		throw new Error(
+			"Die Einkaufsliste enthält nicht alle benötigten HTML-Elemente."
+		);
+	}
+
+
+	await loadGerichte();
+
+
+	renderGerichte(
+		controls
+	);
+
+
+	loadState(
+		controls
+	);
+
+
+	const checkedMarket =
+		marktAuswahl.querySelector(
+			'input[name="markt"]:checked'
+		);
+
+
+	currentMap =
+		checkedMarket?.value ??
+		"none";
+
+
+	/*
+	 * Änderung der Gericht-Auswahl.
+	 */
+	controls.addEventListener(
+		"change",
+		event => {
+
+			if (
+				!event.target.matches(
+					'input[type="checkbox"]'
+				)
+			) {
+
+				return;
+			}
+
+
+			saveState(
+				controls
+			);
+
+
+			updateEinkaufslisteView(
+				controls,
+				zutatenListe,
+				mapContainer,
+				mapImage,
+				markersDiv,
+				popup
+			);
+		}
+	);
+
+
+	/*
+	 * Klick auf Rezeptbild.
+	 */
+	controls.addEventListener(
+		"click",
+		event => {
+
+			const image =
+				event.target.closest(
+					".icon"
+				);
+
+
+			if (
+				!image
+			) {
+
+				return;
+			}
+
+
+			event.stopPropagation();
+
+
+			openOverlay(
+				overlay,
+				overlayImg,
+				image
+			);
+		}
+	);
+
+
+	/*
+	 * Markt wechseln.
+	 */
+	marktAuswahl.addEventListener(
+		"change",
+		event => {
+
+			if (
+				!event.target.matches(
+					'input[name="markt"]'
+				)
+			) {
+
+				return;
+			}
+
+
+			currentMap =
+				event.target.value;
+
+
+			hidePopup(
+				popup
+			);
+
+
+			updateEinkaufslisteView(
+				controls,
+				zutatenListe,
+				mapContainer,
+				mapImage,
+				markersDiv,
+				popup
+			);
+		}
+	);
+
+
+	/*
+	 * Auswahl zurücksetzen.
+	 */
+	resetButton.addEventListener(
+		"click",
+		() => {
+
+			resetSelection(
+				controls,
+				zutatenListe,
+				mapContainer,
+				mapImage,
+				markersDiv,
+				popup
+			);
+		}
+	);
+
+
+	/*
+	 * Bild-Overlay schließen.
+	 */
+	overlay.addEventListener(
+		"click",
+		() => {
+
+			closeOverlay(
+				overlay,
+				overlayImg
+			);
+		}
+	);
+
+
+	/*
+	 * Escape schließt Overlay und Popup.
+	 */
+	document.addEventListener(
+		"keydown",
+		event => {
+
+			if (
+				event.key !==
+				"Escape"
+			) {
+
+				return;
+			}
+
+
+			closeOverlay(
+				overlay,
+				overlayImg
+			);
+
+
+			hidePopup(
+				popup
+			);
+		}
+	);
+
+
+	/*
+	 * Klick außerhalb eines Markers schließt Popup.
+	 */
+	document.addEventListener(
+		"click",
+		event => {
+
+			if (
+				event.target.closest(
+					".marker"
+				)
+			) {
+
+				return;
+			}
+
+
+			hidePopup(
+				popup
+			);
+		}
+	);
+
+
+	updateEinkaufslisteView(
+		controls,
+		zutatenListe,
+		mapContainer,
+		mapImage,
+		markersDiv,
+		popup
+	);
+}
+
+
+/* =========================================================
+   REZEPTÜBERSICHT
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   18. Rezeptübersicht darstellen
    --------------------------------------------------------- */
 
 /**
- * Berechnet die Einkaufsliste neu und aktualisiert
- * Einkaufsliste und Karte.
+ * Erstellt eine Rezeptkarte für jedes geladene Gericht.
+ *
+ * Die Karten sind Links, können per CSS aber vollständig
+ * wie Buttons gestaltet werden.
+ *
+ * @param {HTMLElement} rezeptListe
  */
-function updateView() {
-    const einkaufsliste =
-        createShoppingList();
+function renderRezeptUebersicht(
+	rezeptListe
+) {
+
+	rezeptListe.innerHTML =
+		"";
 
 
-    renderShoppingList(
-        einkaufsliste
-    );
+	if (
+		gerichte.size === 0
+	) {
+
+		const message =
+			document.createElement(
+				"p"
+			);
+
+		message.textContent =
+			"Keine Rezepte verfügbar.";
 
 
-    renderMap(
-        einkaufsliste
-    );
+		rezeptListe.appendChild(
+			message
+		);
+
+		return;
+	}
+
+
+	gerichte.forEach(
+		gericht => {
+
+			const card =
+				document.createElement(
+					"a"
+				);
+
+
+			card.className =
+				"rezept-card";
+
+
+			card.href =
+				`rezept.html?id=${encodeURIComponent(gericht.id)}`;
+
+
+			if (
+				gericht.bild
+			) {
+
+				card.style.backgroundImage =
+					`url("${gericht.bild}")`;
+			}
+
+
+			const title =
+				document.createElement(
+					"span"
+				);
+
+
+			title.className =
+				"rezept-card-title";
+
+
+			title.textContent =
+				gericht.name;
+
+
+			card.appendChild(
+				title
+			);
+
+
+			rezeptListe.appendChild(
+				card
+			);
+		}
+	);
 }
 
 
 /* ---------------------------------------------------------
-   17. Reset
+   19. Rezeptübersicht initialisieren
+   --------------------------------------------------------- */
+
+async function initRezeptUebersicht() {
+
+	const rezeptListe =
+		document.getElementById(
+			"rezeptListe"
+		);
+
+
+	if (
+		!rezeptListe
+	) {
+
+		return;
+	}
+
+
+	await loadGerichte();
+
+
+	renderRezeptUebersicht(
+		rezeptListe
+	);
+}
+
+
+/* =========================================================
+   EINZELNES REZEPT
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   20. Rezept-ID aus URL lesen
    --------------------------------------------------------- */
 
 /**
- * Entfernt die komplette aktuelle Auswahl.
+ * Liest beispielsweise aus
+ *
+ * rezept.html?id=gericht3
+ *
+ * die ID "gericht3".
+ *
+ * @returns {string|null}
  */
-function resetSelection() {
-    controls
-        .querySelectorAll(
-            'input[type="checkbox"]'
-        )
-        .forEach(checkbox => {
+function getRezeptIdFromUrl() {
 
-            checkbox.checked =
-                false;
-        });
+	const params =
+		new URLSearchParams(
+			window.location.search
+		);
 
 
-    localStorage.removeItem(
-        STORAGE_KEY
-    );
-
-
-    hidePopup();
-
-    updateView();
+	return params.get(
+		"id"
+	);
 }
 
 
 /* ---------------------------------------------------------
-   18. Events registrieren
+   21. Rezept-Metadaten darstellen
    --------------------------------------------------------- */
 
-function registerEventHandlers() {
+function renderRezeptMeta(
+	container,
+	gericht
+) {
 
-    /*
-     * Event Delegation für alle Gerichte.
-     */
-    controls.addEventListener(
-        "change",
-        event => {
-
-            if (
-                !event.target.matches(
-                    'input[type="checkbox"]'
-                )
-            ) {
-                return;
-            }
+	const metaItems =
+		[];
 
 
-            saveState();
-            updateView();
-        }
-    );
+	if (
+		gericht.portionen !== undefined &&
+		gericht.portionen !== null
+	) {
+
+		metaItems.push(
+			`${gericht.portionen} Portionen`
+		);
+	}
 
 
-    /*
-     * Rezeptbilder ebenfalls über Event Delegation.
-     */
-    controls.addEventListener(
-        "click",
-        event => {
+	if (
+		gericht.zubereitungszeit !== undefined &&
+		gericht.zubereitungszeit !== null
+	) {
 
-            const image =
-                event.target.closest(
-                    ".icon"
-                );
+		metaItems.push(
+			`${gericht.zubereitungszeit} Minuten`
+		);
+	}
 
 
-            if (!image) {
-                return;
-            }
+	if (
+		metaItems.length === 0
+	) {
+
+		return;
+	}
 
 
-            event.stopPropagation();
-
-            openOverlay(image);
-        }
-    );
-
-
-    /*
-     * Marktauswahl.
-     */
-    marktAuswahl.addEventListener(
-        "change",
-        event => {
-
-            if (
-                !event.target.matches(
-                    'input[name="markt"]'
-                )
-            ) {
-                return;
-            }
+	const meta =
+		document.createElement(
+			"p"
+		);
 
 
-            currentMap =
-                event.target.value;
+	meta.className =
+		"rezept-meta";
 
 
-            hidePopup();
-            updateView();
-        }
-    );
+	meta.textContent =
+		metaItems.join(
+			" · "
+		);
 
 
-    /*
-     * Reset.
-     */
-    resetButton.addEventListener(
-        "click",
-        resetSelection
-    );
-
-
-    /*
-     * Overlay schließen.
-     */
-    overlay.addEventListener(
-        "click",
-        closeOverlay
-    );
-
-
-    /*
-     * Escape schließt ebenfalls das Overlay.
-     */
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Escape"
-            ) {
-                closeOverlay();
-                hidePopup();
-            }
-        }
-    );
-
-
-    /*
-     * Klick außerhalb eines Markers schließt
-     * das Karten-Popup.
-     */
-    document.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target.closest(
-                    ".marker"
-                )
-            ) {
-                return;
-            }
-
-
-            hidePopup();
-        }
-    );
+	container.appendChild(
+		meta
+	);
 }
 
 
 /* ---------------------------------------------------------
-   19. Initialisierung
+   22. Rezept-Zutaten darstellen
    --------------------------------------------------------- */
 
+function renderRezeptZutaten(
+	container,
+	gericht
+) {
+
+	const heading =
+		document.createElement(
+			"h2"
+		);
+
+	heading.textContent =
+		"Zutaten";
+
+
+	container.appendChild(
+		heading
+	);
+
+
+	const list =
+		document.createElement(
+			"ul"
+		);
+
+	list.className =
+		"rezept-zutaten";
+
+
+	if (
+		gericht.zutaten.length === 0
+	) {
+
+		const li =
+			document.createElement(
+				"li"
+			);
+
+		li.textContent =
+			"Keine Zutaten hinterlegt.";
+
+
+		list.appendChild(
+			li
+		);
+
+		container.appendChild(
+			list
+		);
+
+		return;
+	}
+
+
+	gericht.zutaten.forEach(
+		zutat => {
+
+			if (
+				!zutat ||
+				!zutat.name
+			) {
+
+				return;
+			}
+
+
+			const li =
+				document.createElement(
+					"li"
+				);
+
+
+			const menge =
+				Number(
+					zutat.menge
+				);
+
+
+			const einheit =
+				zutat.einheit
+					? ` ${zutat.einheit}`
+					: "";
+
+
+			if (
+				Number.isFinite(
+					menge
+				)
+			) {
+
+				li.textContent =
+					`${formatMenge(menge)}${einheit} ${zutat.name}`;
+
+			} else {
+
+				li.textContent =
+					zutat.name;
+			}
+
+
+			list.appendChild(
+				li
+			);
+		}
+	);
+
+
+	container.appendChild(
+		list
+	);
+}
+
+
+/* ---------------------------------------------------------
+   23. Zubereitung darstellen
+   --------------------------------------------------------- */
+
+function renderZubereitung(
+	container,
+	gericht
+) {
+
+	const heading =
+		document.createElement(
+			"h2"
+		);
+
+	heading.textContent =
+		"Zubereitung";
+
+
+	container.appendChild(
+		heading
+	);
+
+
+	if (
+		!Array.isArray(
+			gericht.zubereitung
+		) ||
+		gericht.zubereitung.length === 0
+	) {
+
+		const message =
+			document.createElement(
+				"p"
+			);
+
+		message.textContent =
+			"Keine Zubereitung hinterlegt.";
+
+
+		container.appendChild(
+			message
+		);
+
+		return;
+	}
+
+
+	const list =
+		document.createElement(
+			"ol"
+		);
+
+
+	list.className =
+		"rezept-zubereitung";
+
+
+	gericht.zubereitung.forEach(
+		schritt => {
+
+			if (
+				typeof schritt !==
+				"string"
+			) {
+
+				return;
+			}
+
+
+			const li =
+				document.createElement(
+					"li"
+				);
+
+
+			li.textContent =
+				schritt;
+
+
+			list.appendChild(
+				li
+			);
+		}
+	);
+
+
+	container.appendChild(
+		list
+	);
+}
+
+
+/* ---------------------------------------------------------
+   24. Einzelnes Rezept darstellen
+   --------------------------------------------------------- */
+
+function renderRezept(
+	rezeptDetails,
+	gericht
+) {
+
+	rezeptDetails.innerHTML =
+		"";
+
+
+	const title =
+		document.createElement(
+			"h1"
+		);
+
+	title.textContent =
+		gericht.name;
+
+
+	rezeptDetails.appendChild(
+		title
+	);
+
+
+	if (
+		gericht.bild
+	) {
+
+		const image =
+			document.createElement(
+				"img"
+			);
+
+		image.src =
+			gericht.bild;
+
+		image.alt =
+			gericht.name;
+
+		image.className =
+			"rezept-bild";
+
+
+		rezeptDetails.appendChild(
+			image
+		);
+	}
+
+
+	renderRezeptMeta(
+		rezeptDetails,
+		gericht
+	);
+
+
+	renderRezeptZutaten(
+		rezeptDetails,
+		gericht
+	);
+
+
+	renderZubereitung(
+		rezeptDetails,
+		gericht
+	);
+}
+
+
+/* ---------------------------------------------------------
+   25. Rezept-Fehler anzeigen
+   --------------------------------------------------------- */
+
+function renderRezeptError(
+	rezeptDetails,
+	message
+) {
+
+	rezeptDetails.innerHTML =
+		"";
+
+
+	const heading =
+		document.createElement(
+			"h1"
+		);
+
+	heading.textContent =
+		"Rezept nicht gefunden";
+
+
+	const text =
+		document.createElement(
+			"p"
+		);
+
+	text.textContent =
+		message;
+
+
+	rezeptDetails.appendChild(
+		heading
+	);
+
+	rezeptDetails.appendChild(
+		text
+	);
+}
+
+
+/* ---------------------------------------------------------
+   26. Einzelnes Rezept initialisieren
+   --------------------------------------------------------- */
+
+async function initRezept() {
+
+	const rezeptDetails =
+		document.getElementById(
+			"rezeptDetails"
+		);
+
+
+	if (
+		!rezeptDetails
+	) {
+
+		return;
+	}
+
+
+	const rezeptId =
+		getRezeptIdFromUrl();
+
+
+	if (
+		!rezeptId
+	) {
+
+		renderRezeptError(
+			rezeptDetails,
+			"Es wurde kein Rezept ausgewählt."
+		);
+
+		return;
+	}
+
+
+	await loadGerichte();
+
+
+	const gericht =
+		gerichte.get(
+			rezeptId
+		);
+
+
+	if (
+		!gericht
+	) {
+
+		renderRezeptError(
+			rezeptDetails,
+			`Für die ID "${rezeptId}" wurde kein Rezept gefunden.`
+		);
+
+		return;
+	}
+
+
+	renderRezept(
+		rezeptDetails,
+		gericht
+	);
+}
+
+
+/* =========================================================
+   ANWENDUNG INITIALISIEREN
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   27. Seite erkennen
+   --------------------------------------------------------- */
+
+/**
+ * Erkennt anhand vorhandener HTML-Elemente automatisch,
+ * welche Seite geöffnet wurde.
+ *
+ * Dadurch benötigt die bestehende index.html keine
+ * zusätzliche data-page-Angabe.
+ */
 async function init() {
-    try {
 
-        registerEventHandlers();
+	try {
 
-        await loadGerichte();
+		/*
+		 * Einkaufsliste
+		 */
+		if (
+			document.getElementById(
+				"controls"
+			) &&
+			document.getElementById(
+				"zutatenListe"
+			)
+		) {
 
-        renderGerichte();
+			await initEinkaufsliste();
 
-        loadState();
-
-        updateView();
-
-    } catch (error) {
-
-        console.error(
-            "Die Anwendung konnte nicht initialisiert werden:",
-            error
-        );
-
-
-        controls.innerHTML = "";
+			return;
+		}
 
 
-        const message =
-            document.createElement("p");
+		/*
+		 * Rezeptübersicht
+		 */
+		if (
+			document.getElementById(
+				"rezeptListe"
+			)
+		) {
 
-        message.textContent =
-            "Die Gerichte konnten nicht geladen werden.";
+			await initRezeptUebersicht();
+
+			return;
+		}
 
 
-        controls.appendChild(
-            message
-        );
-    }
+		/*
+		 * Einzelnes Rezept
+		 */
+		if (
+			document.getElementById(
+				"rezeptDetails"
+			)
+		) {
+
+			await initRezept();
+
+			return;
+		}
+
+
+		console.warn(
+			"Für diese Seite wurde keine bekannte Ansicht gefunden."
+		);
+
+	} catch (
+		error
+	) {
+
+		console.error(
+			"Die Anwendung konnte nicht initialisiert werden:",
+			error
+		);
+
+
+		const controls =
+			document.getElementById(
+				"controls"
+			);
+
+
+		if (
+			controls
+		) {
+
+			controls.innerHTML =
+				"";
+
+
+			const message =
+				document.createElement(
+					"p"
+				);
+
+			message.textContent =
+				"Die Gerichte konnten nicht geladen werden.";
+
+
+			controls.appendChild(
+				message
+			);
+		}
+
+
+		const rezeptListe =
+			document.getElementById(
+				"rezeptListe"
+			);
+
+
+		if (
+			rezeptListe
+		) {
+
+			rezeptListe.innerHTML =
+				"";
+
+
+			const message =
+				document.createElement(
+					"p"
+				);
+
+			message.textContent =
+				"Die Rezepte konnten nicht geladen werden.";
+
+
+			rezeptListe.appendChild(
+				message
+			);
+		}
+
+
+		const rezeptDetails =
+			document.getElementById(
+				"rezeptDetails"
+			);
+
+
+		if (
+			rezeptDetails
+		) {
+
+			renderRezeptError(
+				rezeptDetails,
+				"Das Rezept konnte nicht geladen werden."
+			);
+		}
+	}
 }
 
 
 /* ---------------------------------------------------------
-   20. Start
+   28. Start
    --------------------------------------------------------- */
 
 document.addEventListener(
-    "DOMContentLoaded",
-    init
+	"DOMContentLoaded",
+	init
 );
