@@ -1,205 +1,1014 @@
-/* ===================== Zutaten und Positionen ===================== */
+/* =========================================================
+   Einkaufsliste
+   Main JavaScript
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   1. Konfiguration
+   --------------------------------------------------------- */
+
+const GERICHTE_MANIFEST = "data/gerichte/manifest.json";
+const GERICHTE_PFAD = "data/gerichte";
+
+const STORAGE_KEY = "ausgewaehlteGerichte";
+
+
+/* ---------------------------------------------------------
+   2. Marktdaten
+   --------------------------------------------------------- */
+
+/*
+ * Die Zutaten werden über ihre technische ID mit den
+ * Zutaten aus den Gericht-JSON-Dateien verknüpft.
+ */
 const maps = {
     edeka: {
         image: "karte-edeka.png",
+
         zutaten: {
-            Tomate: { name: "Tomate", top: 60, left: 65 },
-            Käse:  { name: "Käse",    top: 35, left: 94 },
-            Nudeln: { name: "Nudeln",  top: 34, left: 75 },
-            Salat:  { name: "Salat",   top: 65, left: 55 },
-			Hähnchenbrust:	{ name: "Hähnchenbrust", top: 19, left: 78 }
+            tomate: {
+                top: 60,
+                left: 65
+            },
+
+            kaese: {
+                top: 35,
+                left: 94
+            },
+
+            nudeln: {
+                top: 34,
+                left: 75
+            },
+
+            salat: {
+                top: 65,
+                left: 55
+            },
+
+            haehnchenbrust: {
+                top: 19,
+                left: 78
+            }
         }
     },
+
     lidl: {
         image: "karte-lidl.png",
+
         zutaten: {
-            Tomate: { name: "Tomate", top: 30, left: 49 },
-            Käse:  { name: "Käse",    top: 45, left: 20 },
-            Nudeln: { name: "Nudeln",  top: 65, left: 45 },
-            Salat:  { name: "Salat",   top: 20, left: 60 },
-			Hähnchenbrust:	{ name: "Hähnchenbrust", top: 35, left: 60 }
+            tomate: {
+                top: 30,
+                left: 49
+            },
+
+            kaese: {
+                top: 45,
+                left: 20
+            },
+
+            nudeln: {
+                top: 65,
+                left: 45
+            },
+
+            salat: {
+                top: 20,
+                left: 60
+            },
+
+            haehnchenbrust: {
+                top: 35,
+                left: 60
+            }
         }
     }
 };
 
-/* ===================== Gerichte ===================== */
-const gerichte = {
-    gericht1: ["Tomate", "Nudeln"],
-    gericht2: ["Tomate", "Käse"],
-    gericht3: ["Hähnchenbrust", "Kartoffel festkochend 750g", "Brokkoli", "Tomate", "Tomate", "Zwiebel", "Zwiebel", "Knoblauchzehen", "Knoblauchzehen", "Creme Fraíche", "Tomatepesto 50g", "Hühnerbrühe"],
-	gericht4: ["Hähnchenbrust", "Kartoffel festkochend 750g", "Salatmischung", "Knoblauchzehen", "Knoblauchzehen", "Buttermilch-Zitronen-Dressing 100ml", "Pflaumenkonfitüre 160g", "Sriracha Soße 8ml", "Sojasoße 20ml"],
-    gericht5: ["Tomate", "Käse"],
-    gericht6: ["Salat", "Tomate"]
-};
 
-/* ===================== ICON OVERLAY ===================== */
-const overlay = document.getElementById("iconOverlay");
-const overlayImg = document.getElementById("iconOverlayImg");
+/* ---------------------------------------------------------
+   3. Zustand
+   --------------------------------------------------------- */
 
-document.querySelectorAll(".icon").forEach(icon => {
-    icon.addEventListener("click", e => {
-        e.stopPropagation();
-        overlayImg.src = icon.src;
-        overlay.style.display = "flex";
-    });
-});
-
-overlay.addEventListener("click", () => overlay.style.display = "none");
-
-
+const gerichte = new Map();
 
 let currentMap = "none";
 
-/* ===================== UPDATE ===================== */
-function updateMap() {
-    const zutatenListe = document.getElementById("zutatenListe");
-    const markersDiv = document.getElementById("markers");
-    const mapContainer = document.getElementById("map-container");
 
-    zutatenListe.innerHTML = "";
-    markersDiv.innerHTML = "";
+/* ---------------------------------------------------------
+   4. DOM-Elemente
+   --------------------------------------------------------- */
 
-    const counter = {};
-	const positions = {}; // sammelt Zutaten pro Koordinate
+const controls = document.getElementById("controls");
 
-    document.querySelectorAll("#controls input:checked").forEach(cb => {
-        gerichte[cb.value].forEach(z => counter[z] = (counter[z] || 0) + 1);
-    });
+const zutatenListe =
+    document.getElementById("zutatenListe");
 
-    if (Object.keys(counter).length === 0) {
-        zutatenListe.innerHTML = "<li><em>Keine Zutaten ausgewählt</em></li>";
-    } else {
-        Object.keys(counter).forEach(key => {
-            const name =
-                currentMap !== "none"
-                ? maps[currentMap].zutaten[key]?.name || key
-                : key;
+const mapContainer =
+    document.getElementById("map-container");
 
-            const li = document.createElement("li");
-            li.textContent = `${counter[key]}× ${name}`;
-            zutatenListe.appendChild(li);
-        });
+const mapImage =
+    document.getElementById("mapImage");
+
+const markersDiv =
+    document.getElementById("markers");
+
+const popup =
+    document.getElementById("popup");
+
+const resetButton =
+    document.getElementById("resetBtn");
+
+const overlay =
+    document.getElementById("iconOverlay");
+
+const overlayImg =
+    document.getElementById("iconOverlayImg");
+
+const marktAuswahl =
+    document.getElementById("marktAuswahl");
+
+
+/* ---------------------------------------------------------
+   5. Gerichte laden
+   --------------------------------------------------------- */
+
+/**
+ * Lädt das Gerichte-Manifest und anschließend alle darin
+ * aufgeführten Gericht-Dateien.
+ */
+async function loadGerichte() {
+    const response =
+        await fetch(GERICHTE_MANIFEST);
+
+    if (!response.ok) {
+        throw new Error(
+            `Gerichte-Manifest konnte nicht geladen werden: ${response.status}`
+        );
     }
 
-    if (currentMap === "none") {
-        mapContainer.classList.add("hidden");
+    const manifest = await response.json();
+
+    if (!Array.isArray(manifest.gerichte)) {
+        throw new Error(
+            "Das Gerichte-Manifest enthält keine gültige Gerichte-Liste."
+        );
+    }
+
+
+    const requests =
+        manifest.gerichte.map(async datei => {
+
+            const response =
+                await fetch(
+                    `${GERICHTE_PFAD}/${datei}`
+                );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Gericht "${datei}" konnte nicht geladen werden: ${response.status}`
+                );
+            }
+
+            return response.json();
+        });
+
+
+    const geladeneGerichte =
+        await Promise.all(requests);
+
+
+    geladeneGerichte.forEach(gericht => {
+
+        if (
+            !gericht.id ||
+            !gericht.name ||
+            !Array.isArray(gericht.zutaten)
+        ) {
+            console.warn(
+                "Ungültiges Gericht wurde übersprungen:",
+                gericht
+            );
+
+            return;
+        }
+
+
+        if (gerichte.has(gericht.id)) {
+            console.warn(
+                `Doppelte Gericht-ID "${gericht.id}" wurde gefunden.`
+            );
+
+            return;
+        }
+
+
+        gerichte.set(
+            gericht.id,
+            gericht
+        );
+    });
+}
+
+
+/* ---------------------------------------------------------
+   6. Gerichte darstellen
+   --------------------------------------------------------- */
+
+/**
+ * Erstellt die Gericht-Auswahl dynamisch aus den
+ * geladenen JSON-Dateien.
+ */
+function renderGerichte() {
+    controls.innerHTML = "";
+
+
+    gerichte.forEach(gericht => {
+
+        const container =
+            document.createElement("div");
+
+        container.className = "gericht";
+
+
+        const label =
+            document.createElement("label");
+
+
+        const checkbox =
+            document.createElement("input");
+
+        checkbox.type = "checkbox";
+        checkbox.value = gericht.id;
+        checkbox.id = `gericht-${gericht.id}`;
+
+
+        const name =
+            document.createTextNode(
+                ` ${gericht.name}`
+            );
+
+
+        label.appendChild(checkbox);
+        label.appendChild(name);
+
+
+        container.appendChild(label);
+
+
+        /*
+         * Bild nur erstellen, wenn im JSON auch
+         * tatsächlich eines angegeben wurde.
+         */
+        if (gericht.bild) {
+
+            const bild =
+                document.createElement("img");
+
+            bild.src = gericht.bild;
+            bild.alt = gericht.name;
+            bild.className = "icon";
+            bild.loading = "lazy";
+
+            container.appendChild(bild);
+        }
+
+
+        controls.appendChild(container);
+    });
+}
+
+
+/* ---------------------------------------------------------
+   7. Ausgewählte Gerichte
+   --------------------------------------------------------- */
+
+/**
+ * Gibt alle momentan ausgewählten Gerichte zurück.
+ *
+ * @returns {Array<Object>}
+ */
+function getSelectedGerichte() {
+    const selected = [];
+
+
+    controls
+        .querySelectorAll(
+            'input[type="checkbox"]:checked'
+        )
+        .forEach(checkbox => {
+
+            const gericht =
+                gerichte.get(
+                    checkbox.value
+                );
+
+
+            if (gericht) {
+                selected.push(gericht);
+            }
+        });
+
+
+    return selected;
+}
+
+
+/* ---------------------------------------------------------
+   8. Einkaufsliste berechnen
+   --------------------------------------------------------- */
+
+/**
+ * Fasst die Zutaten aller ausgewählten Gerichte zusammen.
+ *
+ * Gleiche Zutaten mit gleicher Einheit werden addiert.
+ *
+ * @returns {Array<Object>}
+ */
+function createShoppingList() {
+    const einkaufsliste =
+        new Map();
+
+
+    const selectedGerichte =
+        getSelectedGerichte();
+
+
+    selectedGerichte.forEach(gericht => {
+
+        gericht.zutaten.forEach(zutat => {
+
+            const menge =
+                Number(zutat.menge);
+
+
+            if (!Number.isFinite(menge)) {
+                console.warn(
+                    `Ungültige Menge bei "${zutat.name}" in "${gericht.name}".`
+                );
+
+                return;
+            }
+
+
+            /*
+             * Einheit ist Teil des Schlüssels.
+             *
+             * Dadurch werden beispielsweise
+             *
+             * 2 Stk Tomaten
+             *
+             * nicht versehentlich mit
+             *
+             * 500 g Tomaten
+             *
+             * verrechnet.
+             */
+            const key =
+                `${zutat.id}::${zutat.einheit}`;
+
+
+            if (!einkaufsliste.has(key)) {
+
+                einkaufsliste.set(
+                    key,
+                    {
+                        id: zutat.id,
+                        name: zutat.name,
+                        menge: 0,
+                        einheit: zutat.einheit
+                    }
+                );
+            }
+
+
+            einkaufsliste.get(key).menge += menge;
+        });
+    });
+
+
+    return Array.from(
+        einkaufsliste.values()
+    );
+}
+
+
+/* ---------------------------------------------------------
+   9. Mengen formatieren
+   --------------------------------------------------------- */
+
+/**
+ * Formatiert Zahlen für die deutsche Darstellung.
+ *
+ * @param {number} menge
+ * @returns {string}
+ */
+function formatMenge(menge) {
+    return new Intl.NumberFormat(
+        "de-DE",
+        {
+            maximumFractionDigits: 2
+        }
+    ).format(menge);
+}
+
+
+/* ---------------------------------------------------------
+   10. Einkaufsliste darstellen
+   --------------------------------------------------------- */
+
+/**
+ * Zeigt die berechnete Einkaufsliste an.
+ *
+ * @param {Array<Object>} einkaufsliste
+ */
+function renderShoppingList(
+    einkaufsliste
+) {
+    zutatenListe.innerHTML = "";
+
+
+    if (einkaufsliste.length === 0) {
+
+        const li =
+            document.createElement("li");
+
+        const em =
+            document.createElement("em");
+
+        em.textContent =
+            "Keine Zutaten ausgewählt";
+
+
+        li.appendChild(em);
+        zutatenListe.appendChild(li);
+
         return;
     }
 
-    mapContainer.classList.remove("hidden");
-    document.getElementById("mapImage").src = maps[currentMap].image;
 
-    // Zutaten nach Position gruppieren
-Object.keys(counter).forEach(key => {
-    const z = maps[currentMap].zutaten[key];
-    if (!z) return;
+    einkaufsliste.forEach(zutat => {
 
-    const posKey = `${z.top}-${z.left}`;
+        const li =
+            document.createElement("li");
 
-    if (!positions[posKey]) {
-        positions[posKey] = {
-            top: z.top,
-            left: z.left,
-            items: []
-        };
+
+        li.textContent =
+            `${formatMenge(zutat.menge)} ${zutat.einheit} ${zutat.name}`;
+
+
+        zutatenListe.appendChild(li);
+    });
+}
+
+
+/* ---------------------------------------------------------
+   11. Karte darstellen
+   --------------------------------------------------------- */
+
+/**
+ * Aktualisiert die Marktkarte.
+ *
+ * @param {Array<Object>} einkaufsliste
+ */
+function renderMap(
+    einkaufsliste
+) {
+    markersDiv.innerHTML = "";
+
+
+    if (currentMap === "none") {
+
+        mapContainer.classList.add(
+            "hidden"
+        );
+
+        return;
     }
 
-    positions[posKey].items.push({
-        name: z.name,
-        amount: counter[key]
+
+    const map =
+        maps[currentMap];
+
+
+    if (!map) {
+        console.warn(
+            `Unbekannte Karte: ${currentMap}`
+        );
+
+        mapContainer.classList.add(
+            "hidden"
+        );
+
+        return;
+    }
+
+
+    mapContainer.classList.remove(
+        "hidden"
+    );
+
+    mapImage.src = map.image;
+
+
+    renderMarkers(
+        einkaufsliste,
+        map
+    );
+}
+
+
+/* ---------------------------------------------------------
+   12. Kartenmarker
+   --------------------------------------------------------- */
+
+/**
+ * Erstellt die Marker für die Zutaten auf der Karte.
+ *
+ * Zutaten mit identischer Position werden zu einem Marker
+ * zusammengefasst.
+ *
+ * @param {Array<Object>} einkaufsliste
+ * @param {Object} map
+ */
+function renderMarkers(
+    einkaufsliste,
+    map
+) {
+    const positions = {};
+
+
+    einkaufsliste.forEach(zutat => {
+
+        const position =
+            map.zutaten[zutat.id];
+
+
+        /*
+         * Zutat ist für diesen Markt nicht auf
+         * der Karte hinterlegt.
+         */
+        if (!position) {
+            return;
+        }
+
+
+        const positionKey =
+            `${position.top}-${position.left}`;
+
+
+        if (!positions[positionKey]) {
+
+            positions[positionKey] = {
+                top: position.top,
+                left: position.left,
+                items: []
+            };
+        }
+
+
+        positions[positionKey].items.push(
+            zutat
+        );
     });
-});
 
-// Für jede Position genau EIN Marker
-Object.values(positions).forEach(pos => {
-    const marker = document.createElement("div");
-    marker.className = "marker";
-    marker.style.top = pos.top + "%";
-    marker.style.left = pos.left + "%";
 
-    // Gesamtanzahl als Zahl im Marker
-    const total = pos.items.reduce((sum, i) => sum + i.amount, 0);
-    marker.innerText = total;
+    Object.values(
+        positions
+    ).forEach(position => {
 
-    marker.onclick = (e) => {
-        e.stopPropagation();
+        const marker =
+            document.createElement("button");
 
-        const text = pos.items
-            .map(i => `${i.amount}× ${i.name}`)
+        marker.type = "button";
+        marker.className = "marker";
+
+        marker.style.top =
+            `${position.top}%`;
+
+        marker.style.left =
+            `${position.left}%`;
+
+
+        /*
+         * Die Zahl zeigt jetzt die Anzahl verschiedener
+         * Zutaten an dieser Position.
+         *
+         * Die Mengen können nicht mehr sinnvoll addiert
+         * werden, weil beispielsweise Gramm und Stück
+         * unterschiedliche Einheiten sind.
+         */
+        marker.textContent =
+            position.items.length;
+
+
+        marker.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                showPopup(
+                    marker,
+                    position.items
+                );
+            }
+        );
+
+
+        markersDiv.appendChild(
+            marker
+        );
+    });
+}
+
+
+/* ---------------------------------------------------------
+   13. Popup
+   --------------------------------------------------------- */
+
+/**
+ * Zeigt die Zutaten eines Kartenmarkers an.
+ *
+ * @param {HTMLElement} marker
+ * @param {Array<Object>} items
+ */
+function showPopup(
+    marker,
+    items
+) {
+    const text =
+        items
+            .map(
+                item =>
+                    `${formatMenge(item.menge)} ${item.einheit} ${item.name}`
+            )
             .join("\n");
 
-        showPopup(marker, text);
-    };
 
-    markersDiv.appendChild(marker);
-});
-	
+    popup.textContent = text;
+
+    popup.style.display =
+        "block";
+
+    popup.style.top =
+        `${marker.offsetTop - 30}px`;
+
+    popup.style.left =
+        `${marker.offsetLeft + 25}px`;
 }
 
-/* ===================== EVENTS ===================== */
-document.querySelectorAll("#controls input").forEach(cb =>
-    cb.addEventListener("change", updateMap)
-);
 
-document.querySelectorAll("input[name='markt']").forEach(rb =>
-    rb.addEventListener("change", () => {
-        currentMap = rb.value;
-        updateMap();
-    })
-);
-
-document.getElementById("resetBtn").addEventListener("click", () => {
-    document.querySelectorAll("#controls input").forEach(cb => cb.checked = false);
-    localStorage.removeItem("eingekaufteGerichte");
-    updateMap();
-});
-
-updateMap();
-function showPopup(marker, text) {
-    const popup = document.getElementById("popup");
-    popup.innerText = text;
-    popup.style.display = "block";
-    popup.style.top = (marker.offsetTop - 30) + "px";
-    popup.style.left = (marker.offsetLeft + 25) + "px";
+/**
+ * Schließt das Karten-Popup.
+ */
+function hidePopup() {
+    popup.style.display =
+        "none";
 }
 
-// Klick irgendwo → Popup schließen
-document.addEventListener("click", () => {
-    document.getElementById("popup").style.display = "none";
-});
 
-/* ===================== LOCAL STORAGE ===================== */
-const STORAGE_KEY = "eingekaufteGerichte";
+/* ---------------------------------------------------------
+   14. Bild-Overlay
+   --------------------------------------------------------- */
 
+/**
+ * Öffnet das große Rezeptbild.
+ *
+ * @param {HTMLImageElement} image
+ */
+function openOverlay(image) {
+    overlayImg.src =
+        image.src;
+
+    overlayImg.alt =
+        image.alt;
+
+    overlay.style.display =
+        "flex";
+}
+
+
+/**
+ * Schließt das Rezeptbild.
+ */
+function closeOverlay() {
+    overlay.style.display =
+        "none";
+
+    overlayImg.src = "";
+}
+
+
+/* ---------------------------------------------------------
+   15. LocalStorage
+   --------------------------------------------------------- */
+
+/**
+ * Speichert die IDs der momentan ausgewählten Gerichte.
+ */
 function saveState() {
-    const state = {};
-    document.querySelectorAll("#controls input").forEach(cb => {
-        state[cb.id] = cb.checked;
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const selectedIds =
+        getSelectedGerichte()
+            .map(
+                gericht => gericht.id
+            );
+
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(selectedIds)
+    );
 }
 
-document.querySelectorAll("#controls input").forEach(cb => {
-    cb.addEventListener("change", () => {
-        saveState();
-        updateMap();
-    });
-});
 
-window.addEventListener("DOMContentLoaded", () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        const state = JSON.parse(saved);
-        document.querySelectorAll("#controls input").forEach(cb => {
-            cb.checked = !!state[cb.id];
-        });
+/**
+ * Stellt die zuvor gespeicherte Auswahl wieder her.
+ */
+function loadState() {
+    try {
+
+        const saved =
+            localStorage.getItem(
+                STORAGE_KEY
+            );
+
+
+        if (!saved) {
+            return;
+        }
+
+
+        const selectedIds =
+            JSON.parse(saved);
+
+
+        if (!Array.isArray(selectedIds)) {
+            return;
+        }
+
+
+        controls
+            .querySelectorAll(
+                'input[type="checkbox"]'
+            )
+            .forEach(checkbox => {
+
+                checkbox.checked =
+                    selectedIds.includes(
+                        checkbox.value
+                    );
+            });
+
+    } catch (error) {
+
+        console.error(
+            "Gespeicherte Gerichte konnten nicht geladen werden:",
+            error
+        );
     }
-    updateMap();
-});
+}
 
-/* ===================== RESET ===================== */
-document.getElementById("resetBtn").addEventListener("click", () => {
-    document.querySelectorAll("#controls input").forEach(cb => cb.checked = false);
-    localStorage.removeItem(STORAGE_KEY);
-    updateMap();
-});
+
+/* ---------------------------------------------------------
+   16. Ansicht aktualisieren
+   --------------------------------------------------------- */
+
+/**
+ * Berechnet die Einkaufsliste neu und aktualisiert
+ * Einkaufsliste und Karte.
+ */
+function updateView() {
+    const einkaufsliste =
+        createShoppingList();
+
+
+    renderShoppingList(
+        einkaufsliste
+    );
+
+
+    renderMap(
+        einkaufsliste
+    );
+}
+
+
+/* ---------------------------------------------------------
+   17. Reset
+   --------------------------------------------------------- */
+
+/**
+ * Entfernt die komplette aktuelle Auswahl.
+ */
+function resetSelection() {
+    controls
+        .querySelectorAll(
+            'input[type="checkbox"]'
+        )
+        .forEach(checkbox => {
+
+            checkbox.checked =
+                false;
+        });
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    hidePopup();
+
+    updateView();
+}
+
+
+/* ---------------------------------------------------------
+   18. Events registrieren
+   --------------------------------------------------------- */
+
+function registerEventHandlers() {
+
+    /*
+     * Event Delegation für alle Gerichte.
+     */
+    controls.addEventListener(
+        "change",
+        event => {
+
+            if (
+                !event.target.matches(
+                    'input[type="checkbox"]'
+                )
+            ) {
+                return;
+            }
+
+
+            saveState();
+            updateView();
+        }
+    );
+
+
+    /*
+     * Rezeptbilder ebenfalls über Event Delegation.
+     */
+    controls.addEventListener(
+        "click",
+        event => {
+
+            const image =
+                event.target.closest(
+                    ".icon"
+                );
+
+
+            if (!image) {
+                return;
+            }
+
+
+            event.stopPropagation();
+
+            openOverlay(image);
+        }
+    );
+
+
+    /*
+     * Marktauswahl.
+     */
+    marktAuswahl.addEventListener(
+        "change",
+        event => {
+
+            if (
+                !event.target.matches(
+                    'input[name="markt"]'
+                )
+            ) {
+                return;
+            }
+
+
+            currentMap =
+                event.target.value;
+
+
+            hidePopup();
+            updateView();
+        }
+    );
+
+
+    /*
+     * Reset.
+     */
+    resetButton.addEventListener(
+        "click",
+        resetSelection
+    );
+
+
+    /*
+     * Overlay schließen.
+     */
+    overlay.addEventListener(
+        "click",
+        closeOverlay
+    );
+
+
+    /*
+     * Escape schließt ebenfalls das Overlay.
+     */
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+                closeOverlay();
+                hidePopup();
+            }
+        }
+    );
+
+
+    /*
+     * Klick außerhalb eines Markers schließt
+     * das Karten-Popup.
+     */
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target.closest(
+                    ".marker"
+                )
+            ) {
+                return;
+            }
+
+
+            hidePopup();
+        }
+    );
+}
+
+
+/* ---------------------------------------------------------
+   19. Initialisierung
+   --------------------------------------------------------- */
+
+async function init() {
+    try {
+
+        registerEventHandlers();
+
+        await loadGerichte();
+
+        renderGerichte();
+
+        loadState();
+
+        updateView();
+
+    } catch (error) {
+
+        console.error(
+            "Die Anwendung konnte nicht initialisiert werden:",
+            error
+        );
+
+
+        controls.innerHTML = "";
+
+
+        const message =
+            document.createElement("p");
+
+        message.textContent =
+            "Die Gerichte konnten nicht geladen werden.";
+
+
+        controls.appendChild(
+            message
+        );
+    }
+}
+
+
+/* ---------------------------------------------------------
+   20. Start
+   --------------------------------------------------------- */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
