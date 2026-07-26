@@ -1,5 +1,5 @@
 /* =========================================================
-   Einkaufsliste
+   Einkaufsliste & Rezepte
    Main Stylesheet
    ========================================================= */
 
@@ -18,12 +18,19 @@ body {
 
 	font-family: Arial, sans-serif;
 	font-size: 24px;
+
+	color: #222;
+	background: #fff;
 }
 
 
 /* ---------------------------------------------------------
    2. Header
    --------------------------------------------------------- */
+
+header {
+	margin-bottom: 20px;
+}
 
 header h1 {
 	margin-top: 0;
@@ -32,38 +39,57 @@ header h1 {
 header nav {
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;
+
 	gap: 10px;
 }
 
 
 /*
- * Reset-Button und Rezepte-Link sollen optisch
- * gleich behandelt werden.
+ * Buttons und Navigationslinks einheitlich darstellen.
  */
 #resetBtn,
-#rezeptBtn {
+#rezeptBtn,
+header nav a {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 
-	padding: 24px;
+	padding: 16px 24px;
 
 	font: inherit;
 	font-size: 1rem;
 
-	color: inherit;
+	color: #222;
 	background: #f0f0f0;
 
 	border: 1px solid #999;
 	border-radius: 4px;
 
 	text-decoration: none;
+
 	cursor: pointer;
 }
 
 
+#resetBtn:hover,
+#rezeptBtn:hover,
+header nav a:hover {
+	background: #ddd;
+}
+
+
+#resetBtn:focus-visible,
+#rezeptBtn:focus-visible,
+header nav a:focus-visible,
+.rezept-card:focus-visible {
+	outline: 3px solid #333;
+	outline-offset: 3px;
+}
+
+
 /* ---------------------------------------------------------
-   3. Hauptlayout
+   3. Hauptlayout Einkaufsliste
    --------------------------------------------------------- */
 
 #listen-container {
@@ -75,35 +101,21 @@ header nav {
 }
 
 
-/*
- * Gerichte
- *
- * Entspricht dem früheren:
- * style="flex:1; max-width:600px;"
- */
 #listen-container > section:first-child {
 	flex: 1;
+
 	max-width: 600px;
 	min-width: 0;
 }
 
 
-/*
- * Zutatenliste
- *
- * Entspricht dem früheren:
- * style="flex:1;"
- */
 #listen-container > section:nth-child(2) {
 	flex: 1;
+
 	min-width: 0;
 }
 
 
-/*
- * Die Überschriften hatten vorher teilweise
- * style="margin:0;".
- */
 #listen-container h2 {
 	margin-top: 0;
 }
@@ -215,6 +227,7 @@ header nav {
 	position: relative;
 
 	max-width: 1200px;
+
 	margin-top: 20px;
 }
 
@@ -317,31 +330,238 @@ header nav {
 }
 
 
+/* =========================================================
+   REZEPTÜBERSICHT
+   ========================================================= */
+
+
 /* ---------------------------------------------------------
-   11. Responsive Layout
+   11. Rezeptkarten-Layout
+   --------------------------------------------------------- */
+
+#rezeptListe {
+	display: grid;
+
+	grid-template-columns:
+		repeat(
+			auto-fit,
+			minmax(260px, 1fr)
+		);
+
+	gap: 20px;
+
+	max-width: 1200px;
+}
+
+
+/* ---------------------------------------------------------
+   12. Rezeptkarte
+   --------------------------------------------------------- */
+
+.rezept-card {
+	position: relative;
+
+	min-height: 220px;
+
+	display: flex;
+	align-items: flex-end;
+
+	overflow: hidden;
+
+	color: white;
+
+	background-color: #555;
+	background-size: cover;
+	background-position: center;
+
+	border-radius: 8px;
+
+	text-decoration: none;
+
+	box-shadow:
+		0 2px 8px rgba(0, 0, 0, 0.25);
+
+	transition:
+		transform 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+
+/*
+ * Dunkler Verlauf über dem Bild,
+ * damit der Rezeptname lesbar bleibt.
+ */
+.rezept-card::before {
+	content: "";
+
+	position: absolute;
+	inset: 0;
+
+	background:
+		linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.8) 0%,
+			rgba(0, 0, 0, 0.15) 60%,
+			rgba(0, 0, 0, 0) 100%
+		);
+}
+
+
+.rezept-card:hover {
+	transform: translateY(-3px);
+
+	box-shadow:
+		0 5px 14px rgba(0, 0, 0, 0.35);
+}
+
+
+.rezept-card-title {
+	position: relative;
+	z-index: 1;
+
+	width: 100%;
+
+	padding: 18px;
+
+	font-size: 1rem;
+	font-weight: bold;
+
+	text-shadow:
+		0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+
+/* =========================================================
+   REZEPTDETAILSEITE
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   13. Rezept-Container
+   --------------------------------------------------------- */
+
+#rezeptDetails {
+	max-width: 900px;
+
+	margin: 0 auto;
+}
+
+
+#rezeptDetails h1 {
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+
+
+#rezeptDetails h2 {
+	margin-top: 35px;
+	margin-bottom: 15px;
+}
+
+
+/* ---------------------------------------------------------
+   14. Rezeptbild
+   --------------------------------------------------------- */
+
+.rezept-bild {
+	display: block;
+
+	width: 100%;
+	max-height: 500px;
+
+	object-fit: cover;
+
+	border-radius: 8px;
+
+	box-shadow:
+		0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ---------------------------------------------------------
+   15. Rezeptinformationen
+   --------------------------------------------------------- */
+
+.rezept-meta {
+	margin-top: 15px;
+	margin-bottom: 25px;
+
+	font-size: 0.9em;
+
+	color: #555;
+}
+
+
+/* ---------------------------------------------------------
+   16. Rezept-Zutaten
+   --------------------------------------------------------- */
+
+.rezept-zutaten {
+	margin: 0;
+	padding-left: 30px;
+}
+
+
+.rezept-zutaten li {
+	margin-bottom: 8px;
+}
+
+
+/* ---------------------------------------------------------
+   17. Zubereitung
+   --------------------------------------------------------- */
+
+.rezept-zubereitung {
+	margin: 0;
+
+	padding-left: 35px;
+}
+
+
+.rezept-zubereitung li {
+	margin-bottom: 18px;
+
+	padding-left: 8px;
+
+	line-height: 1.5;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   18. Tablet / Smartphone
    --------------------------------------------------------- */
 
 @media (max-width: 800px) {
 
 	body {
-		font-size: 18px;
 		padding: 15px;
+
+		font-size: 18px;
 	}
 
 
 	header nav {
-		flex-wrap: wrap;
+		align-items: stretch;
 	}
 
 
 	#resetBtn,
-	#rezeptBtn {
-		padding: 16px;
+	#rezeptBtn,
+	header nav a {
+		padding: 14px 18px;
 	}
 
 
+	/* Einkaufsliste */
+
 	#listen-container {
 		flex-direction: column;
+
 		gap: 20px;
 	}
 
@@ -359,5 +579,72 @@ header nav {
 
 	#zutatenListe {
 		min-width: 0;
+	}
+
+
+	/* Rezeptübersicht */
+
+	#rezeptListe {
+		grid-template-columns:
+			repeat(
+				auto-fit,
+				minmax(220px, 1fr)
+			);
+	}
+
+
+	.rezept-card {
+		min-height: 180px;
+	}
+
+
+	/* Rezeptdetail */
+
+	#rezeptDetails {
+		max-width: none;
+	}
+
+
+	.rezept-bild {
+		max-height: 400px;
+	}
+}
+
+
+/* ---------------------------------------------------------
+   19. Kleine Smartphones
+   --------------------------------------------------------- */
+
+@media (max-width: 500px) {
+
+	header nav {
+		flex-direction: column;
+	}
+
+
+	header nav a,
+	#resetBtn,
+	#rezeptBtn {
+		width: 100%;
+	}
+
+
+	#rezeptListe {
+		grid-template-columns: 1fr;
+	}
+
+
+	.rezept-card {
+		min-height: 200px;
+	}
+
+
+	.rezept-card-title {
+		padding: 15px;
+	}
+
+
+	.rezept-zubereitung {
+		padding-left: 28px;
 	}
 }
