@@ -1,228 +1,40 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>Rezepte</title>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-	font-size: 24px; /* Base font size */
-    padding: 20px;
-}
+		<link
+			rel="stylesheet"
+			href="assets/css/main.css"
+		>
 
-/* ===================== KARTE ===================== */
-#map-container {
-    position: relative;
-    max-width: 1200px;
-    margin-top: 20px;
-}
+		<title>Rezepte</title>
+	</head>
 
-#map-container.hidden {
-    display: none;
-}
+	<body>
 
-#map-container img {
-    width: 100%;
-    display: block;
-}
+		<header>
+			<h1>Rezepte</h1>
 
-.marker {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    background: red;
-    border-radius: 50%;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-	cursor: pointer;
-}
+			<nav aria-label="Seitennavigation">
+				<a href="index.html">
+					Einkaufsliste
+				</a>
+			</nav>
+		</header>
 
-/* Popup für Zutaten */
-.popup {
-    position: absolute;
-    background: white;
-    border: 1px solid #333;
-    padding: 6px 10px;
-    font-size: 12px;
-    display: none;
-    z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-	}
+		<main>
 
-/* ===================== LAYOUT ===================== */
-#listen-container {
-    display: flex;
-    gap: 30px;
-    margin-top: 20px;
-    align-items: flex-start;
-}
+			<section>
+				<h2>Gerichte</h2>
 
-#controls {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 10px;
-}
+				<div id="rezeptListe"></div>
+			</section>
 
-.gericht {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-}
+		</main>
 
-.gericht label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
+		<script src="assets/js/rezepte.js"></script>
 
-.icon {
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-}
-
-/* ===================== FULLSCREEN OVERLAY ===================== */
-#iconOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-#iconOverlay img {
-    max-width: 90vw;
-    max-height: 90vh;
-}
-/* ===================== FULLSCREEN OVERLAY END ===================== */
-
-#zutatenListe {
-    padding: 10px;
-    min-width: 200px;
-}
-
-#zutatenListe li {
-    margin-bottom: 6px;
-}
-
-/* ===================== MARKTAUSWAHL ===================== */
-#marktAuswahl label {
-    display: block;
-    margin-bottom: 6px;
-    cursor: pointer;
-}
-</style>
-</head>
-
-<body>
-
-<h1>Rezepte</h1>
-
-<a href="index.html"><button id="rezeptBtn"; style="padding:24px 24px;">Zurück</button> </a>
-<br><br>
-
-<!-- ===================== LISTEN ===================== -->
-<div id="listen-container">
-
-    <!-- GERICHTE -->
-    <div style="flex:1; max-width: 600px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <h3 style="margin:0;">Gerichte</h3>	
-        </div>
-
-        <div id="controls">
-            <div class="gericht">
-                <a href="gericht1.html"><label> Mustergericht</label> </a>
-                <img src="gericht1.png" class="icon">
-            </div>
-            <div class="gericht">
-                <a href="gericht2.html"><label> Mustergericht</label> </a>
-                <img src="gericht2.png" class="icon">
-            </div>
-            <div class="gericht">
-                <a href="gericht3.html"><label> Hähnchen mit Brokkoli und Kartoffelspalten</label> </a>
-                <img src="gericht3.png" class="icon">
-            </div>
-			<div class="gericht">
-                <a href="gericht4.html"><label> Hähnchen mit Pflaumen-Sriracha-Soße</label> </a>
-                <img src="gericht4.png" class="icon">
-            </div>
-            <div class="gericht">
-                <a href="gericht5.html"><label> Mustergericht</label> </a>
-                <img src="gericht5.png" class="icon">
-            </div>
-            <div class="gericht">
-                <a href="gericht6.html"><label> Mustergericht</label> </a>
-                <img src="gericht6.png" class="icon">
-            </div>
-        </div>
-    </div>
-	
-	
-<!-- ===================== ICON OVERLAY ===================== -->
-<div id="iconOverlay">
-    <img id="iconOverlayImg">
-</div>
-<script>
-/* ===================== ICON OVERLAY ===================== */
-const overlay = document.getElementById("iconOverlay");
-const overlayImg = document.getElementById("iconOverlayImg");
-
-document.querySelectorAll(".icon").forEach(icon => {
-    icon.addEventListener("click", e => {
-        e.stopPropagation();
-        overlayImg.src = icon.src;
-        overlay.style.display = "flex";
-    });
-});
-
-overlay.addEventListener("click", () => overlay.style.display = "none");
-
-/* ===================== LOCAL STORAGE ===================== */
-const STORAGE_KEY = "eingekaufteGerichte";
-
-function saveState() {
-    const state = {};
-    document.querySelectorAll("#controls input").forEach(cb => {
-        state[cb.id] = cb.checked;
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-document.querySelectorAll("#controls input").forEach(cb => {
-    cb.addEventListener("change", () => {
-        saveState();
-        updateMap();
-    });
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        const state = JSON.parse(saved);
-        document.querySelectorAll("#controls input").forEach(cb => {
-            cb.checked = !!state[cb.id];
-        });
-    }
-    updateMap();
-});
-
-/* ===================== RESET ===================== */
-document.getElementById("resetBtn").addEventListener("click", () => {
-    document.querySelectorAll("#controls input").forEach(cb => cb.checked = false);
-    localStorage.removeItem(STORAGE_KEY);
-    updateMap();
-});
-</script>
-
-</body>
+	</body>
 </html>
