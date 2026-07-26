@@ -1,0 +1,62 @@
+{
+  "id": "gericht3",
+  "name": "Hähnchen mit Brokkoli und Kartoffelspalten",
+  "bild": "bilder/gericht3.png",
+
+  "zutaten": [
+    {
+      "id": "haehnchenbrust",
+      "name": "Hähnchenbrust",
+      "menge": 300,
+      "einheit": "g"
+    },
+    {
+      "id": "kartoffelnFestkochend",
+      "name": "Kartoffeln, festkochend",
+      "menge": 750,
+      "einheit": "g"
+    },
+    {
+      "id": "brokkoli",
+      "name": "Brokkoli",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "tomate",
+      "name": "Tomate",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "zwiebel",
+      "name": "Zwiebel",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehe",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "cremeFraiche",
+      "name": "Crème fraîche",
+      "menge": 1,
+      "einheit": "Becher"
+    },
+    {
+      "id": "tomatenpesto",
+      "name": "Tomatenpesto",
+      "menge": 50,
+      "einheit": "g"
+    },
+    {
+      "id": "huehnerbruehe",
+      "name": "Hühnerbrühe",
+      "menge": 1,
+      "einheit": "Stk"
+    }
+  ]
+}
