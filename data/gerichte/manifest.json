@@ -2,9 +2,12 @@
   "gerichte": [
     "fleischkaeseSpiegelei.json",
     "geroestetePaprikacremesuppeMitChorizo.json",
-    "gericht3.json",
-    "gericht4.json",
-    "gericht5.json",
-    "gericht6.json"
+    "cremigeChampignonHaehnchenPfanne.json",
+    "hackbaellchenInTomatensauceMitReis.json",
+    "mediterraneGnocchiGemuesepfanne.json",
+    "mildesHaehnchenKokosCurry.json",
+    "ofenlachsMitHonigSenfKruste",
+    "spaghettiMitPaprikaFrischkaeseSauce.json",
+    "zitronenHaehnchenMitOfenkartoffeln.json"
   ]
 }
