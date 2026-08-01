@@ -9,7 +9,7 @@
    --------------------------------------------------------- */
 
 const GERICHTE_MANIFEST =
-	"data/gerichte/_manifest.json";
+	"data/gerichte/00_manifest.json";
 
 const GERICHTE_PFAD =
 	"data/gerichte";
