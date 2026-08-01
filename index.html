@@ -2,54 +2,138 @@
 <html lang="de">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		>
 
-		<link rel="stylesheet" href="assets/css/main.css">
+		<meta
+			name="description"
+			content="Gerichte auswählen, Zutaten zusammenstellen und auf der Marktkarte anzeigen."
+		>
+
+		<link
+			rel="stylesheet"
+			href="assets/css/main.css"
+		>
 
 		<title>Einkaufsliste</title>
 	</head>
 
 	<body>
 
+		<a
+			class="skip-link"
+			href="#main-content"
+		>
+			Zum Hauptinhalt
+		</a>
+
+
 		<!-- ===================== HEADER ===================== -->
-		<header>
-			<h1>Einkaufsliste</h1>
+		<header class="site-header">
 
-			<nav aria-label="Seitennavigation">
-				<button type="button" id="resetBtn">
-					Zurücksetzen
-				</button>
+			<div class="page-container header-content">
 
-				<a href="rezept_uebersicht.html" id="rezeptBtn">
-					Rezepte
-				</a>
-			</nav>
+				<div class="header-heading">
+					<p class="eyebrow">
+						Essensplanung
+					</p>
+
+					<h1>Einkaufsliste</h1>
+
+					<p class="header-description">
+						Wähle Gerichte aus und erhalte automatisch
+						die passende Zutatenliste.
+					</p>
+				</div>
+
+
+				<nav
+					class="header-actions"
+					aria-label="Seitennavigation"
+				>
+					<a
+						href="rezept_uebersicht.html"
+						id="rezeptBtn"
+						class="button button-secondary"
+					>
+						Rezepte
+					</a>
+
+					<button
+						type="button"
+						id="resetBtn"
+						class="button button-danger"
+					>
+						Auswahl zurücksetzen
+					</button>
+				</nav>
+
+			</div>
+
 		</header>
 
 
 		<!-- ===================== HAUPTINHALT ===================== -->
-		<main>
+		<main
+			id="main-content"
+			class="page-container"
+		>
 
-			<!-- ===================== LISTEN ===================== -->
 			<div id="listen-container">
 
 				<!-- ===================== GERICHTE ===================== -->
-				<section>
-					<h2>Gerichte</h2>
+				<section
+					class="panel gerichte-panel"
+					aria-labelledby="gerichte-heading"
+				>
+					<div class="panel-header">
+						<div>
+							<p class="panel-kicker">
+								Schritt 1
+							</p>
+
+							<h2 id="gerichte-heading">
+								Gerichte auswählen
+							</h2>
+						</div>
+					</div>
+
 
 					<!--
-						Wird automatisch durch main.js
-						aus data/gerichte/manifest.json gefüllt.
+						Wird durch main.js aus
+						data/gerichte/manifest.json gefüllt.
 					-->
-					<div id="controls"></div>
+					<div
+						id="controls"
+						class="gerichte-liste"
+					></div>
 				</section>
 
 
 				<!-- ===================== ZUTATENLISTE ===================== -->
-				<section>
-					<h2>Zutatenliste</h2>
+				<section
+					class="panel zutaten-panel"
+					aria-labelledby="zutaten-heading"
+				>
+					<div class="panel-header">
+						<div>
+							<p class="panel-kicker">
+								Schritt 2
+							</p>
 
-					<ul id="zutatenListe">
+							<h2 id="zutaten-heading">
+								Zutatenliste
+							</h2>
+						</div>
+					</div>
+
+
+					<ul
+						id="zutatenListe"
+						aria-live="polite"
+					>
 						<li>
 							<em>Keine Zutaten ausgewählt</em>
 						</li>
@@ -58,40 +142,62 @@
 
 
 				<!-- ===================== MARKTAUSWAHL ===================== -->
-				<section>
-					<h2>Markt</h2>
+				<section
+					class="panel markt-panel"
+					aria-labelledby="markt-heading"
+				>
+					<div class="panel-header">
+						<div>
+							<p class="panel-kicker">
+								Optional
+							</p>
 
-					<div id="marktAuswahl">
+							<h2 id="markt-heading">
+								Markt auswählen
+							</h2>
+						</div>
+					</div>
 
-						<label>
+
+					<fieldset id="marktAuswahl">
+						<legend class="visually-hidden">
+							Karte eines Marktes auswählen
+						</legend>
+
+
+						<label class="markt-option">
 							<input
 								type="radio"
 								name="markt"
 								value="none"
 								checked
 							>
-							Keine Karte
+
+							<span>Keine Karte</span>
 						</label>
 
-						<label>
+
+						<label class="markt-option">
 							<input
 								type="radio"
 								name="markt"
 								value="edeka"
 							>
-							Edeka
+
+							<span>Edeka</span>
 						</label>
 
-						<label>
+
+						<label class="markt-option">
 							<input
 								type="radio"
 								name="markt"
 								value="lidl"
 							>
-							Lidl
-						</label>
 
-					</div>
+							<span>Lidl</span>
+						</label>
+					</fieldset>
 				</section>
 
 			</div>
@@ -100,21 +206,39 @@
 			<!-- ===================== KARTE ===================== -->
 			<section
 				id="map-container"
-				class="hidden"
-				aria-label="Marktkarte"
+				class="map-section hidden"
+				aria-labelledby="map-heading"
 			>
-				<img
-					id="mapImage"
-					src=""
-					alt="Karte des ausgewählten Marktes"
-				>
+				<div class="map-header">
+					<p class="panel-kicker">
+						Orientierung
+					</p>
 
-				<div id="markers"></div>
+					<h2 id="map-heading">
+						Marktkarte
+					</h2>
+				</div>
 
-				<div
-					id="popup"
-					class="popup"
-				></div>
+
+				<div class="map-stage">
+					<img
+						id="mapImage"
+						src=""
+						alt="Karte des ausgewählten Marktes"
+					>
+
+					<div
+						id="markers"
+						aria-label="Positionen der ausgewählten Zutaten"
+					></div>
+
+					<div
+						id="popup"
+						class="popup"
+						role="status"
+						aria-live="polite"
+					></div>
+				</div>
 			</section>
 
 		</main>
@@ -123,9 +247,10 @@
 		<!-- ===================== BILD-OVERLAY ===================== -->
 		<div
 			id="iconOverlay"
+			class="image-overlay"
 			role="dialog"
 			aria-modal="true"
-			aria-label="Rezeptbild"
+			aria-label="Vergrößertes Bild des Gerichts"
 		>
 			<img
 				id="iconOverlayImg"
