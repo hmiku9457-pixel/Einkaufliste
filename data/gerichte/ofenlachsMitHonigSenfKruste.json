@@ -1,0 +1,70 @@
+{
+  "id": "ofenlachsMitHonigSenfKruste",
+  "name": "Ofenlachs mit Honig-Senf-Kruste und Brokkoli",
+  "bild": "data/gerichte/bilder/ofenlachsMitHonigSenfKruste.png",
+  "zutaten": [
+    {
+      "id": "lachsfilet",
+      "name": "Lachsfilet",
+      "menge": 400,
+      "einheit": "g"
+    },
+    {
+      "id": "kartoffeln",
+      "name": "Kartoffeln",
+      "menge": 500,
+      "einheit": "g"
+    },
+    {
+      "id": "brokkoli",
+      "name": "Brokkoli",
+      "menge": 400,
+      "einheit": "g"
+    },
+    {
+      "id": "senf",
+      "name": "Senf",
+      "menge": 2,
+      "einheit": "EL"
+    },
+    {
+      "id": "honig",
+      "name": "Honig",
+      "menge": 1,
+      "einheit": "EL"
+    },
+    {
+      "id": "zitronensaft",
+      "name": "Zitronensaft",
+      "menge": 1,
+      "einheit": "EL"
+    },
+    {
+      "id": "olivenoel",
+      "name": "Olivenöl",
+      "menge": 2,
+      "einheit": "EL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+  "zubereitung": [
+    "Den Backofen auf 200 °C Ober-/Unterhitze vorheizen.",
+    "Die Kartoffeln waschen, in kleine Spalten schneiden und mit 1 EL Olivenöl, Salz und Pfeffer vermengen.",
+    "Die Kartoffeln auf einem Backblech verteilen und 20 Minuten vorbacken.",
+    "Senf, Honig und Zitronensaft miteinander verrühren.",
+    "Den Brokkoli in Röschen teilen, mit 1 EL Olivenöl vermengen und zusammen mit dem Lachs zu den Kartoffeln auf das Backblech geben.",
+    "Die Honig-Senf-Mischung auf dem Lachs verteilen und alles weitere 15 bis 18 Minuten backen.",
+    "Prüfen, ob Kartoffeln und Lachs gar sind, und das Gericht direkt servieren."
+  ]
+}

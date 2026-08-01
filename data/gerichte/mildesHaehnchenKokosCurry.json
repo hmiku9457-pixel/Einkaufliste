@@ -1,0 +1,88 @@
+{
+  "id": "mildesHaehnchenKokosCurry",
+  "name": "Mildes Hähnchen-Kokos-Curry mit Basmatireis",
+  "bild": "data/gerichte/bilder/mildesHaehnchenKokosCurry.png",
+  "zutaten": [
+    {
+      "id": "haehnchenbrustfilet",
+      "name": "Hähnchenbrustfilet",
+      "menge": 400,
+      "einheit": "g"
+    },
+    {
+      "id": "basmatireis",
+      "name": "Basmatireis",
+      "menge": 180,
+      "einheit": "g"
+    },
+    {
+      "id": "rotePaprika",
+      "name": "Rote Paprika",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "karotten",
+      "name": "Karotten",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "zwiebel",
+      "name": "Zwiebel",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehe",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "kokosmilch",
+      "name": "Kokosmilch",
+      "menge": 400,
+      "einheit": "ml"
+    },
+    {
+      "id": "currypulver",
+      "name": "Mildes Currypulver",
+      "menge": 2,
+      "einheit": "TL"
+    },
+    {
+      "id": "oel",
+      "name": "Öl",
+      "menge": 2,
+      "einheit": "EL"
+    },
+    {
+      "id": "limettensaft",
+      "name": "Limetten- oder Zitronensaft",
+      "menge": 1,
+      "einheit": "EL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+  "zubereitung": [
+    "Den Basmatireis nach Packungsanleitung kochen.",
+    "Das Hähnchen in mundgerechte Stücke schneiden. Paprika, Karotten und Zwiebel klein schneiden und den Knoblauch fein hacken.",
+    "Öl in einer großen Pfanne erhitzen und das Hähnchen rundherum anbraten.",
+    "Zwiebel, Karotten, Paprika und Knoblauch dazugeben und etwa 5 Minuten mitbraten.",
+    "Currypulver über das Gemüse streuen und kurz mitrösten.",
+    "Kokosmilch dazugeben und das Curry bei mittlerer Hitze etwa 12 Minuten köcheln lassen, bis das Hähnchen vollständig gar ist.",
+    "Mit Limetten- oder Zitronensaft, Salz und Pfeffer abschmecken und zusammen mit dem Basmatireis servieren."
+  ]
+}

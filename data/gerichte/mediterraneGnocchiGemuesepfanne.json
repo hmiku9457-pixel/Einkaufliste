@@ -1,0 +1,82 @@
+{
+  "id": "mediterraneGnocchiGemuesepfanne",
+  "name": "Mediterrane Gnocchi-Gemüsepfanne",
+  "bild": "data/gerichte/bilder/mediterraneGnocchiGemuesepfanne.png",
+  "zutaten": [
+    {
+      "id": "gnocchi",
+      "name": "Gnocchi",
+      "menge": 500,
+      "einheit": "g"
+    },
+    {
+      "id": "rotePaprika",
+      "name": "Rote Paprika",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "zucchini",
+      "name": "Zucchini",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "cherrytomaten",
+      "name": "Cherrytomaten",
+      "menge": 250,
+      "einheit": "g"
+    },
+    {
+      "id": "zwiebel",
+      "name": "Zwiebel",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehe",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "parmesan",
+      "name": "Parmesan",
+      "menge": 50,
+      "einheit": "g"
+    },
+    {
+      "id": "olivenoel",
+      "name": "Olivenöl",
+      "menge": 2,
+      "einheit": "EL"
+    },
+    {
+      "id": "oregano",
+      "name": "Oregano",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+  "zubereitung": [
+    "Paprika, Zucchini und Zwiebel in mundgerechte Stücke schneiden. Knoblauch fein hacken und Cherrytomaten halbieren.",
+    "Olivenöl in einer großen Pfanne erhitzen und die Gnocchi darin rundherum goldbraun anbraten.",
+    "Die Gnocchi aus der Pfanne nehmen und kurz beiseitestellen.",
+    "Zwiebel, Paprika und Zucchini in derselben Pfanne etwa 6 Minuten anbraten.",
+    "Knoblauch, Cherrytomaten und Oregano dazugeben und weitere 3 Minuten braten.",
+    "Die Gnocchi wieder in die Pfanne geben und alles mit Salz und Pfeffer abschmecken.",
+    "Die Gnocchi-Gemüsepfanne mit geriebenem Parmesan bestreuen und servieren."
+  ]
+}

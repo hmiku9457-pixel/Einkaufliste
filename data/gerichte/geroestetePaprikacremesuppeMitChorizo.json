@@ -2,7 +2,6 @@
   "id": "geroestetePaprikacremesuppeMitChorizo",
   "name": "Geröstete Paprikacremesuppe mit knuspriger Chorizo",
   "bild": "data/gerichte/bilder/geroestetePaprikacremesuppeMitChorizo.png",
-
   "zutaten": [
     {
       "id": "rotePaprika",
@@ -54,7 +53,7 @@
     },
     {
       "id": "paprikapulverEdelsuess",
-      "name": "Paprikapulver (edelsüß)",
+      "name": "Paprikapulver edelsüß",
       "menge": 1,
       "einheit": "TL"
     },
@@ -67,7 +66,7 @@
     {
       "id": "petersilie",
       "name": "Petersilie",
-      "menge": 1,
+      "menge": 0.5,
       "einheit": "Bund"
     },
     {
@@ -89,14 +88,13 @@
       "einheit": "n. B."
     }
   ],
-
   "zubereitung": [
-    "Backofen auf 220 °C Ober-/Unterhitze vorheizen. Paprika halbieren, entkernen und zusammen mit der geviertelten Zwiebel auf ein Backblech legen. Mit etwas Olivenöl beträufeln und etwa 25 Minuten rösten, bis die Haut stellenweise dunkel wird.",
-    "Währenddessen die Kartoffeln schälen und würfeln. Zusammen mit den Knoblauchzehen in der Gemüsebrühe etwa 15 Minuten weich kochen.",
-    "Die gerösteten Paprika und Zwiebeln zu den Kartoffeln geben und alles fein pürieren.",
-    "Sahne einrühren und die Suppe mit Paprikapulver, Zitronensaft, Salz und Pfeffer abschmecken. Bei Bedarf nochmals kurz erhitzen.",
-    "Die Chorizo in kleine Würfel oder Scheiben schneiden und ohne zusätzliches Öl in einer Pfanne knusprig anbraten.",
-    "Die Petersilie fein hacken und das Ciabatta oder Baguette nach Belieben kurz aufbacken.",
-    "Die Suppe auf Teller verteilen, mit der knusprigen Chorizo und Petersilie garnieren und zusammen mit dem Brot servieren."
+    "Den Backofen auf 220 °C Ober-/Unterhitze vorheizen. Die Paprika halbieren, entkernen und zusammen mit der geviertelten Zwiebel auf ein Backblech legen.",
+    "Paprika und Zwiebel mit Olivenöl beträufeln und etwa 25 Minuten rösten, bis die Paprikahaut stellenweise dunkel wird.",
+    "Währenddessen die Kartoffeln schälen, würfeln und zusammen mit den Knoblauchzehen in der Gemüsebrühe etwa 15 Minuten weich kochen.",
+    "Die gerösteten Paprika und Zwiebeln in den Topf geben und alles fein pürieren.",
+    "Sahne einrühren und die Suppe mit Paprikapulver, Zitronensaft, Salz und Pfeffer abschmecken.",
+    "Die Chorizo klein schneiden und ohne zusätzliches Öl in einer Pfanne knusprig anbraten.",
+    "Die Suppe mit Chorizo und gehackter Petersilie garnieren und zusammen mit Ciabatta servieren."
   ]
 }

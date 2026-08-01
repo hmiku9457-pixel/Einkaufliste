@@ -1,0 +1,82 @@
+{
+  "id": "spaghettiMitPaprikaFrischkaeseSauce",
+  "name": "Spaghetti mit cremiger Paprika-Frischkäse-Sauce",
+  "bild": "data/gerichte/bilder/spaghettiMitPaprikaFrischkaeseSauce.png",
+  "zutaten": [
+    {
+      "id": "spaghetti",
+      "name": "Spaghetti",
+      "menge": 250,
+      "einheit": "g"
+    },
+    {
+      "id": "rotePaprika",
+      "name": "Rote Paprika",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "zwiebel",
+      "name": "Zwiebel",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehe",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "frischkaese",
+      "name": "Frischkäse",
+      "menge": 150,
+      "einheit": "g"
+    },
+    {
+      "id": "gemuesebruehe",
+      "name": "Gemüsebrühe",
+      "menge": 150,
+      "einheit": "ml"
+    },
+    {
+      "id": "parmesan",
+      "name": "Parmesan",
+      "menge": 40,
+      "einheit": "g"
+    },
+    {
+      "id": "olivenoel",
+      "name": "Olivenöl",
+      "menge": 1,
+      "einheit": "EL"
+    },
+    {
+      "id": "paprikapulverEdelsuess",
+      "name": "Paprikapulver edelsüß",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+  "zubereitung": [
+    "Die Spaghetti nach Packungsanleitung in Salzwasser kochen.",
+    "Paprika und Zwiebel klein schneiden und den Knoblauch fein hacken.",
+    "Olivenöl in einer Pfanne erhitzen und Zwiebel, Paprika und Knoblauch etwa 8 Minuten weich braten.",
+    "Gemüsebrühe dazugeben und das Gemüse weitere 5 Minuten köcheln lassen.",
+    "Frischkäse und Paprikapulver einrühren und die Sauce fein pürieren.",
+    "Die Sauce mit Salz und Pfeffer abschmecken und bei Bedarf mit etwas Nudelwasser verdünnen.",
+    "Die Spaghetti mit der Sauce vermengen, mit Parmesan bestreuen und servieren."
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "id": "zitronenHaehnchenMitOfenkartoffeln",
+  "name": "Zitronen-Hähnchen mit Ofenkartoffeln",
+  "bild": "data/gerichte/bilder/zitronenHaehnchenMitOfenkartoffeln.png",
+  "zutaten": [
+    {
+      "id": "haehnchenbrustfilet",
+      "name": "Hähnchenbrustfilet",
+      "menge": 400,
+      "einheit": "g"
+    },
+    {
+      "id": "kartoffeln",
+      "name": "Kartoffeln",
+      "menge": 600,
+      "einheit": "g"
+    },
+    {
+      "id": "zitrone",
+      "name": "Zitrone",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehen",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "naturjoghurt",
+      "name": "Naturjoghurt",
+      "menge": 150,
+      "einheit": "g"
+    },
+    {
+      "id": "olivenoel",
+      "name": "Olivenöl",
+      "menge": 3,
+      "einheit": "EL"
+    },
+    {
+      "id": "rosmarin",
+      "name": "Rosmarin",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "paprikapulverEdelsuess",
+      "name": "Paprikapulver edelsüß",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+  "zubereitung": [
+    "Den Backofen auf 210 °C Ober-/Unterhitze vorheizen.",
+    "Die Kartoffeln gründlich waschen, in Spalten schneiden und mit 2 EL Olivenöl, Rosmarin, Salz und Pfeffer vermengen.",
+    "Die Kartoffeln auf einem Backblech verteilen und etwa 35 Minuten backen.",
+    "Das Hähnchen mit Paprikapulver, Salz und Pfeffer würzen und in 1 EL Olivenöl von beiden Seiten anbraten.",
+    "Knoblauch fein hacken. Die Hälfte der Zitrone auspressen und den Saft zusammen mit dem Knoblauch zum Hähnchen geben.",
+    "Das Hähnchen bei mittlerer Hitze fertig garen.",
+    "Naturjoghurt mit etwas Zitronensaft, Salz und Pfeffer verrühren und zusammen mit Hähnchen und Ofenkartoffeln servieren."
+  ]
+}

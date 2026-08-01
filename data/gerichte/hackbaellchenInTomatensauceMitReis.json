@@ -1,0 +1,88 @@
+{
+  "id": "hackbaellchenInTomatensauceMitReis",
+  "name": "Hackbällchen in Tomatensauce mit Reis",
+  "bild": "data/gerichte/bilder/hackbaellchenInTomatensauceMitReis.png",
+  "zutaten": [
+    {
+      "id": "hackfleischGemischt",
+      "name": "Gemischtes Hackfleisch",
+      "menge": 400,
+      "einheit": "g"
+    },
+    {
+      "id": "ei",
+      "name": "Ei",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "semmelbroesel",
+      "name": "Semmelbrösel",
+      "menge": 3,
+      "einheit": "EL"
+    },
+    {
+      "id": "zwiebel",
+      "name": "Zwiebel",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehe",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "passierteTomaten",
+      "name": "Passierte Tomaten",
+      "menge": 500,
+      "einheit": "ml"
+    },
+    {
+      "id": "reis",
+      "name": "Reis",
+      "menge": 180,
+      "einheit": "g"
+    },
+    {
+      "id": "oel",
+      "name": "Öl",
+      "menge": 2,
+      "einheit": "EL"
+    },
+    {
+      "id": "oregano",
+      "name": "Oregano",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "paprikapulverEdelsuess",
+      "name": "Paprikapulver edelsüß",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+  "zubereitung": [
+    "Den Reis nach Packungsanleitung kochen.",
+    "Hackfleisch, Ei, Semmelbrösel, Paprikapulver, Salz und Pfeffer miteinander vermengen.",
+    "Aus der Hackfleischmasse kleine Bällchen formen.",
+    "Öl in einer großen Pfanne erhitzen und die Hackbällchen rundherum anbraten. Anschließend aus der Pfanne nehmen.",
+    "Zwiebel und Knoblauch fein hacken und im verbliebenen Bratfett anschwitzen.",
+    "Passierte Tomaten und Oregano dazugeben und die Sauce etwa 10 Minuten köcheln lassen.",
+    "Die Hackbällchen in die Sauce geben, vollständig durchgaren und zusammen mit dem Reis servieren."
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "id": "cremigeChampignonHaehnchenPfanne",
+  "name": "Cremige Champignon-Hähnchen-Pfanne",
+  "bild": "data/gerichte/bilder/cremigeChampignonHaehnchenPfanne.png",
+  "zutaten": [
+    {
+      "id": "haehnchenbrustfilet",
+      "name": "Hähnchenbrustfilet",
+      "menge": 400,
+      "einheit": "g"
+    },
+    {
+      "id": "champignons",
+      "name": "Champignons",
+      "menge": 300,
+      "einheit": "g"
+    },
+    {
+      "id": "zwiebel",
+      "name": "Zwiebel",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehe",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "sahne",
+      "name": "Sahne",
+      "menge": 200,
+      "einheit": "ml"
+    },
+    {
+      "id": "gemuesebruehe",
+      "name": "Gemüsebrühe",
+      "menge": 100,
+      "einheit": "ml"
+    },
+    {
+      "id": "reis",
+      "name": "Reis",
+      "menge": 180,
+      "einheit": "g"
+    },
+    {
+      "id": "oel",
+      "name": "Öl",
+      "menge": 2,
+      "einheit": "EL"
+    },
+    {
+      "id": "paprikapulverEdelsuess",
+      "name": "Paprikapulver edelsüß",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+  "zubereitung": [
+    "Den Reis nach Packungsanleitung kochen.",
+    "Das Hähnchen in mundgerechte Stücke schneiden und mit Paprikapulver, Salz und Pfeffer würzen.",
+    "Öl in einer großen Pfanne erhitzen und das Hähnchen rundherum anbraten. Anschließend aus der Pfanne nehmen.",
+    "Zwiebel und Knoblauch fein hacken. Die Champignons in Scheiben schneiden.",
+    "Zwiebel, Knoblauch und Champignons in derselben Pfanne kräftig anbraten.",
+    "Mit Gemüsebrühe und Sahne ablöschen und die Sauce einige Minuten köcheln lassen.",
+    "Das Hähnchen wieder in die Pfanne geben, vollständig durchgaren und die Pfanne zusammen mit dem Reis servieren."
+  ]
+}
