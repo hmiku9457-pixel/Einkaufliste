@@ -1,0 +1,102 @@
+{
+  "id": "geroestetePaprikacremesuppeMitChorizo",
+  "name": "Geröstete Paprikacremesuppe mit knuspriger Chorizo",
+  "bild": "data/gerichte/bilder/geroestetePaprikacremesuppeMitChorizo.png",
+
+  "zutaten": [
+    {
+      "id": "rotePaprika",
+      "name": "Rote Paprika",
+      "menge": 4,
+      "einheit": "Stk"
+    },
+    {
+      "id": "zwiebel",
+      "name": "Zwiebel",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "knoblauch",
+      "name": "Knoblauchzehen",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "kartoffeln",
+      "name": "Kartoffeln",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "gemuesebruehe",
+      "name": "Gemüsebrühe",
+      "menge": 700,
+      "einheit": "ml"
+    },
+    {
+      "id": "sahne",
+      "name": "Sahne",
+      "menge": 80,
+      "einheit": "ml"
+    },
+    {
+      "id": "chorizo",
+      "name": "Chorizo",
+      "menge": 150,
+      "einheit": "g"
+    },
+    {
+      "id": "olivenoel",
+      "name": "Olivenöl",
+      "menge": 2,
+      "einheit": "EL"
+    },
+    {
+      "id": "paprikapulverEdelsuess",
+      "name": "Paprikapulver (edelsüß)",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "zitronensaft",
+      "name": "Zitronensaft",
+      "menge": 2,
+      "einheit": "TL"
+    },
+    {
+      "id": "petersilie",
+      "name": "Petersilie",
+      "menge": 1,
+      "einheit": "Bund"
+    },
+    {
+      "id": "ciabatta",
+      "name": "Ciabatta",
+      "menge": 1,
+      "einheit": "Stk"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "n. B."
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "n. B."
+    }
+  ],
+
+  "zubereitung": [
+    "Backofen auf 220 °C Ober-/Unterhitze vorheizen. Paprika halbieren, entkernen und zusammen mit der geviertelten Zwiebel auf ein Backblech legen. Mit etwas Olivenöl beträufeln und etwa 25 Minuten rösten, bis die Haut stellenweise dunkel wird.",
+    "Währenddessen die Kartoffeln schälen und würfeln. Zusammen mit den Knoblauchzehen in der Gemüsebrühe etwa 15 Minuten weich kochen.",
+    "Die gerösteten Paprika und Zwiebeln zu den Kartoffeln geben und alles fein pürieren.",
+    "Sahne einrühren und die Suppe mit Paprikapulver, Zitronensaft, Salz und Pfeffer abschmecken. Bei Bedarf nochmals kurz erhitzen.",
+    "Die Chorizo in kleine Würfel oder Scheiben schneiden und ohne zusätzliches Öl in einer Pfanne knusprig anbraten.",
+    "Die Petersilie fein hacken und das Ciabatta oder Baguette nach Belieben kurz aufbacken.",
+    "Die Suppe auf Teller verteilen, mit der knusprigen Chorizo und Petersilie garnieren und zusammen mit dem Brot servieren."
+  ]
+}
