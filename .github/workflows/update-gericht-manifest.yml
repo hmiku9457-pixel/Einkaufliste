@@ -1,0 +1,90 @@
+name: Gerichte-Manifest aktualisieren
+
+on:
+  push:
+    branches:
+      - main
+
+    paths:
+      - "data/gerichte/*.json"
+      - "!data/gerichte/00_*.json"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gerichte-manifest-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update-manifest:
+    name: Manifest generieren
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Manifest generieren
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+
+          gerichte_ordner = Path("data/gerichte")
+          manifest_datei = gerichte_ordner / "00_manifest.json"
+
+          dateien = sorted(
+              (
+                  datei.name
+                  for datei in gerichte_ordner.glob("*.json")
+                  if datei.is_file()
+                  and not datei.name.startswith("00_")
+              ),
+              key=str.casefold
+          )
+
+          manifest = {
+              "gerichte": dateien
+          }
+
+          inhalt = (
+              json.dumps(
+                  manifest,
+                  ensure_ascii=False,
+                  indent=2
+              )
+              + "\n"
+          )
+
+          manifest_datei.write_text(
+              inhalt,
+              encoding="utf-8"
+          )
+
+          print(
+              f"{manifest_datei} wurde mit "
+              f"{len(dateien)} Gerichten erzeugt."
+          )
+          PY
+
+      - name: Änderungen speichern
+        shell: bash
+        run: |
+          git add data/gerichte/00_manifest.json
+
+          if git diff --cached --quiet; then
+            echo "Das Manifest ist bereits aktuell."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "chore: Gerichte-Manifest aktualisieren"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
