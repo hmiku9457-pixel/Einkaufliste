@@ -9,7 +9,7 @@
    --------------------------------------------------------- */
 
 const GERICHTE_MANIFEST =
-	"data/gerichte/manifest.json";
+	"data/gerichte/_manifest.json";
 
 const GERICHTE_PFAD =
 	"data/gerichte";
@@ -25,7 +25,7 @@ const STORAGE_KEY =
 const maps = {
 
 	edeka: {
-		image: "data/laeden/karte-edeka.png",
+		image: "karte-edeka.png",
 
 		zutaten: {
 
@@ -58,7 +58,7 @@ const maps = {
 
 
 	lidl: {
-		image: "data/laeden/karte-lidl.png",
+		image: "karte-lidl.png",
 
 		zutaten: {
 
@@ -160,6 +160,23 @@ async function loadGerichte() {
 		const datei
 		of manifest.gerichte
 	) {
+
+		/*
+		 * Ungültige Einträge im Manifest überspringen.
+		 */
+		if (
+			typeof datei !== "string" ||
+			datei.trim() === ""
+		) {
+
+			console.warn(
+				"Ungültiger Eintrag im Gerichte-Manifest wurde übersprungen:",
+				datei
+			);
+
+			continue;
+		}
+
 
 		try {
 
@@ -282,13 +299,133 @@ function formatMenge(
 }
 
 
+/* ---------------------------------------------------------
+   6. Optionale Bilder
+   --------------------------------------------------------- */
+
+/**
+ * Lädt ein Bild und blendet es erst ein, wenn die Datei
+ * erfolgreich geladen wurde.
+ *
+ * Falls die Datei nicht existiert, wird das Bildelement
+ * vollständig entfernt. Der 404-Fehler bleibt weiterhin
+ * in der Browserkonsole sichtbar.
+ *
+ * @param {HTMLImageElement} image
+ * @param {string} imagePath
+ */
+function loadOptionalImage(
+	image,
+	imagePath
+) {
+
+	if (
+		!imagePath ||
+		typeof imagePath !== "string"
+	) {
+
+		image.remove();
+
+		return;
+	}
+
+
+	/*
+	 * Verhindert, dass während des Ladevorgangs kurz ein
+	 * defektes Bildsymbol angezeigt wird.
+	 */
+	image.hidden =
+		true;
+
+
+	image.addEventListener(
+		"load",
+		() => {
+
+			image.hidden =
+				false;
+		},
+		{
+			once: true
+		}
+	);
+
+
+	image.addEventListener(
+		"error",
+		() => {
+
+			image.remove();
+		},
+		{
+			once: true
+		}
+	);
+
+
+	image.src =
+		imagePath;
+}
+
+
+/**
+ * Setzt ein Hintergrundbild erst dann, wenn es erfolgreich
+ * geladen wurde.
+ *
+ * Bei einem Fehler bleibt lediglich die normale
+ * Hintergrundfarbe des Elements sichtbar.
+ *
+ * @param {HTMLElement} element
+ * @param {string} imagePath
+ */
+function setOptionalBackgroundImage(
+	element,
+	imagePath
+) {
+
+	if (
+		!imagePath ||
+		typeof imagePath !== "string"
+	) {
+
+		return;
+	}
+
+
+	const image =
+		new Image();
+
+
+	image.addEventListener(
+		"load",
+		() => {
+
+			element.style.backgroundImage =
+				`url(${JSON.stringify(imagePath)})`;
+		},
+		{
+			once: true
+		}
+	);
+
+
+	/*
+	 * Kein eigener Error-Handler notwendig:
+	 * Bei einem Fehler wird einfach kein Hintergrundbild
+	 * gesetzt. Der 404 bleibt in der Konsole sichtbar.
+	 */
+	image.src =
+		imagePath;
+}
+
+
 /* =========================================================
    EINKAUFSLISTE
    ========================================================= */
 
 
 /* ---------------------------------------------------------
-   6. Gerichte für Einkaufsliste darstellen
+   7. Gerichte für Einkaufsliste darstellen
    --------------------------------------------------------- */
 
 /**
@@ -366,9 +503,6 @@ function renderGerichte(
 						"img"
 					);
 
-				image.src =
-					gericht.bild;
-
 				image.alt =
 					gericht.name;
 
@@ -378,9 +512,18 @@ function renderGerichte(
 				image.loading =
 					"lazy";
 
+				image.decoding =
+					"async";
+
 
 				container.appendChild(
 					image
+				);
+
+
+				loadOptionalImage(
+					image,
+					gericht.bild
 				);
 			}
 
@@ -394,7 +537,7 @@ function renderGerichte(
 
 
 /* ---------------------------------------------------------
-   7. Ausgewählte Gerichte
+   8. Ausgewählte Gerichte
    --------------------------------------------------------- */
 
 /**
@@ -441,7 +584,7 @@ function getSelectedGerichte(
 
 
 /* ---------------------------------------------------------
-   8. Einkaufsliste berechnen
+   9. Einkaufsliste berechnen
    --------------------------------------------------------- */
 
 /**
@@ -559,7 +702,7 @@ function createShoppingList(
 
 
 /* ---------------------------------------------------------
-   9. Einkaufsliste darstellen
+   10. Einkaufsliste darstellen
    --------------------------------------------------------- */
 
 /**
@@ -636,7 +779,7 @@ function renderShoppingList(
 
 
 /* ---------------------------------------------------------
-   10. Karte darstellen
+   11. Karte darstellen
    --------------------------------------------------------- */
 
 /**
@@ -711,7 +854,7 @@ function renderMap(
 
 
 /* ---------------------------------------------------------
-   11. Kartenmarker
+   12. Kartenmarker
    --------------------------------------------------------- */
 
 /**
@@ -845,7 +988,7 @@ function renderMarkers(
 
 
 /* ---------------------------------------------------------
-   12. Karten-Popup
+   13. Karten-Popup
    --------------------------------------------------------- */
 
 /**
@@ -902,7 +1045,7 @@ function showPopup(
 /**
  * Schließt das Zutaten-Popup.
  *
- * @param {HTMLElement} popup
+ * @param {HTMLElement|null} popup
  */
 function hidePopup(
 	popup
@@ -919,7 +1062,7 @@ function hidePopup(
 
 
 /* ---------------------------------------------------------
-   13. Bild-Overlay
+   14. Bild-Overlay
    --------------------------------------------------------- */
 
 /**
@@ -951,8 +1094,8 @@ function openOverlay(
 /**
  * Schließt das Rezeptbild.
  *
- * @param {HTMLElement} overlay
- * @param {HTMLImageElement} overlayImg
+ * @param {HTMLElement|null} overlay
+ * @param {HTMLImageElement|null} overlayImg
  */
 function closeOverlay(
 	overlay,
@@ -982,7 +1125,7 @@ function closeOverlay(
 
 
 /* ---------------------------------------------------------
-   14. LocalStorage
+   15. LocalStorage
    --------------------------------------------------------- */
 
 /**
@@ -1081,7 +1224,7 @@ function loadState(
 
 
 /* ---------------------------------------------------------
-   15. Einkaufsliste aktualisieren
+   16. Einkaufsliste aktualisieren
    --------------------------------------------------------- */
 
 function updateEinkaufslisteView(
@@ -1116,7 +1259,7 @@ function updateEinkaufslisteView(
 
 
 /* ---------------------------------------------------------
-   16. Einkaufsliste zurücksetzen
+   17. Einkaufsliste zurücksetzen
    --------------------------------------------------------- */
 
 function resetSelection(
@@ -1163,7 +1306,7 @@ function resetSelection(
 
 
 /* ---------------------------------------------------------
-   17. Einkaufsliste initialisieren
+   18. Einkaufsliste initialisieren
    --------------------------------------------------------- */
 
 async function initEinkaufsliste() {
@@ -1471,7 +1614,7 @@ async function initEinkaufsliste() {
 
 
 /* ---------------------------------------------------------
-   18. Rezeptübersicht darstellen
+   19. Rezeptübersicht darstellen
    --------------------------------------------------------- */
 
 /**
@@ -1532,8 +1675,10 @@ function renderRezeptUebersicht(
 				gericht.bild
 			) {
 
-				card.style.backgroundImage =
-					`url("${gericht.bild}")`;
+				setOptionalBackgroundImage(
+					card,
+					gericht.bild
+				);
 			}
 
 
@@ -1565,7 +1710,7 @@ function renderRezeptUebersicht(
 
 
 /* ---------------------------------------------------------
-   19. Rezeptübersicht initialisieren
+   20. Rezeptübersicht initialisieren
    --------------------------------------------------------- */
 
 async function initRezeptUebersicht() {
@@ -1599,7 +1744,7 @@ async function initRezeptUebersicht() {
 
 
 /* ---------------------------------------------------------
-   20. Rezept-ID aus URL lesen
+   21. Rezept-ID aus URL lesen
    --------------------------------------------------------- */
 
 /**
@@ -1626,7 +1771,7 @@ function getRezeptIdFromUrl() {
 
 
 /* ---------------------------------------------------------
-   21. Rezept-Metadaten darstellen
+   22. Rezept-Metadaten darstellen
    --------------------------------------------------------- */
 
 function renderRezeptMeta(
@@ -1691,7 +1836,7 @@ function renderRezeptMeta(
 
 
 /* ---------------------------------------------------------
-   22. Rezept-Zutaten darstellen
+   23. Rezept-Zutaten darstellen
    --------------------------------------------------------- */
 
 function renderRezeptZutaten(
@@ -1807,7 +1952,7 @@ function renderRezeptZutaten(
 
 
 /* ---------------------------------------------------------
-   23. Zubereitung darstellen
+   24. Zubereitung darstellen
    --------------------------------------------------------- */
 
 function renderZubereitung(
@@ -1868,7 +2013,8 @@ function renderZubereitung(
 
 			if (
 				typeof schritt !==
-				"string"
+					"string" ||
+				schritt.trim() === ""
 			) {
 
 				return;
@@ -1899,7 +2045,7 @@ function renderZubereitung(
 
 
 /* ---------------------------------------------------------
-   24. Einzelnes Rezept darstellen
+   25. Einzelnes Rezept darstellen
    --------------------------------------------------------- */
 
 function renderRezept(
@@ -1909,6 +2055,10 @@ function renderRezept(
 
 	rezeptDetails.innerHTML =
 		"";
+
+
+	document.title =
+		`${gericht.name} – Rezept`;
 
 
 	const title =
@@ -1934,18 +2084,24 @@ function renderRezept(
 				"img"
 			);
 
-		image.src =
-			gericht.bild;
-
 		image.alt =
 			gericht.name;
 
 		image.className =
 			"rezept-bild";
 
+		image.decoding =
+			"async";
+
 
 		rezeptDetails.appendChild(
 			image
+		);
+
+
+		loadOptionalImage(
+			image,
+			gericht.bild
 		);
 	}
 
@@ -1970,7 +2126,7 @@ function renderRezept(
 
 
 /* ---------------------------------------------------------
-   25. Rezept-Fehler anzeigen
+   26. Rezept-Fehler anzeigen
    --------------------------------------------------------- */
 
 function renderRezeptError(
@@ -2011,7 +2167,7 @@ function renderRezeptError(
 
 
 /* ---------------------------------------------------------
-   26. Einzelnes Rezept initialisieren
+   27. Einzelnes Rezept initialisieren
    --------------------------------------------------------- */
 
 async function initRezept() {
@@ -2082,15 +2238,12 @@ async function initRezept() {
 
 
 /* ---------------------------------------------------------
-   27. Seite erkennen
+   28. Seite erkennen
    --------------------------------------------------------- */
 
 /**
  * Erkennt anhand vorhandener HTML-Elemente automatisch,
  * welche Seite geöffnet wurde.
- *
- * Dadurch benötigt die bestehende index.html keine
- * zusätzliche data-page-Angabe.
  */
 async function init() {
 
@@ -2236,7 +2389,7 @@ async function init() {
 
 
 /* ---------------------------------------------------------
-   28. Start
+   29. Start
    --------------------------------------------------------- */
 
 document.addEventListener(
