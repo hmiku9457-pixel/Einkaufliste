@@ -5,38 +5,199 @@
 
 
 /* ---------------------------------------------------------
-   1. Grundeinstellungen
+   1. Variablen und Grundeinstellungen
    --------------------------------------------------------- */
+
+:root {
+	--color-background: #f4f5f7;
+	--color-surface: #ffffff;
+	--color-surface-hover: #f1f3f5;
+
+	--color-text: #222222;
+	--color-text-muted: #666666;
+
+	--color-border: #d6d9dd;
+	--color-primary: #2f6f4e;
+	--color-primary-hover: #275e42;
+
+	--color-danger: #b83b3b;
+	--color-danger-hover: #9f3030;
+
+	--color-marker: #d62828;
+
+	--shadow-small:
+		0 2px 8px rgba(0, 0, 0, 0.08);
+
+	--shadow-medium:
+		0 6px 20px rgba(0, 0, 0, 0.12);
+
+	--border-radius-small: 6px;
+	--border-radius-medium: 12px;
+
+	--page-width: 1400px;
+}
+
 
 * {
 	box-sizing: border-box;
 }
 
+
+html {
+	scroll-behavior: smooth;
+}
+
+
 body {
 	margin: 0;
-	padding: 20px;
 
 	font-family: Arial, sans-serif;
-	font-size: 24px;
+	font-size: 20px;
+	line-height: 1.5;
 
-	color: #222;
-	background: #fff;
+	color: var(--color-text);
+	background: var(--color-background);
+}
+
+
+img {
+	max-width: 100%;
+}
+
+
+button,
+input {
+	font: inherit;
 }
 
 
 /* ---------------------------------------------------------
-   2. Header
+   2. Allgemeine Hilfsklassen
    --------------------------------------------------------- */
 
-header {
-	margin-bottom: 20px;
+.page-container,
+body > main {
+	width: min(
+		calc(100% - 40px),
+		var(--page-width)
+	);
+
+	margin-right: auto;
+	margin-left: auto;
 }
 
-header h1 {
+
+.visually-hidden {
+	position: absolute;
+
+	width: 1px;
+	height: 1px;
+
+	padding: 0;
+	margin: -1px;
+
+	overflow: hidden;
+
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+
+	border: 0;
+}
+
+
+.skip-link {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	z-index: 10000;
+
+	padding: 10px 16px;
+
+	color: #ffffff;
+	background: #222222;
+
+	border-radius: var(--border-radius-small);
+
+	text-decoration: none;
+
+	transform: translateY(-200%);
+}
+
+
+.skip-link:focus {
+	transform: translateY(0);
+}
+
+
+/* ---------------------------------------------------------
+   3. Header
+   --------------------------------------------------------- */
+
+.site-header,
+body > header {
+	margin-bottom: 30px;
+
+	background: var(--color-surface);
+
+	border-bottom: 1px solid var(--color-border);
+
+	box-shadow: var(--shadow-small);
+}
+
+
+.header-content {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	gap: 30px;
+
+	padding-top: 28px;
+	padding-bottom: 28px;
+}
+
+
+.header-heading {
+	min-width: 0;
+}
+
+
+.header-heading h1,
+body > header h1 {
 	margin-top: 0;
+	margin-bottom: 6px;
+
+	font-size: clamp(2rem, 4vw, 3rem);
+	line-height: 1.1;
 }
 
-header nav {
+
+.eyebrow {
+	margin-top: 0;
+	margin-bottom: 4px;
+
+	color: var(--color-primary);
+
+	font-size: 0.75rem;
+	font-weight: bold;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+
+.header-description {
+	max-width: 700px;
+
+	margin: 0;
+
+	color: var(--color-text-muted);
+
+	font-size: 0.9rem;
+}
+
+
+header nav,
+.header-actions {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
@@ -46,8 +207,19 @@ header nav {
 
 
 /*
- * Buttons und Navigationslinks einheitlich darstellen.
+ * Rezeptübersicht und Rezeptdetailseite verwenden aktuell
+ * einen einfachen Header ohne .header-content.
  */
+body > header:not(.site-header) {
+	padding: 20px;
+}
+
+
+/* ---------------------------------------------------------
+   4. Buttons und Navigationslinks
+   --------------------------------------------------------- */
+
+.button,
 #resetBtn,
 #rezeptBtn,
 header nav a {
@@ -55,91 +227,211 @@ header nav a {
 	align-items: center;
 	justify-content: center;
 
-	padding: 16px 24px;
+	min-height: 52px;
+
+	padding: 12px 20px;
+
+	color: var(--color-text);
+	background: var(--color-surface);
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-small);
 
 	font: inherit;
-	font-size: 1rem;
+	font-size: 0.9rem;
+	font-weight: bold;
+	line-height: 1.2;
 
-	color: #222;
-	background: #f0f0f0;
-
-	border: 1px solid #999;
-	border-radius: 4px;
-
+	text-align: center;
 	text-decoration: none;
 
 	cursor: pointer;
+
+	transition:
+		background-color 0.15s ease,
+		border-color 0.15s ease,
+		color 0.15s ease,
+		transform 0.15s ease,
+		box-shadow 0.15s ease;
 }
 
 
+.button:hover,
 #resetBtn:hover,
 #rezeptBtn:hover,
 header nav a:hover {
-	background: #ddd;
+	background: var(--color-surface-hover);
+
+	border-color: #b7bbc0;
+
+	transform: translateY(-1px);
+
+	box-shadow: var(--shadow-small);
 }
 
 
-#resetBtn:focus-visible,
-#rezeptBtn:focus-visible,
-header nav a:focus-visible,
+.button-secondary,
+#rezeptBtn {
+	color: #ffffff;
+	background: var(--color-primary);
+
+	border-color: var(--color-primary);
+}
+
+
+.button-secondary:hover,
+#rezeptBtn:hover {
+	color: #ffffff;
+	background: var(--color-primary-hover);
+
+	border-color: var(--color-primary-hover);
+}
+
+
+.button-danger,
+#resetBtn {
+	color: #ffffff;
+	background: var(--color-danger);
+
+	border-color: var(--color-danger);
+}
+
+
+.button-danger:hover,
+#resetBtn:hover {
+	color: #ffffff;
+	background: var(--color-danger-hover);
+
+	border-color: var(--color-danger-hover);
+}
+
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
 .rezept-card:focus-visible {
-	outline: 3px solid #333;
+	outline: 3px solid #1d4ed8;
 	outline-offset: 3px;
 }
 
 
 /* ---------------------------------------------------------
-   3. Hauptlayout Einkaufsliste
+   5. Hauptlayout Einkaufsliste
    --------------------------------------------------------- */
 
+#main-content {
+	padding-bottom: 40px;
+}
+
+
 #listen-container {
-	display: flex;
-	align-items: flex-start;
+	display: grid;
 
-	gap: 30px;
-	margin-top: 20px;
-}
+	grid-template-columns:
+		minmax(320px, 1.4fr)
+		minmax(280px, 1fr)
+		minmax(220px, 0.7fr);
 
+	align-items: start;
 
-#listen-container > section:first-child {
-	flex: 1;
-
-	max-width: 600px;
-	min-width: 0;
-}
-
-
-#listen-container > section:nth-child(2) {
-	flex: 1;
-
-	min-width: 0;
-}
-
-
-#listen-container h2 {
-	margin-top: 0;
+	gap: 24px;
 }
 
 
 /* ---------------------------------------------------------
-   4. Gerichte
+   6. Allgemeine Panels
    --------------------------------------------------------- */
 
-#controls {
-	max-height: 300px;
+.panel {
+	min-width: 0;
 
-	padding: 10px;
+	padding: 24px;
+
+	background: var(--color-surface);
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-medium);
+
+	box-shadow: var(--shadow-small);
+}
+
+
+.panel-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+
+	gap: 15px;
+
+	margin-bottom: 18px;
+}
+
+
+.panel-header h2,
+.map-header h2 {
+	margin: 0;
+
+	font-size: 1.25rem;
+	line-height: 1.25;
+}
+
+
+.panel-kicker {
+	margin-top: 0;
+	margin-bottom: 2px;
+
+	color: var(--color-primary);
+
+	font-size: 0.7rem;
+	font-weight: bold;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+}
+
+
+/* ---------------------------------------------------------
+   7. Gerichte
+   --------------------------------------------------------- */
+
+#controls,
+.gerichte-liste {
+	max-height: 460px;
+
+	padding-right: 6px;
 
 	overflow-y: auto;
+
+	scrollbar-gutter: stable;
 }
 
 
 .gericht {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 
-	gap: 12px;
+	gap: 14px;
+
+	min-height: 62px;
+
 	margin-bottom: 10px;
+	padding: 8px 10px;
+
+	background: #fafafa;
+
+	border: 1px solid transparent;
+	border-radius: var(--border-radius-small);
+
+	transition:
+		background-color 0.15s ease,
+		border-color 0.15s ease;
+}
+
+
+.gericht:hover {
+	background: var(--color-surface-hover);
+
+	border-color: var(--color-border);
 }
 
 
@@ -151,43 +443,58 @@ header nav a:focus-visible,
 .gericht label {
 	display: flex;
 	align-items: center;
+	flex: 1;
 
-	gap: 6px;
+	gap: 10px;
+
+	min-width: 0;
 
 	cursor: pointer;
 }
 
 
 .gericht input[type="checkbox"] {
+	width: 22px;
+	height: 22px;
+
 	flex-shrink: 0;
+
+	accent-color: var(--color-primary);
 
 	cursor: pointer;
 }
 
 
 .icon {
-	width: 32px;
-	height: 32px;
+	width: 48px;
+	height: 48px;
+
+	flex-shrink: 0;
 
 	object-fit: cover;
+
+	border-radius: var(--border-radius-small);
 
 	cursor: pointer;
 }
 
 
 /* ---------------------------------------------------------
-   5. Zutatenliste
+   8. Zutatenliste
    --------------------------------------------------------- */
 
 #zutatenListe {
-	min-width: 200px;
+	min-width: 0;
 
-	padding: 10px;
+	margin: 0;
+	padding-left: 28px;
 }
 
 
 #zutatenListe li {
-	margin-bottom: 6px;
+	margin-bottom: 8px;
+
+	overflow-wrap: anywhere;
 }
 
 
@@ -196,39 +503,94 @@ header nav a:focus-visible,
 }
 
 
-/* ---------------------------------------------------------
-   6. Marktauswahl
-   --------------------------------------------------------- */
-
-#marktAuswahl label {
-	display: block;
-
-	margin-bottom: 6px;
-
-	cursor: pointer;
+#zutatenListe em {
+	color: var(--color-text-muted);
 }
 
 
+/* ---------------------------------------------------------
+   9. Marktauswahl
+   --------------------------------------------------------- */
+
+#marktAuswahl {
+	min-width: 0;
+
+	margin: 0;
+	padding: 0;
+
+	border: 0;
+}
+
+
+.markt-option,
+#marktAuswahl label {
+	display: flex;
+	align-items: center;
+
+	gap: 10px;
+
+	margin-bottom: 10px;
+	padding: 12px;
+
+	background: #fafafa;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-small);
+
+	cursor: pointer;
+
+	transition:
+		background-color 0.15s ease,
+		border-color 0.15s ease;
+}
+
+
+.markt-option:hover,
+#marktAuswahl label:hover {
+	background: var(--color-surface-hover);
+
+	border-color: #aeb3b8;
+}
+
+
+.markt-option:last-child,
 #marktAuswahl label:last-child {
 	margin-bottom: 0;
 }
 
 
 #marktAuswahl input[type="radio"] {
+	width: 20px;
+	height: 20px;
+
+	flex-shrink: 0;
+
+	accent-color: var(--color-primary);
+
 	cursor: pointer;
 }
 
 
 /* ---------------------------------------------------------
-   7. Karte
+   10. Karte
    --------------------------------------------------------- */
 
-#map-container {
-	position: relative;
-
+#map-container,
+.map-section {
 	max-width: 1200px;
 
-	margin-top: 20px;
+	margin-top: 30px;
+	margin-right: auto;
+	margin-left: auto;
+
+	padding: 24px;
+
+	background: var(--color-surface);
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-medium);
+
+	box-shadow: var(--shadow-small);
 }
 
 
@@ -237,22 +599,44 @@ header nav a:focus-visible,
 }
 
 
-#map-container > img {
+.map-header {
+	margin-bottom: 18px;
+}
+
+
+/*
+ * Die Karte, Marker und Popups müssen dieselbe
+ * Positionierungsfläche verwenden.
+ */
+.map-stage {
+	position: relative;
+
+	overflow: visible;
+
+	border-radius: var(--border-radius-small);
+}
+
+
+#mapImage,
+.map-stage > img {
 	display: block;
 
 	width: 100%;
+	height: auto;
+
+	border-radius: var(--border-radius-small);
 }
 
 
 /* ---------------------------------------------------------
-   8. Kartenmarker
+   11. Kartenmarker
    --------------------------------------------------------- */
 
 .marker {
 	position: absolute;
 
-	width: 22px;
-	height: 22px;
+	width: 28px;
+	height: 28px;
 
 	display: flex;
 	align-items: center;
@@ -260,22 +644,41 @@ header nav a:focus-visible,
 
 	padding: 0;
 
-	color: white;
-	background: red;
+	color: #ffffff;
+	background: var(--color-marker);
 
-	border: 0;
+	border: 2px solid #ffffff;
 	border-radius: 50%;
 
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: bold;
 	line-height: 1;
 
+	box-shadow:
+		0 2px 6px rgba(0, 0, 0, 0.35);
+
 	cursor: pointer;
+
+	transform: translate(-50%, -50%);
+
+	transition:
+		transform 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+
+.marker:hover {
+	transform:
+		translate(-50%, -50%)
+		scale(1.15);
+
+	box-shadow:
+		0 3px 10px rgba(0, 0, 0, 0.45);
 }
 
 
 /* ---------------------------------------------------------
-   9. Karten-Popup
+   12. Karten-Popup
    --------------------------------------------------------- */
 
 .popup {
@@ -284,26 +687,30 @@ header nav a:focus-visible,
 
 	display: none;
 
-	padding: 6px 10px;
+	max-width: 280px;
 
-	color: #000;
-	background: white;
+	padding: 10px 14px;
 
-	border: 1px solid #333;
+	color: var(--color-text);
+	background: var(--color-surface);
 
-	font-size: 12px;
+	border: 1px solid #555555;
+	border-radius: var(--border-radius-small);
+
+	font-size: 14px;
+	line-height: 1.4;
 	white-space: pre-line;
 
-	box-shadow:
-		0 2px 6px rgba(0, 0, 0, 0.3);
+	box-shadow: var(--shadow-medium);
 }
 
 
 /* ---------------------------------------------------------
-   10. Rezeptbild-Overlay
+   13. Rezeptbild-Overlay
    --------------------------------------------------------- */
 
-#iconOverlay {
+#iconOverlay,
+.image-overlay {
 	position: fixed;
 	inset: 0;
 	z-index: 9999;
@@ -314,19 +721,25 @@ header nav a:focus-visible,
 
 	padding: 20px;
 
-	background: rgba(0, 0, 0, 0.8);
+	background: rgba(0, 0, 0, 0.85);
 
 	cursor: pointer;
 }
 
 
-#iconOverlay img {
+#iconOverlay img,
+.image-overlay img {
 	display: block;
 
 	max-width: 90vw;
 	max-height: 90vh;
 
 	object-fit: contain;
+
+	border-radius: var(--border-radius-small);
+
+	box-shadow:
+		0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -336,7 +749,7 @@ header nav a:focus-visible,
 
 
 /* ---------------------------------------------------------
-   11. Rezeptkarten-Layout
+   14. Rezeptkarten-Layout
    --------------------------------------------------------- */
 
 #rezeptListe {
@@ -351,11 +764,13 @@ header nav a:focus-visible,
 	gap: 20px;
 
 	max-width: 1200px;
+
+	padding-bottom: 40px;
 }
 
 
 /* ---------------------------------------------------------
-   12. Rezeptkarte
+   15. Rezeptkarte
    --------------------------------------------------------- */
 
 .rezept-card {
@@ -368,18 +783,17 @@ header nav a:focus-visible,
 
 	overflow: hidden;
 
-	color: white;
+	color: #ffffff;
 
-	background-color: #555;
+	background-color: #555555;
 	background-size: cover;
 	background-position: center;
 
-	border-radius: 8px;
+	border-radius: var(--border-radius-medium);
 
 	text-decoration: none;
 
-	box-shadow:
-		0 2px 8px rgba(0, 0, 0, 0.25);
+	box-shadow: var(--shadow-small);
 
 	transition:
 		transform 0.15s ease,
@@ -387,10 +801,6 @@ header nav a:focus-visible,
 }
 
 
-/*
- * Dunkler Verlauf über dem Bild,
- * damit der Rezeptname lesbar bleibt.
- */
 .rezept-card::before {
 	content: "";
 
@@ -400,18 +810,17 @@ header nav a:focus-visible,
 	background:
 		linear-gradient(
 			to top,
-			rgba(0, 0, 0, 0.8) 0%,
-			rgba(0, 0, 0, 0.15) 60%,
+			rgba(0, 0, 0, 0.85) 0%,
+			rgba(0, 0, 0, 0.2) 62%,
 			rgba(0, 0, 0, 0) 100%
 		);
 }
 
 
 .rezept-card:hover {
-	transform: translateY(-3px);
+	transform: translateY(-4px);
 
-	box-shadow:
-		0 5px 14px rgba(0, 0, 0, 0.35);
+	box-shadow: var(--shadow-medium);
 }
 
 
@@ -425,6 +834,7 @@ header nav a:focus-visible,
 
 	font-size: 1rem;
 	font-weight: bold;
+	line-height: 1.3;
 
 	text-shadow:
 		0 1px 3px rgba(0, 0, 0, 0.8);
@@ -437,30 +847,42 @@ header nav a:focus-visible,
 
 
 /* ---------------------------------------------------------
-   13. Rezept-Container
+   16. Rezept-Container
    --------------------------------------------------------- */
 
 #rezeptDetails {
 	max-width: 900px;
 
-	margin: 0 auto;
+	margin: 0 auto 40px;
+	padding: 28px;
+
+	background: var(--color-surface);
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-medium);
+
+	box-shadow: var(--shadow-small);
 }
 
 
 #rezeptDetails h1 {
 	margin-top: 0;
 	margin-bottom: 20px;
+
+	line-height: 1.2;
 }
 
 
 #rezeptDetails h2 {
 	margin-top: 35px;
 	margin-bottom: 15px;
+
+	font-size: 1.3rem;
 }
 
 
 /* ---------------------------------------------------------
-   14. Rezeptbild
+   17. Rezeptbild
    --------------------------------------------------------- */
 
 .rezept-bild {
@@ -471,29 +893,29 @@ header nav a:focus-visible,
 
 	object-fit: cover;
 
-	border-radius: 8px;
+	border-radius: var(--border-radius-medium);
 
-	box-shadow:
-		0 2px 8px rgba(0, 0, 0, 0.2);
+	box-shadow: var(--shadow-small);
 }
 
 
 /* ---------------------------------------------------------
-   15. Rezeptinformationen
+   18. Rezeptinformationen
    --------------------------------------------------------- */
 
 .rezept-meta {
 	margin-top: 15px;
 	margin-bottom: 25px;
 
-	font-size: 0.9em;
+	color: var(--color-text-muted);
 
-	color: #555;
+	font-size: 0.9rem;
+	font-weight: bold;
 }
 
 
 /* ---------------------------------------------------------
-   16. Rezept-Zutaten
+   19. Rezept-Zutaten
    --------------------------------------------------------- */
 
 .rezept-zutaten {
@@ -508,22 +930,20 @@ header nav a:focus-visible,
 
 
 /* ---------------------------------------------------------
-   17. Zubereitung
+   20. Zubereitung
    --------------------------------------------------------- */
 
 .rezept-zubereitung {
 	margin: 0;
-
 	padding-left: 35px;
 }
 
 
 .rezept-zubereitung li {
 	margin-bottom: 18px;
-
 	padding-left: 8px;
 
-	line-height: 1.5;
+	line-height: 1.6;
 }
 
 
@@ -533,56 +953,115 @@ header nav a:focus-visible,
 
 
 /* ---------------------------------------------------------
-   18. Tablet / Smartphone
+   21. Kleinere Desktop-Bildschirme / Tablets
+   --------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+
+	#listen-container {
+		grid-template-columns:
+			minmax(300px, 1fr)
+			minmax(260px, 1fr);
+	}
+
+
+	.markt-panel {
+		grid-column: 1 / -1;
+	}
+
+
+	#marktAuswahl {
+		display: grid;
+
+		grid-template-columns:
+			repeat(
+				3,
+				minmax(0, 1fr)
+			);
+
+		gap: 10px;
+	}
+
+
+	.markt-option,
+	#marktAuswahl label {
+		margin-bottom: 0;
+	}
+}
+
+
+/* ---------------------------------------------------------
+   22. Tablet / Smartphone
    --------------------------------------------------------- */
 
 @media (max-width: 800px) {
 
 	body {
-		padding: 15px;
-
 		font-size: 18px;
 	}
 
 
-	header nav {
+	.page-container,
+	body > main {
+		width: min(
+			calc(100% - 30px),
+			var(--page-width)
+		);
+	}
+
+
+	.header-content {
+		flex-direction: column;
+		align-items: stretch;
+
+		padding-top: 22px;
+		padding-bottom: 22px;
+	}
+
+
+	.header-actions {
 		align-items: stretch;
 	}
 
 
-	#resetBtn,
-	#rezeptBtn,
-	header nav a {
-		padding: 14px 18px;
+	.header-actions > * {
+		flex: 1;
 	}
 
-
-	/* Einkaufsliste */
 
 	#listen-container {
-		flex-direction: column;
+		grid-template-columns: 1fr;
 
-		gap: 20px;
+		gap: 18px;
 	}
 
 
-	#listen-container > section {
-		width: 100%;
-		max-width: none;
+	.markt-panel {
+		grid-column: auto;
 	}
 
 
-	#controls {
+	.panel {
+		padding: 20px;
+	}
+
+
+	#controls,
+	.gerichte-liste {
 		max-height: none;
 	}
 
 
-	#zutatenListe {
-		min-width: 0;
+	#marktAuswahl {
+		grid-template-columns: 1fr;
 	}
 
 
-	/* Rezeptübersicht */
+	#map-container,
+	.map-section {
+		padding: 18px;
+	}
+
 
 	#rezeptListe {
 		grid-template-columns:
@@ -598,10 +1077,9 @@ header nav a:focus-visible,
 	}
 
 
-	/* Rezeptdetail */
-
 	#rezeptDetails {
 		max-width: none;
+		padding: 20px;
 	}
 
 
@@ -612,20 +1090,78 @@ header nav a:focus-visible,
 
 
 /* ---------------------------------------------------------
-   19. Kleine Smartphones
+   23. Kleine Smartphones
    --------------------------------------------------------- */
 
 @media (max-width: 500px) {
 
-	header nav {
+	.page-container,
+	body > main {
+		width: min(
+			calc(100% - 20px),
+			var(--page-width)
+		);
+	}
+
+
+	.site-header,
+	body > header {
+		margin-bottom: 20px;
+	}
+
+
+	.header-content {
+		gap: 20px;
+	}
+
+
+	header nav,
+	.header-actions {
 		flex-direction: column;
 	}
 
 
 	header nav a,
+	header nav button,
+	.header-actions > *,
 	#resetBtn,
 	#rezeptBtn {
 		width: 100%;
+	}
+
+
+	.panel {
+		padding: 16px;
+	}
+
+
+	.gericht {
+		align-items: flex-start;
+
+		padding: 10px;
+	}
+
+
+	.gericht label {
+		align-items: flex-start;
+	}
+
+
+	.icon {
+		width: 44px;
+		height: 44px;
+	}
+
+
+	#map-container,
+	.map-section {
+		padding: 12px;
+	}
+
+
+	.marker {
+		width: 26px;
+		height: 26px;
 	}
 
 
@@ -644,7 +1180,28 @@ header nav a:focus-visible,
 	}
 
 
+	#rezeptDetails {
+		padding: 16px;
+	}
+
+
 	.rezept-zubereitung {
 		padding-left: 28px;
+	}
+}
+
+
+/* ---------------------------------------------------------
+   24. Reduzierte Bewegungen
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+	* {
+		scroll-behavior: auto !important;
+
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
 	}
 }
