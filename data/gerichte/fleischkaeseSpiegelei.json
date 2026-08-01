@@ -1,0 +1,46 @@
+{
+  "id": "FleischkaeseSpiegelei",
+  "name": "Angebratener Fleischkäse mit Spiegelei",
+  "bild": "data/gerichte/bilder/icon2.png",
+
+  "zutaten": [
+    {
+      "id": "fleischkaese",
+      "name": "Fleischkäse",
+      "menge": 2,
+      "einheit": "Scheiben"
+    },
+    {
+      "id": "ei",
+      "name": "Ei",
+      "menge": 2,
+      "einheit": "Stk"
+    },
+    {
+      "id": "oel",
+      "name": "Öl",
+      "menge": 1,
+      "einheit": "TL"
+    },
+    {
+      "id": "salz",
+      "name": "Salz",
+      "menge": 1,
+      "einheit": "Prise"
+    },
+    {
+      "id": "pfeffer",
+      "name": "Pfeffer",
+      "menge": 1,
+      "einheit": "Prise"
+    }
+  ],
+
+  "zubereitung": [
+    "Eine beschichtete Pfanne auf mittlere Hitze erwärmen und das Öl hineingeben.",
+    "Die Fleischkäsescheiben in die Pfanne legen und von jeder Seite etwa 3 bis 4 Minuten goldbraun anbraten.",
+    "Den Fleischkäse an den Rand der Pfanne schieben oder kurz herausnehmen.",
+    "Die Eier in die gleiche Pfanne aufschlagen und bei mittlerer bis niedriger Hitze braten, bis das Eiweiß vollständig gestockt ist.",
+    "Die Spiegeleier mit etwas Salz und Pfeffer würzen und zusammen mit dem angebratenen Fleischkäse servieren."
+  ]
+}
