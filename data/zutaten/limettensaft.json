@@ -2,6 +2,6 @@
   "id": "limettensaft",
   "name": "Limettensaft",
   "kategorie": "Obst",
-  "standardEinheit": "EL",
+  "standardEinheit": "ml",
   "quelle": "bestand"
 }

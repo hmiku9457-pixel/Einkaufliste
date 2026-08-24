@@ -2,6 +2,6 @@
   "id": "apfel",
   "name": "Apfel",
   "kategorie": "Obst",
-  "standardEinheit": "Stk",
+  "standardEinheit": "g",
   "quelle": "grundausstattung"
 }

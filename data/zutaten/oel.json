@@ -2,6 +2,6 @@
   "id": "oel",
   "name": "Öl",
   "kategorie": "Öle, Saucen & Würzmittel",
-  "standardEinheit": "EL",
+  "standardEinheit": "ml",
   "quelle": "bestand"
 }

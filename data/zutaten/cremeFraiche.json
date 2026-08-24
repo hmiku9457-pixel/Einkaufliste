@@ -2,6 +2,6 @@
   "id": "cremeFraiche",
   "name": "Crème fraîche",
   "kategorie": "Milchprodukte & Eier",
-  "standardEinheit": "Becher",
+  "standardEinheit": "g",
   "quelle": "bestand"
 }

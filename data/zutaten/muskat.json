@@ -2,6 +2,6 @@
   "id": "muskat",
   "name": "Muskat",
   "kategorie": "Gewürze & Kräuter",
-  "standardEinheit": "Prise",
+  "standardEinheit": "g",
   "quelle": "grundausstattung"
 }

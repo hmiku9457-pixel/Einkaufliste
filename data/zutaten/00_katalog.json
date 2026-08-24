@@ -3,22 +3,22 @@
     "apfel": {
       "name": "Apfel",
       "kategorie": "Obst",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "aubergine": {
       "name": "Aubergine",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "avocado": {
       "name": "Avocado",
       "kategorie": "Obst",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "backpulver": {
       "name": "Backpulver",
       "kategorie": "Backen & Vorrat",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "bacon": {
       "name": "Bacon",
@@ -28,22 +28,22 @@
     "baguette": {
       "name": "Baguette",
       "kategorie": "Brot & Backwaren",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "balsamico": {
       "name": "Balsamico",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "banane": {
       "name": "Banane",
       "kategorie": "Obst",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "basilikum": {
       "name": "Basilikum",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "Bund"
+      "standardEinheit": "g"
     },
     "basmatireis": {
       "name": "Basmatireis",
@@ -53,12 +53,12 @@
     "blumenkohl": {
       "name": "Blumenkohl",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "bratwurst": {
       "name": "Bratwurst",
       "kategorie": "Fleisch",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "braunerZucker": {
       "name": "Brauner Zucker",
@@ -73,7 +73,7 @@
     "brot": {
       "name": "Brot",
       "kategorie": "Brot & Backwaren",
-      "standardEinheit": "Scheiben"
+      "standardEinheit": "g"
     },
     "bulgur": {
       "name": "Bulgur",
@@ -103,12 +103,12 @@
     "chili": {
       "name": "Chilischote",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "chiliflocken": {
       "name": "Chiliflocken",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "chorizo": {
       "name": "Chorizo",
@@ -118,7 +118,7 @@
     "ciabatta": {
       "name": "Ciabatta",
       "kategorie": "Brot & Backwaren",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "couscous": {
       "name": "Couscous",
@@ -128,27 +128,27 @@
     "cremeFraiche": {
       "name": "Crème fraîche",
       "kategorie": "Milchprodukte & Eier",
-      "standardEinheit": "Becher"
+      "standardEinheit": "g"
     },
     "currypasteRot": {
       "name": "Rote Currypaste",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "currypulver": {
       "name": "Mildes Currypulver",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "dill": {
       "name": "Dill",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "Bund"
+      "standardEinheit": "g"
     },
     "ei": {
       "name": "Ei",
       "kategorie": "Milchprodukte & Eier",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "emmentaler": {
       "name": "Emmentaler",
@@ -168,7 +168,7 @@
     "essig": {
       "name": "Essig",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "feta": {
       "name": "Feta",
@@ -178,7 +178,7 @@
     "fleischkaese": {
       "name": "Fleischkäse",
       "kategorie": "Fleisch",
-      "standardEinheit": "Scheiben"
+      "standardEinheit": "g"
     },
     "frischkaese": {
       "name": "Frischkäse",
@@ -188,7 +188,7 @@
     "fruehlingszwiebel": {
       "name": "Frühlingszwiebel",
       "kategorie": "Gemüse",
-      "standardEinheit": "Bund"
+      "standardEinheit": "g"
     },
     "fusilli": {
       "name": "Fusilli",
@@ -203,12 +203,12 @@
     "gehackteTomaten": {
       "name": "Gehackte Tomaten",
       "kategorie": "Konserven & Hülsenfrüchte",
-      "standardEinheit": "Dose"
+      "standardEinheit": "g"
     },
     "gelbePaprika": {
       "name": "Gelbe Paprika",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "gemuesebruehe": {
       "name": "Gemüsebrühe",
@@ -238,12 +238,12 @@
     "gruenePaprika": {
       "name": "Grüne Paprika",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "gurke": {
       "name": "Gurke",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "hackfleischGemischt": {
       "name": "Gemischtes Hackfleisch",
@@ -278,7 +278,7 @@
     "honig": {
       "name": "Honig",
       "kategorie": "Backen & Vorrat",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "huehnerbruehe": {
       "name": "Hühnerbrühe",
@@ -303,7 +303,7 @@
     "karotten": {
       "name": "Karotten",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "kartoffeln": {
       "name": "Kartoffeln",
@@ -318,27 +318,27 @@
     "ketchup": {
       "name": "Ketchup",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "kichererbsen": {
       "name": "Kichererbsen",
       "kategorie": "Konserven & Hülsenfrüchte",
-      "standardEinheit": "Dose"
+      "standardEinheit": "g"
     },
     "kidneybohnen": {
       "name": "Kidneybohnen",
       "kategorie": "Konserven & Hülsenfrüchte",
-      "standardEinheit": "Dose"
+      "standardEinheit": "g"
     },
     "knoblauch": {
       "name": "Knoblauchzehe",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "knoblauchpulver": {
       "name": "Knoblauchpulver",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "kochschinken": {
       "name": "Kochschinken",
@@ -353,12 +353,12 @@
     "koriander": {
       "name": "Koriander",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "Bund"
+      "standardEinheit": "g"
     },
     "kreuzkuemmel": {
       "name": "Kreuzkümmel",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "kuerbis": {
       "name": "Kürbis",
@@ -368,7 +368,7 @@
     "kurkuma": {
       "name": "Kurkuma",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "lachsfilet": {
       "name": "Lachsfilet",
@@ -383,17 +383,17 @@
     "lauch": {
       "name": "Lauch",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "limette": {
       "name": "Limette",
       "kategorie": "Obst",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "limettensaft": {
       "name": "Limettensaft",
       "kategorie": "Obst",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "linsen": {
       "name": "Linsen",
@@ -403,7 +403,7 @@
     "mais": {
       "name": "Mais",
       "kategorie": "Konserven & Hülsenfrüchte",
-      "standardEinheit": "Dose"
+      "standardEinheit": "g"
     },
     "mandeln": {
       "name": "Mandeln",
@@ -413,12 +413,12 @@
     "mango": {
       "name": "Mango",
       "kategorie": "Obst",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "mayonnaise": {
       "name": "Mayonnaise",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "mehl": {
       "name": "Mehl",
@@ -438,7 +438,7 @@
     "muskat": {
       "name": "Muskat",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "Prise"
+      "standardEinheit": "g"
     },
     "naturjoghurt": {
       "name": "Naturjoghurt",
@@ -453,22 +453,22 @@
     "oel": {
       "name": "Öl",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "olivenoel": {
       "name": "Olivenöl",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "orange": {
       "name": "Orange",
       "kategorie": "Obst",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "oregano": {
       "name": "Oregano",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "paniermehl": {
       "name": "Paniermehl",
@@ -478,17 +478,17 @@
     "paprika": {
       "name": "Paprika",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "paprikapulverEdelsuess": {
       "name": "Paprikapulver edelsüß",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "paprikapulverRosenscharf": {
       "name": "Paprikapulver rosenscharf",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "parmesan": {
       "name": "Parmesan",
@@ -513,12 +513,12 @@
     "petersilie": {
       "name": "Petersilie",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "Bund"
+      "standardEinheit": "g"
     },
     "pfeffer": {
       "name": "Pfeffer",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "n. B."
+      "standardEinheit": "g"
     },
     "putenbrust": {
       "name": "Putenbrust",
@@ -538,7 +538,7 @@
     "rapsoel": {
       "name": "Rapsöl",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "reis": {
       "name": "Reis",
@@ -563,17 +563,17 @@
     "rosmarin": {
       "name": "Rosmarin",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "rotePaprika": {
       "name": "Rote Paprika",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "roteZwiebel": {
       "name": "Rote Zwiebel",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "rucola": {
       "name": "Rucola",
@@ -593,27 +593,27 @@
     "salat": {
       "name": "Salat",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "salz": {
       "name": "Salz",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "n. B."
+      "standardEinheit": "g"
     },
     "saureSahne": {
       "name": "Saure Sahne",
       "kategorie": "Milchprodukte & Eier",
-      "standardEinheit": "Becher"
+      "standardEinheit": "g"
     },
     "schmand": {
       "name": "Schmand",
       "kategorie": "Milchprodukte & Eier",
-      "standardEinheit": "Becher"
+      "standardEinheit": "g"
     },
     "schnittlauch": {
       "name": "Schnittlauch",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "Bund"
+      "standardEinheit": "g"
     },
     "schweinefilet": {
       "name": "Schweinefilet",
@@ -628,32 +628,32 @@
     "sellerie": {
       "name": "Sellerie",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "semmelbroesel": {
       "name": "Semmelbrösel",
       "kategorie": "Backen & Vorrat",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "senf": {
       "name": "Senf",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "sesamoel": {
       "name": "Sesamöl",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "sojasauce": {
       "name": "Sojasauce",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "sonnenblumenoel": {
       "name": "Sonnenblumenöl",
       "kategorie": "Öle, Saucen & Würzmittel",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "spaghetti": {
       "name": "Spaghetti",
@@ -668,7 +668,7 @@
     "speisestaerke": {
       "name": "Speisestärke",
       "kategorie": "Backen & Vorrat",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "spinat": {
       "name": "Spinat",
@@ -688,27 +688,27 @@
     "thunfisch": {
       "name": "Thunfisch",
       "kategorie": "Fisch & Meeresfrüchte",
-      "standardEinheit": "Dose"
+      "standardEinheit": "g"
     },
     "thymian": {
       "name": "Thymian",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "toastbrot": {
       "name": "Toastbrot",
       "kategorie": "Brot & Backwaren",
-      "standardEinheit": "Scheiben"
+      "standardEinheit": "g"
     },
     "tomate": {
       "name": "Tomate",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "tomatenmark": {
       "name": "Tomatenmark",
       "kategorie": "Konserven & Hülsenfrüchte",
-      "standardEinheit": "EL"
+      "standardEinheit": "g"
     },
     "tomatenpesto": {
       "name": "Tomatenpesto",
@@ -723,7 +723,7 @@
     "tortillaWraps": {
       "name": "Tortilla-Wraps",
       "kategorie": "Brot & Backwaren",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "walnuesse": {
       "name": "Walnüsse",
@@ -733,27 +733,27 @@
     "weisseBohnen": {
       "name": "Weiße Bohnen",
       "kategorie": "Konserven & Hülsenfrüchte",
-      "standardEinheit": "Dose"
+      "standardEinheit": "g"
     },
     "zimt": {
       "name": "Zimt",
       "kategorie": "Gewürze & Kräuter",
-      "standardEinheit": "TL"
+      "standardEinheit": "g"
     },
     "zitrone": {
       "name": "Zitrone",
       "kategorie": "Obst",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "zitronensaft": {
       "name": "Zitronensaft",
       "kategorie": "Obst",
-      "standardEinheit": "EL"
+      "standardEinheit": "ml"
     },
     "zucchini": {
       "name": "Zucchini",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "zucker": {
       "name": "Zucker",
@@ -763,12 +763,12 @@
     "zutatA": {
       "name": "Zutat A (Platzhalter)",
       "kategorie": "Technisch",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     },
     "zwiebel": {
       "name": "Zwiebel",
       "kategorie": "Gemüse",
-      "standardEinheit": "Stk"
+      "standardEinheit": "g"
     }
   }
 }

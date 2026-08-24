@@ -2,6 +2,6 @@
   "id": "honig",
   "name": "Honig",
   "kategorie": "Backen & Vorrat",
-  "standardEinheit": "EL",
+  "standardEinheit": "g",
   "quelle": "bestand"
 }

@@ -2,6 +2,6 @@
   "id": "brot",
   "name": "Brot",
   "kategorie": "Brot & Backwaren",
-  "standardEinheit": "Scheiben",
+  "standardEinheit": "g",
   "quelle": "grundausstattung"
 }
