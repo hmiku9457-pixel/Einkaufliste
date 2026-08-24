@@ -1,0 +1,244 @@
+media:
+  - name: rezeptbilder
+    label: Rezeptbilder
+    input: data/gerichte/bilder
+    output: data/gerichte/bilder
+    extensions: [jpg, jpeg, png, webp]
+    categories: [image]
+    rename: safe
+
+settings:
+  commit:
+    identity: app
+    templates:
+      create: "CMS: {filename} erstellen"
+      update: "CMS: {filename} aktualisieren"
+      delete: "CMS: {filename} löschen"
+      rename: "CMS: {oldFilename} -> {newFilename}"
+
+content:
+  - name: rezepte
+    label: Rezepte
+    type: collection
+    path: data/gerichte
+    format: json
+    subfolders: false
+    exclude:
+      - 00_manifest.json
+      - 00_template.json
+    filename:
+      template: "{id}.json"
+      field: false
+    operations:
+      create: true
+      rename: false
+      delete: true
+    view:
+      fields: [name, id]
+      primary: name
+      sort: [name, id]
+      search: [name, id]
+      default:
+        sort: name
+        order: asc
+    fields:
+      - name: id
+        label: Rezept-ID
+        type: string
+        required: true
+        description: "Eindeutige technische ID, z. B. mildesHaehnchenKokosCurry. Nach dem ersten Speichern nicht mehr ändern."
+        pattern:
+          regex: "^[A-Za-z][A-Za-z0-9_-]*$"
+          message: "Nur Buchstaben, Zahlen, _ und -; die ID muss mit einem Buchstaben beginnen."
+
+      - name: name
+        label: Rezeptname
+        type: string
+        required: true
+        options:
+          maxlength: 160
+
+      - name: bild
+        label: Rezeptbild
+        type: image
+        required: false
+        description: "Optional. Ohne Bild wird auf der Webseite kein Rezeptbild angezeigt."
+        options:
+          media: rezeptbilder
+          extensions: [jpg, jpeg, png, webp]
+          categories: [image]
+          rename: safe
+
+      - name: zutaten
+        label: Zutaten
+        type: object
+        required: true
+        list:
+          min: 1
+          collapsible:
+            collapsed: false
+            summary: "{id} · {menge} {einheit}"
+        fields:
+          - name: id
+            label: Zutat
+            type: reference
+            required: true
+            description: "Hier tippen, um den zentralen Zutatenkatalog zu durchsuchen. Fehlt eine Zutat, zuerst unter 'Zutaten' anlegen."
+            options:
+              collection: zutatenkatalog
+              search: "fields.name,fields.id,fields.kategorie"
+              value: "{fields.id}"
+              label: "{fields.name} · {fields.kategorie}"
+
+          - name: menge
+            label: Menge
+            type: number
+            required: true
+            options:
+              min: 0
+
+          - name: einheit
+            label: Einheit
+            type: select
+            required: true
+            description: "Die Standard-Einheit der Zutat wird in der Auswahl angezeigt; hier kann die für das konkrete Rezept passende Einheit gewählt werden."
+            options:
+              placeholder: "Einheit auswählen"
+              values:
+                - g
+                - kg
+                - ml
+                - l
+                - Stk
+                - EL
+                - TL
+                - Prise
+                - "n. B."
+                - Bund
+                - Becher
+                - Dose
+                - Packung
+                - Glas
+                - Flasche
+                - Scheiben
+                - Zehen
+                - Handvoll
+                - Tasse
+                - Würfel
+                - Blatt
+                - Rolle
+
+      - name: zubereitung
+        label: Zubereitung
+        type: text
+        required: true
+        list:
+          min: 1
+        description: "Jeder Listeneintrag entspricht einem Zubereitungsschritt."
+
+  - name: zutatenkatalog
+    label: Zutaten
+    type: collection
+    path: data/zutaten
+    format: json
+    subfolders: false
+    exclude:
+      - 00_manifest.json
+      - 00_katalog.json
+    filename:
+      template: "{id}.json"
+      field: false
+    operations:
+      create: true
+      rename: false
+      delete: false
+    view:
+      fields: [name, kategorie, standardEinheit, id]
+      primary: name
+      sort: [name, kategorie, id]
+      search: [name, kategorie, id]
+      default:
+        sort: name
+        order: asc
+    fields:
+      - name: id
+        label: Zutaten-ID
+        type: string
+        required: true
+        description: "Eindeutige technische ID, z. B. halloumi oder rotePaprika. Nach dem ersten Speichern nicht mehr ändern."
+        pattern:
+          regex: "^[A-Za-z][A-Za-z0-9_-]*$"
+          message: "Nur Buchstaben, Zahlen, _ und -; die ID muss mit einem Buchstaben beginnen."
+
+      - name: name
+        label: Zutatenname
+        type: string
+        required: true
+        options:
+          maxlength: 120
+
+      - name: kategorie
+        label: Kategorie
+        type: select
+        required: true
+        options:
+          placeholder: "Kategorie auswählen"
+          values:
+            - Gemüse
+            - Obst
+            - Fleisch
+            - Fisch & Meeresfrüchte
+            - Milchprodukte & Eier
+            - Getreide & Beilagen
+            - Konserven & Hülsenfrüchte
+            - Gewürze & Kräuter
+            - Öle, Saucen & Würzmittel
+            - Backen & Vorrat
+            - Brot & Backwaren
+            - Sonstiges
+            - Technisch
+
+      - name: standardEinheit
+        label: Standard-Einheit
+        type: select
+        required: true
+        description: "Dient als Orientierung. Im Rezept kann weiterhin eine andere passende Einheit gewählt werden."
+        options:
+          placeholder: "Standard-Einheit auswählen"
+          values:
+            - g
+            - kg
+            - ml
+            - l
+            - Stk
+            - EL
+            - TL
+            - Prise
+            - "n. B."
+            - Bund
+            - Becher
+            - Dose
+            - Packung
+            - Glas
+            - Flasche
+            - Scheiben
+            - Zehen
+            - Handvoll
+            - Tasse
+            - Würfel
+            - Blatt
+            - Rolle
+
+      - name: quelle
+        label: Quelle
+        type: select
+        required: false
+        description: "Nur zur internen Übersicht. Neue eigene Zutaten können auf 'eigen' gesetzt werden."
+        options:
+          values:
+            - name: bestand
+              label: Bereits vorhandene Zutat
+            - name: grundausstattung
+              label: Vorbelegte Grundausstattung
+            - name: eigen
+              label: Eigene Ergänzung
