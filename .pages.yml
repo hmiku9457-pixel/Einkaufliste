@@ -77,7 +77,7 @@ content:
           min: 1
           collapsible:
             collapsed: false
-            summary: "{id} · {menge} {einheit}"
+            summary: "{id} · {menge}"
         fields:
           - name: id
             label: Zutat
@@ -88,45 +88,16 @@ content:
               collection: zutatenkatalog
               search: "fields.name,fields.id,fields.kategorie"
               value: "{fields.id}"
-              label: "{fields.name} · {fields.kategorie}"
+              label: "{fields.name} · {fields.standardEinheit} · {fields.kategorie}"
 
           - name: menge
             label: Menge
             type: number
             required: true
+            description: "Menge immer in der Einheit der ausgewählten Zutat eintragen (g oder ml)."
             options:
-              min: 0
+              min: 0.01
 
-          - name: einheit
-            label: Einheit
-            type: select
-            required: true
-            description: "Die Standard-Einheit der Zutat wird in der Auswahl angezeigt; hier kann die für das konkrete Rezept passende Einheit gewählt werden."
-            options:
-              placeholder: "Einheit auswählen"
-              values:
-                - g
-                - kg
-                - ml
-                - l
-                - Stk
-                - EL
-                - TL
-                - Prise
-                - "n. B."
-                - Bund
-                - Becher
-                - Dose
-                - Packung
-                - Glas
-                - Flasche
-                - Scheiben
-                - Zehen
-                - Handvoll
-                - Tasse
-                - Würfel
-                - Blatt
-                - Rolle
 
       - name: zubereitung
         label: Zubereitung
@@ -199,35 +170,15 @@ content:
             - Technisch
 
       - name: standardEinheit
-        label: Standard-Einheit
+        label: Einheit
         type: select
         required: true
-        description: "Dient als Orientierung. Im Rezept kann weiterhin eine andere passende Einheit gewählt werden."
+        description: "Kanonische Einheit der Zutat. Nur g für feste/trockene Zutaten oder ml für Flüssigkeiten verwenden."
         options:
-          placeholder: "Standard-Einheit auswählen"
+          placeholder: "Einheit auswählen"
           values:
             - g
-            - kg
             - ml
-            - l
-            - Stk
-            - EL
-            - TL
-            - Prise
-            - "n. B."
-            - Bund
-            - Becher
-            - Dose
-            - Packung
-            - Glas
-            - Flasche
-            - Scheiben
-            - Zehen
-            - Handvoll
-            - Tasse
-            - Würfel
-            - Blatt
-            - Rolle
 
       - name: quelle
         label: Quelle
