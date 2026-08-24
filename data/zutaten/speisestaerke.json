@@ -1,0 +1,7 @@
+{
+  "id": "speisestaerke",
+  "name": "Speisestärke",
+  "kategorie": "Backen & Vorrat",
+  "standardEinheit": "EL",
+  "quelle": "grundausstattung"
+}

@@ -1,0 +1,774 @@
+{
+  "zutaten": {
+    "apfel": {
+      "name": "Apfel",
+      "kategorie": "Obst",
+      "standardEinheit": "Stk"
+    },
+    "aubergine": {
+      "name": "Aubergine",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "avocado": {
+      "name": "Avocado",
+      "kategorie": "Obst",
+      "standardEinheit": "Stk"
+    },
+    "backpulver": {
+      "name": "Backpulver",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "TL"
+    },
+    "bacon": {
+      "name": "Bacon",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "baguette": {
+      "name": "Baguette",
+      "kategorie": "Brot & Backwaren",
+      "standardEinheit": "Stk"
+    },
+    "balsamico": {
+      "name": "Balsamico",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "banane": {
+      "name": "Banane",
+      "kategorie": "Obst",
+      "standardEinheit": "Stk"
+    },
+    "basilikum": {
+      "name": "Basilikum",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "Bund"
+    },
+    "basmatireis": {
+      "name": "Basmatireis",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "blumenkohl": {
+      "name": "Blumenkohl",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "bratwurst": {
+      "name": "Bratwurst",
+      "kategorie": "Fleisch",
+      "standardEinheit": "Stk"
+    },
+    "braunerZucker": {
+      "name": "Brauner Zucker",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "g"
+    },
+    "brokkoli": {
+      "name": "Brokkoli",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "brot": {
+      "name": "Brot",
+      "kategorie": "Brot & Backwaren",
+      "standardEinheit": "Scheiben"
+    },
+    "bulgur": {
+      "name": "Bulgur",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "butter": {
+      "name": "Butter",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "champignons": {
+      "name": "Champignons",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "cheddar": {
+      "name": "Cheddar",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "cherrytomaten": {
+      "name": "Cherrytomaten",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "chili": {
+      "name": "Chilischote",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "chiliflocken": {
+      "name": "Chiliflocken",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "chorizo": {
+      "name": "Chorizo",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "ciabatta": {
+      "name": "Ciabatta",
+      "kategorie": "Brot & Backwaren",
+      "standardEinheit": "Stk"
+    },
+    "couscous": {
+      "name": "Couscous",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "cremeFraiche": {
+      "name": "Crème fraîche",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "Becher"
+    },
+    "currypasteRot": {
+      "name": "Rote Currypaste",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "currypulver": {
+      "name": "Mildes Currypulver",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "dill": {
+      "name": "Dill",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "Bund"
+    },
+    "ei": {
+      "name": "Ei",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "Stk"
+    },
+    "emmentaler": {
+      "name": "Emmentaler",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "erbsen": {
+      "name": "Erbsen",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "erdbeeren": {
+      "name": "Erdbeeren",
+      "kategorie": "Obst",
+      "standardEinheit": "g"
+    },
+    "essig": {
+      "name": "Essig",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "feta": {
+      "name": "Feta",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "fleischkaese": {
+      "name": "Fleischkäse",
+      "kategorie": "Fleisch",
+      "standardEinheit": "Scheiben"
+    },
+    "frischkaese": {
+      "name": "Frischkäse",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "fruehlingszwiebel": {
+      "name": "Frühlingszwiebel",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Bund"
+    },
+    "fusilli": {
+      "name": "Fusilli",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "garnelen": {
+      "name": "Garnelen",
+      "kategorie": "Fisch & Meeresfrüchte",
+      "standardEinheit": "g"
+    },
+    "gehackteTomaten": {
+      "name": "Gehackte Tomaten",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "Dose"
+    },
+    "gelbePaprika": {
+      "name": "Gelbe Paprika",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "gemuesebruehe": {
+      "name": "Gemüsebrühe",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "ml"
+    },
+    "gnocchi": {
+      "name": "Gnocchi",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "gouda": {
+      "name": "Gouda",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "griechischerJoghurt": {
+      "name": "Griechischer Joghurt",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "grueneBohnen": {
+      "name": "Grüne Bohnen",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "gruenePaprika": {
+      "name": "Grüne Paprika",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "gurke": {
+      "name": "Gurke",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "hackfleischGemischt": {
+      "name": "Gemischtes Hackfleisch",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "haehnchenbrust": {
+      "name": "Hähnchenbrust",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "haehnchenbrustfilet": {
+      "name": "Hähnchenbrustfilet",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "haferflocken": {
+      "name": "Haferflocken",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "heidelbeeren": {
+      "name": "Heidelbeeren",
+      "kategorie": "Obst",
+      "standardEinheit": "g"
+    },
+    "himbeeren": {
+      "name": "Himbeeren",
+      "kategorie": "Obst",
+      "standardEinheit": "g"
+    },
+    "honig": {
+      "name": "Honig",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "EL"
+    },
+    "huehnerbruehe": {
+      "name": "Hühnerbrühe",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "ml"
+    },
+    "ingwer": {
+      "name": "Ingwer",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "kabeljau": {
+      "name": "Kabeljaufilet",
+      "kategorie": "Fisch & Meeresfrüchte",
+      "standardEinheit": "g"
+    },
+    "kaese": {
+      "name": "Käse",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "karotten": {
+      "name": "Karotten",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "kartoffeln": {
+      "name": "Kartoffeln",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "kartoffelnFestkochend": {
+      "name": "Kartoffeln, festkochend",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "ketchup": {
+      "name": "Ketchup",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "kichererbsen": {
+      "name": "Kichererbsen",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "Dose"
+    },
+    "kidneybohnen": {
+      "name": "Kidneybohnen",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "Dose"
+    },
+    "knoblauch": {
+      "name": "Knoblauchzehe",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "knoblauchpulver": {
+      "name": "Knoblauchpulver",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "kochschinken": {
+      "name": "Kochschinken",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "kokosmilch": {
+      "name": "Kokosmilch",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "ml"
+    },
+    "koriander": {
+      "name": "Koriander",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "Bund"
+    },
+    "kreuzkuemmel": {
+      "name": "Kreuzkümmel",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "kuerbis": {
+      "name": "Kürbis",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "kurkuma": {
+      "name": "Kurkuma",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "lachsfilet": {
+      "name": "Lachsfilet",
+      "kategorie": "Fisch & Meeresfrüchte",
+      "standardEinheit": "g"
+    },
+    "lasagneplatten": {
+      "name": "Lasagneplatten",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "lauch": {
+      "name": "Lauch",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "limette": {
+      "name": "Limette",
+      "kategorie": "Obst",
+      "standardEinheit": "Stk"
+    },
+    "limettensaft": {
+      "name": "Limettensaft",
+      "kategorie": "Obst",
+      "standardEinheit": "EL"
+    },
+    "linsen": {
+      "name": "Linsen",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "g"
+    },
+    "mais": {
+      "name": "Mais",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "Dose"
+    },
+    "mandeln": {
+      "name": "Mandeln",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "g"
+    },
+    "mango": {
+      "name": "Mango",
+      "kategorie": "Obst",
+      "standardEinheit": "Stk"
+    },
+    "mayonnaise": {
+      "name": "Mayonnaise",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "mehl": {
+      "name": "Mehl",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "g"
+    },
+    "milch": {
+      "name": "Milch",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "ml"
+    },
+    "mozzarella": {
+      "name": "Mozzarella",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "muskat": {
+      "name": "Muskat",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "Prise"
+    },
+    "naturjoghurt": {
+      "name": "Naturjoghurt",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "nudeln": {
+      "name": "Nudeln",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "oel": {
+      "name": "Öl",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "olivenoel": {
+      "name": "Olivenöl",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "orange": {
+      "name": "Orange",
+      "kategorie": "Obst",
+      "standardEinheit": "Stk"
+    },
+    "oregano": {
+      "name": "Oregano",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "paniermehl": {
+      "name": "Paniermehl",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "g"
+    },
+    "paprika": {
+      "name": "Paprika",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "paprikapulverEdelsuess": {
+      "name": "Paprikapulver edelsüß",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "paprikapulverRosenscharf": {
+      "name": "Paprikapulver rosenscharf",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "parmesan": {
+      "name": "Parmesan",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "passierteTomaten": {
+      "name": "Passierte Tomaten",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "ml"
+    },
+    "penne": {
+      "name": "Penne",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "pestoGruen": {
+      "name": "Grünes Pesto",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "g"
+    },
+    "petersilie": {
+      "name": "Petersilie",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "Bund"
+    },
+    "pfeffer": {
+      "name": "Pfeffer",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "n. B."
+    },
+    "putenbrust": {
+      "name": "Putenbrust",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "quark": {
+      "name": "Quark",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "g"
+    },
+    "quinoa": {
+      "name": "Quinoa",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "rapsoel": {
+      "name": "Rapsöl",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "reis": {
+      "name": "Reis",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "rinderhackfleisch": {
+      "name": "Rinderhackfleisch",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "rindersteak": {
+      "name": "Rindersteak",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "rindfleisch": {
+      "name": "Rindfleisch",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "rosmarin": {
+      "name": "Rosmarin",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "rotePaprika": {
+      "name": "Rote Paprika",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "roteZwiebel": {
+      "name": "Rote Zwiebel",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "rucola": {
+      "name": "Rucola",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "sahne": {
+      "name": "Sahne",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "ml"
+    },
+    "salami": {
+      "name": "Salami",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "salat": {
+      "name": "Salat",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "salz": {
+      "name": "Salz",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "n. B."
+    },
+    "saureSahne": {
+      "name": "Saure Sahne",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "Becher"
+    },
+    "schmand": {
+      "name": "Schmand",
+      "kategorie": "Milchprodukte & Eier",
+      "standardEinheit": "Becher"
+    },
+    "schnittlauch": {
+      "name": "Schnittlauch",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "Bund"
+    },
+    "schweinefilet": {
+      "name": "Schweinefilet",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "schweineschnitzel": {
+      "name": "Schweineschnitzel",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "sellerie": {
+      "name": "Sellerie",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "semmelbroesel": {
+      "name": "Semmelbrösel",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "EL"
+    },
+    "senf": {
+      "name": "Senf",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "sesamoel": {
+      "name": "Sesamöl",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "sojasauce": {
+      "name": "Sojasauce",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "sonnenblumenoel": {
+      "name": "Sonnenblumenöl",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "EL"
+    },
+    "spaghetti": {
+      "name": "Spaghetti",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "speck": {
+      "name": "Speck",
+      "kategorie": "Fleisch",
+      "standardEinheit": "g"
+    },
+    "speisestaerke": {
+      "name": "Speisestärke",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "EL"
+    },
+    "spinat": {
+      "name": "Spinat",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "suesskartoffeln": {
+      "name": "Süßkartoffeln",
+      "kategorie": "Gemüse",
+      "standardEinheit": "g"
+    },
+    "tagliatelle": {
+      "name": "Tagliatelle",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "thunfisch": {
+      "name": "Thunfisch",
+      "kategorie": "Fisch & Meeresfrüchte",
+      "standardEinheit": "Dose"
+    },
+    "thymian": {
+      "name": "Thymian",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "toastbrot": {
+      "name": "Toastbrot",
+      "kategorie": "Brot & Backwaren",
+      "standardEinheit": "Scheiben"
+    },
+    "tomate": {
+      "name": "Tomate",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "tomatenmark": {
+      "name": "Tomatenmark",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "EL"
+    },
+    "tomatenpesto": {
+      "name": "Tomatenpesto",
+      "kategorie": "Öle, Saucen & Würzmittel",
+      "standardEinheit": "g"
+    },
+    "tortellini": {
+      "name": "Tortellini",
+      "kategorie": "Getreide & Beilagen",
+      "standardEinheit": "g"
+    },
+    "tortillaWraps": {
+      "name": "Tortilla-Wraps",
+      "kategorie": "Brot & Backwaren",
+      "standardEinheit": "Stk"
+    },
+    "walnuesse": {
+      "name": "Walnüsse",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "g"
+    },
+    "weisseBohnen": {
+      "name": "Weiße Bohnen",
+      "kategorie": "Konserven & Hülsenfrüchte",
+      "standardEinheit": "Dose"
+    },
+    "zimt": {
+      "name": "Zimt",
+      "kategorie": "Gewürze & Kräuter",
+      "standardEinheit": "TL"
+    },
+    "zitrone": {
+      "name": "Zitrone",
+      "kategorie": "Obst",
+      "standardEinheit": "Stk"
+    },
+    "zitronensaft": {
+      "name": "Zitronensaft",
+      "kategorie": "Obst",
+      "standardEinheit": "EL"
+    },
+    "zucchini": {
+      "name": "Zucchini",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    },
+    "zucker": {
+      "name": "Zucker",
+      "kategorie": "Backen & Vorrat",
+      "standardEinheit": "g"
+    },
+    "zutatA": {
+      "name": "Zutat A (Platzhalter)",
+      "kategorie": "Technisch",
+      "standardEinheit": "Stk"
+    },
+    "zwiebel": {
+      "name": "Zwiebel",
+      "kategorie": "Gemüse",
+      "standardEinheit": "Stk"
+    }
+  }
+}
