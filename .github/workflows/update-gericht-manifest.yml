@@ -1,90 +1,106 @@
-name: Gerichte-Manifest aktualisieren
+name: Daten-Manifeste aktualisieren
 
 on:
   push:
     branches:
       - main
-
     paths:
+      - ".pages.yml"
       - "data/gerichte/*.json"
       - "!data/gerichte/00_*.json"
-
+      - "data/zutaten/*.json"
+      - "!data/zutaten/00_*.json"
+      - "tools/validate_rezepte.py"
+      - "tools/patch_main_js_zutaten.py"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: gerichte-manifest-${{ github.ref }}
+  group: daten-manifeste-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  update-manifest:
-    name: Manifest generieren
+  update-data:
+    name: Zutaten integrieren, Daten prüfen und Manifeste generieren
     runs-on: ubuntu-latest
 
     steps:
       - name: Repository laden
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Manifest generieren
+      - name: main.js für zentralen Zutatenkatalog vorbereiten
+        run: python3 tools/patch_main_js_zutaten.py
+
+      - name: Zutaten und Rezepte prüfen
+        run: python3 tools/validate_rezepte.py
+
+      - name: Manifeste und Laufzeit-Katalog generieren
         shell: bash
         run: |
           python3 <<'PY'
           import json
           from pathlib import Path
 
-          gerichte_ordner = Path("data/gerichte")
-          manifest_datei = gerichte_ordner / "00_manifest.json"
+          gerichte_dir = Path("data/gerichte")
+          zutaten_dir = Path("data/zutaten")
 
-          dateien = sorted(
-              (
-                  datei.name
-                  for datei in gerichte_ordner.glob("*.json")
-                  if datei.is_file()
-                  and not datei.name.startswith("00_")
-              ),
-              key=str.casefold
+          gerichte_files = sorted(
+              (p.name for p in gerichte_dir.glob("*.json") if p.is_file() and not p.name.startswith("00_")),
+              key=str.casefold,
+          )
+          (gerichte_dir / "00_manifest.json").write_text(
+              json.dumps({"gerichte": gerichte_files}, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
           )
 
-          manifest = {
-              "gerichte": dateien
-          }
-
-          inhalt = (
-              json.dumps(
-                  manifest,
-                  ensure_ascii=False,
-                  indent=2
-              )
-              + "\n"
+          zutaten_files = sorted(
+              (p for p in zutaten_dir.glob("*.json") if p.is_file() and not p.name.startswith("00_")),
+              key=lambda p: p.name.casefold(),
+          )
+          (zutaten_dir / "00_manifest.json").write_text(
+              json.dumps({"zutaten": [p.name for p in zutaten_files]}, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
           )
 
-          manifest_datei.write_text(
-              inhalt,
-              encoding="utf-8"
+          catalog = {}
+          for path in zutaten_files:
+              data = json.loads(path.read_text(encoding="utf-8"))
+              catalog[data["id"]] = {
+                  "name": data["name"],
+                  "kategorie": data["kategorie"],
+                  "standardEinheit": data["standardEinheit"],
+              }
+
+          catalog = dict(sorted(catalog.items(), key=lambda item: item[0].casefold()))
+          (zutaten_dir / "00_katalog.json").write_text(
+              json.dumps({"zutaten": catalog}, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
           )
 
-          print(
-              f"{manifest_datei} wurde mit "
-              f"{len(dateien)} Gerichten erzeugt."
-          )
+          print(f"{len(gerichte_files)} Rezepte im Gerichte-Manifest.")
+          print(f"{len(zutaten_files)} Zutaten im Zutatenkatalog.")
           PY
 
-      - name: Änderungen speichern
+      - name: Generierte Änderungen speichern
         shell: bash
         run: |
-          git add data/gerichte/00_manifest.json
+          git add \
+            assets/js/main.js \
+            data/gerichte/00_manifest.json \
+            data/zutaten/00_manifest.json \
+            data/zutaten/00_katalog.json
 
           if git diff --cached --quiet; then
-            echo "Das Manifest ist bereits aktuell."
+            echo "Keine generierten Änderungen notwendig."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git commit -m "chore: Gerichte-Manifest aktualisieren"
+          git commit -m "chore: Zutatenkatalog und Manifeste aktualisieren"
           git push origin "HEAD:${GITHUB_REF_NAME}"
