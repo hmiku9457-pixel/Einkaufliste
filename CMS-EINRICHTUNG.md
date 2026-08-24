@@ -1,110 +1,60 @@
-# Rezepte-CMS v2 – zentrale Zutaten mit Suchauswahl
+# Rezepte-CMS v3 – Einrichtung
 
-Dieses Paket erweitert `hmiku9457-pixel/Einkaufliste` um ein Pages-CMS für Rezepte **und** einen zentralen Zutatenkatalog.
+## Ziel
 
-## Was sich gegenüber v1 ändert
+Dieses Paket richtet Pages CMS für Rezepte und einen zentralen Zutatenkatalog ein. Zutaten werden im Rezept gesucht und ausgewählt; freie Zutatennamen und freie Einheiten entfallen.
 
-Beim Rezept wird eine Zutat nicht mehr als freier Text eingegeben. Das Feld `Zutat` ist eine **suchbare Pages-CMS-Referenz** auf die Collection `Zutaten`.
+## Einheitensystem
 
-Ablauf nach Variante A:
+Das System verwendet für **neue Rezepte ausschließlich:**
 
-1. Existiert die Zutat bereits, im Rezeptfeld anfangen zu tippen und auswählen.
-2. Existiert sie nicht, zuerst links im CMS unter `Zutaten` neu anlegen.
-3. Danach zum Rezept zurückkehren und die neue Zutat auswählen.
+- `g` für feste/trockene/stückige/pastöse Zutaten
+- `ml` für Flüssigkeiten
 
-Im Rezept selbst werden nur noch folgende Werte benötigt:
+Die Einheit wird direkt an der Zutat hinterlegt. Im Rezept gibst du nur **Zutat + Menge** ein. Beispiel: `Hähnchenbrust · g` auswählen und als Menge `500` eingeben.
 
-```json
-{
-  "id": "rotePaprika",
-  "menge": 2,
-  "einheit": "Stk"
-}
-```
-
-Der sichtbare Name `Rote Paprika` wird beim Laden der Website aus dem zentralen Katalog ergänzt.
-
-## Vorbelegte Zutaten
-
-Das Paket enthält **154 Zutaten**:
-
-- sämtliche in den aktuell vorhandenen Rezepten gefundenen technischen Zutaten-IDs, einschließlich bestehender Sonderfälle wie `haehnchenbrust`/`haehnchenbrustfilet` und `kartoffeln`/`kartoffelnFestkochend`
-- zusätzlich eine breite Grundausstattung aus Gemüse, Obst, Fleisch, Fisch, Milchprodukten, Nudeln/Reis/Getreide, Hülsenfrüchten, Gewürzen, Saucen und Backzutaten
-- `zutatA` bleibt als technischer Platzhalter enthalten, damit die alten Platzhalter-Rezepte bei der Validierung nicht brechen
-
-## Performance
-
-Pages CMS benötigt für die Suchauswahl die einzelnen Dateien unter `data/zutaten/`.
-Die Website selbst lädt diese Dateien **nicht einzeln**. Der GitHub-Workflow erzeugt stattdessen `data/zutaten/00_katalog.json`; `main.js` lädt nur diese eine kompakte Datei.
-
-## Installation
-
-1. Den kompletten Inhalt dieses Pakets in das Stammverzeichnis des Repositories kopieren und committen.
-2. Vorhandene Dateien mit gleichem Namen ersetzen, insbesondere:
-   - `.pages.yml`
-   - `.github/workflows/update-gericht-manifest.yml`
-   - `tools/validate_rezepte.py`
-3. Die enthaltenen neuen Dateien und den Ordner `data/zutaten/` mit übernehmen.
-4. Der Workflow `Daten-Manifeste aktualisieren` läuft durch den Commit automatisch.
-5. Der Workflow patcht `assets/js/main.js` idempotent und commitet die kleine Laufzeit-Anpassung selbst zurück.
-6. Danach Pages CMS öffnen. Es erscheinen die Bereiche `Rezepte` und `Zutaten`.
-
-Es muss **kein Code aus der Vereinsseite kopiert** werden.
+Damit sind falsche Kombinationen wie `Hähnchenbrust + Bund` technisch ausgeschlossen.
 
 ## Bestehende Rezepte
 
-Die vorhandenen Rezeptdateien können unverändert bleiben. Viele enthalten aktuell noch zusätzlich:
+Alte Rezeptdateien können weiterhin eigene Einheiten wie `Stk`, `EL`, `kg` usw. enthalten. Diese werden bewusst **nicht automatisch** umgerechnet, da dafür je nach Zutat Umrechnungsfaktoren nötig wären. Die Laufzeitlogik bevorzugt bei alten Rezepten deren vorhandene Einheit; nur bei neuen Rezepten ohne `einheit` wird die Katalogeinheit verwendet.
 
-```json
-"name": "Zwiebel"
-```
+## Installation
 
-Dieses redundante Feld ist für neue CMS-Rezepte nicht mehr nötig. Die Website überschreibt bzw. ergänzt den Namen zur Laufzeit mit dem zentralen Katalognamen. Wenn ein altes Rezept im CMS gespeichert wird und Pages CMS das alte `name`-Feld entfernt, ist das daher unproblematisch.
+1. Inhalt dieses Pakets in das Root-Verzeichnis des Repositories kopieren.
+2. Dateien committen und nach `main` pushen.
+3. Die Action `Daten-Manifeste aktualisieren` laufen lassen.
+4. Pages CMS mit dem Repository verbinden bzw. neu laden.
+5. Im CMS gibt es die Bereiche **Rezepte** und **Zutaten**.
 
-## Einheiten
+## Neues Rezept
 
-Die Einheit ist im Rezept ein festes Dropdown. Enthalten sind:
+Unter **Rezepte**:
 
-`g`, `kg`, `ml`, `l`, `Stk`, `EL`, `TL`, `Prise`, `n. B.`, `Bund`, `Becher`, `Dose`, `Packung`, `Glas`, `Flasche`, `Scheiben`, `Zehen`, `Handvoll`, `Tasse`, `Würfel`, `Blatt`, `Rolle`.
+1. Rezept-ID und Namen eintragen.
+2. Optional ein Bild auswählen/hochladen.
+3. Unter Zutaten die gewünschte Zutat suchen. Die Auswahl zeigt Name, Einheit und Kategorie.
+4. Nur die Menge in der angezeigten Einheit eintragen.
+5. Zubereitungsschritte ergänzen und speichern.
 
-Jede Zutat besitzt außerdem eine `standardEinheit`. Sie ist eine Orientierung und verhindert nicht, dass im konkreten Rezept eine andere passende Einheit verwendet wird.
+## Neue Zutat
 
-## Schutzmechanismen
+Unter **Zutaten**:
 
-Der Validator prüft bei jedem relevanten Commit unter anderem:
+1. Zutaten-ID vergeben.
+2. Namen und Kategorie eintragen.
+3. Einheit auf `g` oder `ml` setzen.
+4. Speichern.
+5. Danach steht die Zutat in allen Rezepten über die Suche zur Verfügung.
 
-- gültige und eindeutige Zutaten-IDs
-- Übereinstimmung zwischen Zutaten-ID und Dateiname
-- gültige Standard-Einheit
-- gültige Rezept-IDs
-- jede im Rezept verwendete Zutaten-ID muss im zentralen Katalog existieren
-- gültige Mengen und Einheiten
-- alte abweichende `name`-Felder werden nur als Warnung gemeldet; der Katalog ist künftig maßgeblich
+## Automatik
 
-Das Löschen von Zutaten ist im CMS absichtlich deaktiviert. Dadurch kann eine noch von Rezepten verwendete Zutat nicht versehentlich entfernt werden.
+Die GitHub Action:
 
-## Dateien
+- patcht `assets/js/main.js` idempotent für den Zutatenkatalog,
+- validiert Zutaten und Rezepte,
+- erzeugt `data/gerichte/00_manifest.json`,
+- erzeugt `data/zutaten/00_manifest.json`,
+- erzeugt `data/zutaten/00_katalog.json`.
 
-- `.pages.yml` – CMS-Konfiguration für Rezepte und Zutaten
-- `data/zutaten/*.json` – zentrale Zutaten-Collection
-- `data/zutaten/00_manifest.json` – automatisch generierte Dateiliste
-- `data/zutaten/00_katalog.json` – kompakter Laufzeit-Katalog für die Website
-- `tools/validate_rezepte.py` – Datenvalidierung
-- `tools/patch_main_js_zutaten.py` – einmalige/idempotente main.js-Erweiterung
-- `.github/workflows/update-gericht-manifest.yml` – Patch, Prüfung und Manifest-/Katalog-Generierung
-
-## Neue Zutat anlegen
-
-Beispiel Halloumi:
-
-```json
-{
-  "id": "halloumi",
-  "name": "Halloumi",
-  "kategorie": "Milchprodukte & Eier",
-  "standardEinheit": "g",
-  "quelle": "eigen"
-}
-```
-
-Im CMS werden diese Felder über Formularfelder gepflegt; JSON muss nicht von Hand geschrieben werden.
+Die Webseite lädt nur `00_katalog.json`, nicht alle einzelnen Zutaten-Dateien.

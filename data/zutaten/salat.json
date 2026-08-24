@@ -2,6 +2,6 @@
   "id": "salat",
   "name": "Salat",
   "kategorie": "Gemüse",
-  "standardEinheit": "Stk",
+  "standardEinheit": "g",
   "quelle": "grundausstattung"
 }

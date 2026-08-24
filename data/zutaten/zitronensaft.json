@@ -2,6 +2,6 @@
   "id": "zitronensaft",
   "name": "Zitronensaft",
   "kategorie": "Obst",
-  "standardEinheit": "EL",
+  "standardEinheit": "ml",
   "quelle": "bestand"
 }

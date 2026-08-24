@@ -1,25 +1,12 @@
-REZEPTE-CMS-PAKET V2
-=====================
+Rezepte-CMS v3 – g/ml-System
 
-Ziel:
-- Rezepte über Pages CMS erstellen/bearbeiten/löschen
-- Zutaten über eine zentrale, durchsuchbare Auswahl referenzieren
-- neue Zutaten separat unter "Zutaten" anlegen (Variante A)
-- bestehende Website und alte Rezeptdateien kompatibel halten
-
-Vorbelegt: 154 Zutaten
-
-Wichtige Dateien:
-.pages.yml
+.pages.yml                         Pages-CMS-Konfiguration
 .github/workflows/update-gericht-manifest.yml
-tools/validate_rezepte.py
-tools/patch_main_js_zutaten.py
-data/zutaten/*.json
-data/zutaten/00_manifest.json
-data/zutaten/00_katalog.json
-CMS-EINRICHTUNG.md
-ZUTATENLISTE.md
-
-Einbau:
-Kompletten Paketinhalt ins Repo-Root übernehmen und committen.
-Der enthaltene Workflow erledigt die main.js-Integration und generiert die Laufzeitdateien automatisch.
+                                   Prüfung + Manifest/Katalog-Erzeugung
+tools/validate_rezepte.py         Datenvalidator mit Legacy-Kompatibilität
+tools/patch_main_js_zutaten.py    idempotenter main.js-Patch
+data/zutaten/*.json               zentraler Zutatenkatalog
+data/zutaten/00_manifest.json     automatisch generierte Dateiliste
+data/zutaten/00_katalog.json      kompakter Laufzeitkatalog
+CMS-EINRICHTUNG.md                Installations-/Bedienhinweise
+ZUTATENLISTE.md                   vorbereitete Zutaten mit g/ml-Einheit

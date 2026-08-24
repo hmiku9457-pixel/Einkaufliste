@@ -2,6 +2,6 @@
   "id": "semmelbroesel",
   "name": "Semmelbrösel",
   "kategorie": "Backen & Vorrat",
-  "standardEinheit": "EL",
+  "standardEinheit": "g",
   "quelle": "bestand"
 }

@@ -1,194 +1,167 @@
-# Vorbelegter Zutatenkatalog
+# Zutatenliste – g/ml-System
 
-Insgesamt **154 Zutaten**. Die Liste dient nur als Übersicht; gepflegt werden die Einträge später über Pages CMS.
+Der zentrale Zutatenkatalog ist auf genau zwei kanonische Einheiten reduziert:
 
-## Gemüse
+- **g** – alle festen, trockenen, stückigen und pastösen Zutaten
+- **ml** – Flüssigkeiten
 
-- **Aubergine** (`aubergine`) — Standard: `Stk` · Grundausstattung
-- **Blumenkohl** (`blumenkohl`) — Standard: `Stk` · Grundausstattung
-- **Brokkoli** (`brokkoli`) — Standard: `g` · Bestand
-- **Champignons** (`champignons`) — Standard: `g` · Bestand
-- **Cherrytomaten** (`cherrytomaten`) — Standard: `g` · Bestand
-- **Chilischote** (`chili`) — Standard: `Stk` · Grundausstattung
-- **Erbsen** (`erbsen`) — Standard: `g` · Grundausstattung
-- **Frühlingszwiebel** (`fruehlingszwiebel`) — Standard: `Bund` · Grundausstattung
-- **Gelbe Paprika** (`gelbePaprika`) — Standard: `Stk` · Grundausstattung
-- **Grüne Bohnen** (`grueneBohnen`) — Standard: `g` · Grundausstattung
-- **Grüne Paprika** (`gruenePaprika`) — Standard: `Stk` · Grundausstattung
-- **Gurke** (`gurke`) — Standard: `Stk` · Grundausstattung
-- **Ingwer** (`ingwer`) — Standard: `g` · Grundausstattung
-- **Karotten** (`karotten`) — Standard: `Stk` · Bestand
-- **Kartoffeln** (`kartoffeln`) — Standard: `g` · Bestand
-- **Kartoffeln, festkochend** (`kartoffelnFestkochend`) — Standard: `g` · Bestand
-- **Knoblauchzehe** (`knoblauch`) — Standard: `Stk` · Bestand
-- **Kürbis** (`kuerbis`) — Standard: `g` · Grundausstattung
-- **Lauch** (`lauch`) — Standard: `Stk` · Grundausstattung
-- **Paprika** (`paprika`) — Standard: `Stk` · Grundausstattung
-- **Rote Paprika** (`rotePaprika`) — Standard: `Stk` · Bestand
-- **Rote Zwiebel** (`roteZwiebel`) — Standard: `Stk` · Grundausstattung
-- **Rucola** (`rucola`) — Standard: `g` · Grundausstattung
-- **Salat** (`salat`) — Standard: `Stk` · Grundausstattung
-- **Sellerie** (`sellerie`) — Standard: `Stk` · Grundausstattung
-- **Spinat** (`spinat`) — Standard: `g` · Grundausstattung
-- **Süßkartoffeln** (`suesskartoffeln`) — Standard: `g` · Grundausstattung
-- **Tomate** (`tomate`) — Standard: `Stk` · Bestand
-- **Zucchini** (`zucchini`) — Standard: `Stk` · Bestand
-- **Zwiebel** (`zwiebel`) — Standard: `Stk` · Bestand
+Neue Rezepte speichern die Einheit nicht mehr im Rezept. Sie wird automatisch aus dem Zutatenkatalog ergänzt. Dadurch kann z. B. Hähnchenbrust nur als Gramm und Milch nur als Milliliter verwendet werden.
 
-## Obst
+> Bestehende Rezepte mit alten Einheiten wie `Stk`, `EL`, `kg` usw. bleiben aus Kompatibilitätsgründen unverändert, bis sie bewusst migriert werden.
 
-- **Apfel** (`apfel`) — Standard: `Stk` · Grundausstattung
-- **Avocado** (`avocado`) — Standard: `Stk` · Grundausstattung
-- **Banane** (`banane`) — Standard: `Stk` · Grundausstattung
-- **Erdbeeren** (`erdbeeren`) — Standard: `g` · Grundausstattung
-- **Heidelbeeren** (`heidelbeeren`) — Standard: `g` · Grundausstattung
-- **Himbeeren** (`himbeeren`) — Standard: `g` · Grundausstattung
-- **Limette** (`limette`) — Standard: `Stk` · Grundausstattung
-- **Limettensaft** (`limettensaft`) — Standard: `EL` · Bestand
-- **Mango** (`mango`) — Standard: `Stk` · Grundausstattung
-- **Orange** (`orange`) — Standard: `Stk` · Grundausstattung
-- **Zitrone** (`zitrone`) — Standard: `Stk` · Bestand
-- **Zitronensaft** (`zitronensaft`) — Standard: `EL` · Bestand
-
-## Fleisch
-
-- **Bacon** (`bacon`) — Standard: `g` · Grundausstattung
-- **Bratwurst** (`bratwurst`) — Standard: `Stk` · Grundausstattung
-- **Chorizo** (`chorizo`) — Standard: `g` · Bestand
-- **Fleischkäse** (`fleischkaese`) — Standard: `Scheiben` · Bestand
-- **Gemischtes Hackfleisch** (`hackfleischGemischt`) — Standard: `g` · Bestand
-- **Hähnchenbrust** (`haehnchenbrust`) — Standard: `g` · Bestand
-- **Hähnchenbrustfilet** (`haehnchenbrustfilet`) — Standard: `g` · Bestand
-- **Kochschinken** (`kochschinken`) — Standard: `g` · Grundausstattung
-- **Putenbrust** (`putenbrust`) — Standard: `g` · Grundausstattung
-- **Rinderhackfleisch** (`rinderhackfleisch`) — Standard: `g` · Grundausstattung
-- **Rindersteak** (`rindersteak`) — Standard: `g` · Grundausstattung
-- **Rindfleisch** (`rindfleisch`) — Standard: `g` · Grundausstattung
-- **Salami** (`salami`) — Standard: `g` · Grundausstattung
-- **Schweinefilet** (`schweinefilet`) — Standard: `g` · Grundausstattung
-- **Schweineschnitzel** (`schweineschnitzel`) — Standard: `g` · Grundausstattung
-- **Speck** (`speck`) — Standard: `g` · Grundausstattung
-
-## Fisch & Meeresfrüchte
-
-- **Garnelen** (`garnelen`) — Standard: `g` · Grundausstattung
-- **Kabeljaufilet** (`kabeljau`) — Standard: `g` · Grundausstattung
-- **Lachsfilet** (`lachsfilet`) — Standard: `g` · Bestand
-- **Thunfisch** (`thunfisch`) — Standard: `Dose` · Grundausstattung
-
-## Milchprodukte & Eier
-
-- **Butter** (`butter`) — Standard: `g` · Grundausstattung
-- **Cheddar** (`cheddar`) — Standard: `g` · Grundausstattung
-- **Crème fraîche** (`cremeFraiche`) — Standard: `Becher` · Bestand
-- **Ei** (`ei`) — Standard: `Stk` · Bestand
-- **Emmentaler** (`emmentaler`) — Standard: `g` · Grundausstattung
-- **Feta** (`feta`) — Standard: `g` · Grundausstattung
-- **Frischkäse** (`frischkaese`) — Standard: `g` · Bestand
-- **Gouda** (`gouda`) — Standard: `g` · Grundausstattung
-- **Griechischer Joghurt** (`griechischerJoghurt`) — Standard: `g` · Grundausstattung
-- **Käse** (`kaese`) — Standard: `g` · Grundausstattung
-- **Milch** (`milch`) — Standard: `ml` · Grundausstattung
-- **Mozzarella** (`mozzarella`) — Standard: `g` · Grundausstattung
-- **Naturjoghurt** (`naturjoghurt`) — Standard: `g` · Bestand
-- **Parmesan** (`parmesan`) — Standard: `g` · Bestand
-- **Quark** (`quark`) — Standard: `g` · Grundausstattung
-- **Sahne** (`sahne`) — Standard: `ml` · Bestand
-- **Saure Sahne** (`saureSahne`) — Standard: `Becher` · Grundausstattung
-- **Schmand** (`schmand`) — Standard: `Becher` · Grundausstattung
-
-## Getreide & Beilagen
-
-- **Basmatireis** (`basmatireis`) — Standard: `g` · Bestand
-- **Bulgur** (`bulgur`) — Standard: `g` · Grundausstattung
-- **Couscous** (`couscous`) — Standard: `g` · Grundausstattung
-- **Fusilli** (`fusilli`) — Standard: `g` · Grundausstattung
-- **Gnocchi** (`gnocchi`) — Standard: `g` · Bestand
-- **Haferflocken** (`haferflocken`) — Standard: `g` · Grundausstattung
-- **Lasagneplatten** (`lasagneplatten`) — Standard: `g` · Grundausstattung
-- **Nudeln** (`nudeln`) — Standard: `g` · Grundausstattung
-- **Penne** (`penne`) — Standard: `g` · Grundausstattung
-- **Quinoa** (`quinoa`) — Standard: `g` · Grundausstattung
-- **Reis** (`reis`) — Standard: `g` · Bestand
-- **Spaghetti** (`spaghetti`) — Standard: `g` · Bestand
-- **Tagliatelle** (`tagliatelle`) — Standard: `g` · Grundausstattung
-- **Tortellini** (`tortellini`) — Standard: `g` · Grundausstattung
-
-## Konserven & Hülsenfrüchte
-
-- **Gehackte Tomaten** (`gehackteTomaten`) — Standard: `Dose` · Grundausstattung
-- **Kichererbsen** (`kichererbsen`) — Standard: `Dose` · Grundausstattung
-- **Kidneybohnen** (`kidneybohnen`) — Standard: `Dose` · Grundausstattung
-- **Kokosmilch** (`kokosmilch`) — Standard: `ml` · Bestand
-- **Linsen** (`linsen`) — Standard: `g` · Grundausstattung
-- **Mais** (`mais`) — Standard: `Dose` · Grundausstattung
-- **Passierte Tomaten** (`passierteTomaten`) — Standard: `ml` · Bestand
-- **Tomatenmark** (`tomatenmark`) — Standard: `EL` · Grundausstattung
-- **Weiße Bohnen** (`weisseBohnen`) — Standard: `Dose` · Grundausstattung
-
-## Gewürze & Kräuter
-
-- **Basilikum** (`basilikum`) — Standard: `Bund` · Grundausstattung
-- **Chiliflocken** (`chiliflocken`) — Standard: `TL` · Grundausstattung
-- **Dill** (`dill`) — Standard: `Bund` · Grundausstattung
-- **Knoblauchpulver** (`knoblauchpulver`) — Standard: `TL` · Grundausstattung
-- **Koriander** (`koriander`) — Standard: `Bund` · Grundausstattung
-- **Kreuzkümmel** (`kreuzkuemmel`) — Standard: `TL` · Grundausstattung
-- **Kurkuma** (`kurkuma`) — Standard: `TL` · Grundausstattung
-- **Mildes Currypulver** (`currypulver`) — Standard: `TL` · Bestand
-- **Muskat** (`muskat`) — Standard: `Prise` · Grundausstattung
-- **Oregano** (`oregano`) — Standard: `TL` · Bestand
-- **Paprikapulver edelsüß** (`paprikapulverEdelsuess`) — Standard: `TL` · Bestand
-- **Paprikapulver rosenscharf** (`paprikapulverRosenscharf`) — Standard: `TL` · Grundausstattung
-- **Petersilie** (`petersilie`) — Standard: `Bund` · Bestand
-- **Pfeffer** (`pfeffer`) — Standard: `n. B.` · Bestand
-- **Rosmarin** (`rosmarin`) — Standard: `TL` · Bestand
-- **Salz** (`salz`) — Standard: `n. B.` · Bestand
-- **Schnittlauch** (`schnittlauch`) — Standard: `Bund` · Grundausstattung
-- **Thymian** (`thymian`) — Standard: `TL` · Grundausstattung
-- **Zimt** (`zimt`) — Standard: `TL` · Grundausstattung
-
-## Öle, Saucen & Würzmittel
-
-- **Balsamico** (`balsamico`) — Standard: `EL` · Grundausstattung
-- **Essig** (`essig`) — Standard: `EL` · Grundausstattung
-- **Gemüsebrühe** (`gemuesebruehe`) — Standard: `ml` · Bestand
-- **Grünes Pesto** (`pestoGruen`) — Standard: `g` · Grundausstattung
-- **Hühnerbrühe** (`huehnerbruehe`) — Standard: `ml` · Bestand
-- **Ketchup** (`ketchup`) — Standard: `EL` · Grundausstattung
-- **Mayonnaise** (`mayonnaise`) — Standard: `EL` · Grundausstattung
-- **Olivenöl** (`olivenoel`) — Standard: `EL` · Bestand
-- **Rapsöl** (`rapsoel`) — Standard: `EL` · Grundausstattung
-- **Rote Currypaste** (`currypasteRot`) — Standard: `EL` · Grundausstattung
-- **Senf** (`senf`) — Standard: `EL` · Bestand
-- **Sesamöl** (`sesamoel`) — Standard: `EL` · Grundausstattung
-- **Sojasauce** (`sojasauce`) — Standard: `EL` · Grundausstattung
-- **Sonnenblumenöl** (`sonnenblumenoel`) — Standard: `EL` · Grundausstattung
-- **Tomatenpesto** (`tomatenpesto`) — Standard: `g` · Bestand
-- **Öl** (`oel`) — Standard: `EL` · Bestand
-
-## Backen & Vorrat
-
-- **Backpulver** (`backpulver`) — Standard: `TL` · Grundausstattung
-- **Brauner Zucker** (`braunerZucker`) — Standard: `g` · Grundausstattung
-- **Honig** (`honig`) — Standard: `EL` · Bestand
-- **Mandeln** (`mandeln`) — Standard: `g` · Grundausstattung
-- **Mehl** (`mehl`) — Standard: `g` · Grundausstattung
-- **Paniermehl** (`paniermehl`) — Standard: `g` · Grundausstattung
-- **Semmelbrösel** (`semmelbroesel`) — Standard: `EL` · Bestand
-- **Speisestärke** (`speisestaerke`) — Standard: `EL` · Grundausstattung
-- **Walnüsse** (`walnuesse`) — Standard: `g` · Grundausstattung
-- **Zucker** (`zucker`) — Standard: `g` · Grundausstattung
-
-## Brot & Backwaren
-
-- **Baguette** (`baguette`) — Standard: `Stk` · Grundausstattung
-- **Brot** (`brot`) — Standard: `Scheiben` · Grundausstattung
-- **Ciabatta** (`ciabatta`) — Standard: `Stk` · Bestand
-- **Toastbrot** (`toastbrot`) — Standard: `Scheiben` · Grundausstattung
-- **Tortilla-Wraps** (`tortillaWraps`) — Standard: `Stk` · Grundausstattung
-
-## Technisch
-
-- **Zutat A (Platzhalter)** (`zutatA`) — Standard: `Stk` · Bestand
-
+| Zutat | ID | Kategorie | Einheit |
+|---|---|---|---|
+| Apfel | `apfel` | Obst | **g** |
+| Aubergine | `aubergine` | Gemüse | **g** |
+| Avocado | `avocado` | Obst | **g** |
+| Backpulver | `backpulver` | Backen & Vorrat | **g** |
+| Bacon | `bacon` | Fleisch | **g** |
+| Baguette | `baguette` | Brot & Backwaren | **g** |
+| Balsamico | `balsamico` | Öle, Saucen & Würzmittel | **ml** |
+| Banane | `banane` | Obst | **g** |
+| Basilikum | `basilikum` | Gewürze & Kräuter | **g** |
+| Basmatireis | `basmatireis` | Getreide & Beilagen | **g** |
+| Blumenkohl | `blumenkohl` | Gemüse | **g** |
+| Bratwurst | `bratwurst` | Fleisch | **g** |
+| Brauner Zucker | `braunerZucker` | Backen & Vorrat | **g** |
+| Brokkoli | `brokkoli` | Gemüse | **g** |
+| Brot | `brot` | Brot & Backwaren | **g** |
+| Bulgur | `bulgur` | Getreide & Beilagen | **g** |
+| Butter | `butter` | Milchprodukte & Eier | **g** |
+| Champignons | `champignons` | Gemüse | **g** |
+| Cheddar | `cheddar` | Milchprodukte & Eier | **g** |
+| Cherrytomaten | `cherrytomaten` | Gemüse | **g** |
+| Chiliflocken | `chiliflocken` | Gewürze & Kräuter | **g** |
+| Chilischote | `chili` | Gemüse | **g** |
+| Chorizo | `chorizo` | Fleisch | **g** |
+| Ciabatta | `ciabatta` | Brot & Backwaren | **g** |
+| Couscous | `couscous` | Getreide & Beilagen | **g** |
+| Crème fraîche | `cremeFraiche` | Milchprodukte & Eier | **g** |
+| Dill | `dill` | Gewürze & Kräuter | **g** |
+| Ei | `ei` | Milchprodukte & Eier | **g** |
+| Emmentaler | `emmentaler` | Milchprodukte & Eier | **g** |
+| Erbsen | `erbsen` | Gemüse | **g** |
+| Erdbeeren | `erdbeeren` | Obst | **g** |
+| Essig | `essig` | Öle, Saucen & Würzmittel | **ml** |
+| Feta | `feta` | Milchprodukte & Eier | **g** |
+| Fleischkäse | `fleischkaese` | Fleisch | **g** |
+| Frischkäse | `frischkaese` | Milchprodukte & Eier | **g** |
+| Frühlingszwiebel | `fruehlingszwiebel` | Gemüse | **g** |
+| Fusilli | `fusilli` | Getreide & Beilagen | **g** |
+| Garnelen | `garnelen` | Fisch & Meeresfrüchte | **g** |
+| Gehackte Tomaten | `gehackteTomaten` | Konserven & Hülsenfrüchte | **g** |
+| Gelbe Paprika | `gelbePaprika` | Gemüse | **g** |
+| Gemischtes Hackfleisch | `hackfleischGemischt` | Fleisch | **g** |
+| Gemüsebrühe | `gemuesebruehe` | Öle, Saucen & Würzmittel | **ml** |
+| Gnocchi | `gnocchi` | Getreide & Beilagen | **g** |
+| Gouda | `gouda` | Milchprodukte & Eier | **g** |
+| Griechischer Joghurt | `griechischerJoghurt` | Milchprodukte & Eier | **g** |
+| Grüne Bohnen | `grueneBohnen` | Gemüse | **g** |
+| Grüne Paprika | `gruenePaprika` | Gemüse | **g** |
+| Grünes Pesto | `pestoGruen` | Öle, Saucen & Würzmittel | **g** |
+| Gurke | `gurke` | Gemüse | **g** |
+| Haferflocken | `haferflocken` | Getreide & Beilagen | **g** |
+| Heidelbeeren | `heidelbeeren` | Obst | **g** |
+| Himbeeren | `himbeeren` | Obst | **g** |
+| Honig | `honig` | Backen & Vorrat | **g** |
+| Hähnchenbrust | `haehnchenbrust` | Fleisch | **g** |
+| Hähnchenbrustfilet | `haehnchenbrustfilet` | Fleisch | **g** |
+| Hühnerbrühe | `huehnerbruehe` | Öle, Saucen & Würzmittel | **ml** |
+| Ingwer | `ingwer` | Gemüse | **g** |
+| Kabeljaufilet | `kabeljau` | Fisch & Meeresfrüchte | **g** |
+| Karotten | `karotten` | Gemüse | **g** |
+| Kartoffeln | `kartoffeln` | Gemüse | **g** |
+| Kartoffeln, festkochend | `kartoffelnFestkochend` | Gemüse | **g** |
+| Ketchup | `ketchup` | Öle, Saucen & Würzmittel | **g** |
+| Kichererbsen | `kichererbsen` | Konserven & Hülsenfrüchte | **g** |
+| Kidneybohnen | `kidneybohnen` | Konserven & Hülsenfrüchte | **g** |
+| Knoblauchpulver | `knoblauchpulver` | Gewürze & Kräuter | **g** |
+| Knoblauchzehe | `knoblauch` | Gemüse | **g** |
+| Kochschinken | `kochschinken` | Fleisch | **g** |
+| Kokosmilch | `kokosmilch` | Konserven & Hülsenfrüchte | **ml** |
+| Koriander | `koriander` | Gewürze & Kräuter | **g** |
+| Kreuzkümmel | `kreuzkuemmel` | Gewürze & Kräuter | **g** |
+| Kurkuma | `kurkuma` | Gewürze & Kräuter | **g** |
+| Käse | `kaese` | Milchprodukte & Eier | **g** |
+| Kürbis | `kuerbis` | Gemüse | **g** |
+| Lachsfilet | `lachsfilet` | Fisch & Meeresfrüchte | **g** |
+| Lasagneplatten | `lasagneplatten` | Getreide & Beilagen | **g** |
+| Lauch | `lauch` | Gemüse | **g** |
+| Limette | `limette` | Obst | **g** |
+| Limettensaft | `limettensaft` | Obst | **ml** |
+| Linsen | `linsen` | Konserven & Hülsenfrüchte | **g** |
+| Mais | `mais` | Konserven & Hülsenfrüchte | **g** |
+| Mandeln | `mandeln` | Backen & Vorrat | **g** |
+| Mango | `mango` | Obst | **g** |
+| Mayonnaise | `mayonnaise` | Öle, Saucen & Würzmittel | **g** |
+| Mehl | `mehl` | Backen & Vorrat | **g** |
+| Milch | `milch` | Milchprodukte & Eier | **ml** |
+| Mildes Currypulver | `currypulver` | Gewürze & Kräuter | **g** |
+| Mozzarella | `mozzarella` | Milchprodukte & Eier | **g** |
+| Muskat | `muskat` | Gewürze & Kräuter | **g** |
+| Naturjoghurt | `naturjoghurt` | Milchprodukte & Eier | **g** |
+| Nudeln | `nudeln` | Getreide & Beilagen | **g** |
+| Olivenöl | `olivenoel` | Öle, Saucen & Würzmittel | **ml** |
+| Orange | `orange` | Obst | **g** |
+| Oregano | `oregano` | Gewürze & Kräuter | **g** |
+| Paniermehl | `paniermehl` | Backen & Vorrat | **g** |
+| Paprika | `paprika` | Gemüse | **g** |
+| Paprikapulver edelsüß | `paprikapulverEdelsuess` | Gewürze & Kräuter | **g** |
+| Paprikapulver rosenscharf | `paprikapulverRosenscharf` | Gewürze & Kräuter | **g** |
+| Parmesan | `parmesan` | Milchprodukte & Eier | **g** |
+| Passierte Tomaten | `passierteTomaten` | Konserven & Hülsenfrüchte | **ml** |
+| Penne | `penne` | Getreide & Beilagen | **g** |
+| Petersilie | `petersilie` | Gewürze & Kräuter | **g** |
+| Pfeffer | `pfeffer` | Gewürze & Kräuter | **g** |
+| Putenbrust | `putenbrust` | Fleisch | **g** |
+| Quark | `quark` | Milchprodukte & Eier | **g** |
+| Quinoa | `quinoa` | Getreide & Beilagen | **g** |
+| Rapsöl | `rapsoel` | Öle, Saucen & Würzmittel | **ml** |
+| Reis | `reis` | Getreide & Beilagen | **g** |
+| Rinderhackfleisch | `rinderhackfleisch` | Fleisch | **g** |
+| Rindersteak | `rindersteak` | Fleisch | **g** |
+| Rindfleisch | `rindfleisch` | Fleisch | **g** |
+| Rosmarin | `rosmarin` | Gewürze & Kräuter | **g** |
+| Rote Currypaste | `currypasteRot` | Öle, Saucen & Würzmittel | **g** |
+| Rote Paprika | `rotePaprika` | Gemüse | **g** |
+| Rote Zwiebel | `roteZwiebel` | Gemüse | **g** |
+| Rucola | `rucola` | Gemüse | **g** |
+| Sahne | `sahne` | Milchprodukte & Eier | **ml** |
+| Salami | `salami` | Fleisch | **g** |
+| Salat | `salat` | Gemüse | **g** |
+| Salz | `salz` | Gewürze & Kräuter | **g** |
+| Saure Sahne | `saureSahne` | Milchprodukte & Eier | **g** |
+| Schmand | `schmand` | Milchprodukte & Eier | **g** |
+| Schnittlauch | `schnittlauch` | Gewürze & Kräuter | **g** |
+| Schweinefilet | `schweinefilet` | Fleisch | **g** |
+| Schweineschnitzel | `schweineschnitzel` | Fleisch | **g** |
+| Sellerie | `sellerie` | Gemüse | **g** |
+| Semmelbrösel | `semmelbroesel` | Backen & Vorrat | **g** |
+| Senf | `senf` | Öle, Saucen & Würzmittel | **g** |
+| Sesamöl | `sesamoel` | Öle, Saucen & Würzmittel | **ml** |
+| Sojasauce | `sojasauce` | Öle, Saucen & Würzmittel | **ml** |
+| Sonnenblumenöl | `sonnenblumenoel` | Öle, Saucen & Würzmittel | **ml** |
+| Spaghetti | `spaghetti` | Getreide & Beilagen | **g** |
+| Speck | `speck` | Fleisch | **g** |
+| Speisestärke | `speisestaerke` | Backen & Vorrat | **g** |
+| Spinat | `spinat` | Gemüse | **g** |
+| Süßkartoffeln | `suesskartoffeln` | Gemüse | **g** |
+| Tagliatelle | `tagliatelle` | Getreide & Beilagen | **g** |
+| Thunfisch | `thunfisch` | Fisch & Meeresfrüchte | **g** |
+| Thymian | `thymian` | Gewürze & Kräuter | **g** |
+| Toastbrot | `toastbrot` | Brot & Backwaren | **g** |
+| Tomate | `tomate` | Gemüse | **g** |
+| Tomatenmark | `tomatenmark` | Konserven & Hülsenfrüchte | **g** |
+| Tomatenpesto | `tomatenpesto` | Öle, Saucen & Würzmittel | **g** |
+| Tortellini | `tortellini` | Getreide & Beilagen | **g** |
+| Tortilla-Wraps | `tortillaWraps` | Brot & Backwaren | **g** |
+| Walnüsse | `walnuesse` | Backen & Vorrat | **g** |
+| Weiße Bohnen | `weisseBohnen` | Konserven & Hülsenfrüchte | **g** |
+| Zimt | `zimt` | Gewürze & Kräuter | **g** |
+| Zitrone | `zitrone` | Obst | **g** |
+| Zitronensaft | `zitronensaft` | Obst | **ml** |
+| Zucchini | `zucchini` | Gemüse | **g** |
+| Zucker | `zucker` | Backen & Vorrat | **g** |
+| Zutat A (Platzhalter) | `zutatA` | Technisch | **g** |
+| Zwiebel | `zwiebel` | Gemüse | **g** |
+| Öl | `oel` | Öle, Saucen & Würzmittel | **ml** |

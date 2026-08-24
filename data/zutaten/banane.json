@@ -2,6 +2,6 @@
   "id": "banane",
   "name": "Banane",
   "kategorie": "Obst",
-  "standardEinheit": "Stk",
+  "standardEinheit": "g",
   "quelle": "grundausstattung"
 }

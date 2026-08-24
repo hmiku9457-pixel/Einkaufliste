@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 '''Erweitert assets/js/main.js idempotent um den zentralen Zutatenkatalog.
 
-Die bestehende Website-Struktur bleibt erhalten. Neue CMS-Rezepte dürfen im
-Zutatenobjekt das redundante Feld `name` weglassen; der Name wird beim Laden aus
-`data/zutaten/00_katalog.json` ergänzt. Alte Rezepte funktionieren weiterhin.
+Die bestehende Website-Struktur bleibt erhalten. Neue CMS-Rezepte speichern im
+Zutatenobjekt nur `id` und `menge`; Name und Einheit werden beim Laden aus
+`data/zutaten/00_katalog.json` ergänzt. Alte Rezepte mit eigener Einheit bleiben
+weiterhin unverändert kompatibel.
 '''
 
 from __future__ import annotations
@@ -127,8 +128,8 @@ async function loadZutatenKatalog() {
 }
 
 /**
- * Ergänzt den Namen einer Rezept-Zutat aus dem zentralen Katalog.
- * Alte Rezeptdateien mit eigenem name-Feld bleiben als Fallback kompatibel.
+ * Ergänzt Name und Einheit einer Rezept-Zutat aus dem zentralen Katalog.
+ * Alte Rezeptdateien mit eigenem name-/einheit-Feld bleiben als Fallback kompatibel.
  */
 function resolveZutatenNamen(
 	gericht
@@ -172,7 +173,11 @@ function resolveZutatenNamen(
 					name:
 						katalogEintrag?.name ||
 						zutat.name ||
-						id
+						id,
+					einheit:
+						(typeof zutat.einheit === "string" && zutat.einheit.trim() !== "")
+							? zutat.einheit
+							: (katalogEintrag?.standardEinheit || "g")
 				};
 			}
 		);

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Validiert Zutatenkatalog und Rezepte für die Einkaufsliste.
 
-Neue CMS-Rezepte speichern pro Zutat nur noch id, menge und einheit.
-Der sichtbare Zutatenname wird zur Laufzeit aus data/zutaten/00_katalog.json ergänzt.
-Alte Rezeptdateien mit zusätzlichem name-Feld bleiben kompatibel.
+Neue CMS-Rezepte speichern pro Zutat nur noch id und menge. Name und Einheit
+werden zur Laufzeit aus data/zutaten/00_katalog.json ergänzt. Der Zutatenkatalog
+verwendet ausschließlich g für feste/trockene Zutaten und ml für Flüssigkeiten.
+Alte Rezeptdateien mit eigenem name-/einheit-Feld bleiben kompatibel.
 """
 
 from __future__ import annotations
@@ -18,7 +19,8 @@ from typing import Any
 GERICHTE_DIR = Path("data/gerichte")
 ZUTATEN_DIR = Path("data/zutaten")
 ID_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*$")
-ALLOWED_UNITS = {
+STANDARD_UNITS = {"g", "ml"}
+LEGACY_UNITS = {
     "g", "kg", "ml", "l", "Stk", "EL", "TL", "Prise", "n. B.", "Bund",
     "Becher", "Dose", "Packung", "Glas", "Flasche", "Scheiben", "Zehen",
     "Handvoll", "Tasse", "Würfel", "Blatt", "Rolle",
@@ -94,7 +96,7 @@ def validate_ingredients() -> tuple[dict[str, dict[str, Any]], bool]:
             problems.append("Feld 'name' fehlt oder ist leer.")
         if not isinstance(category, str) or not category.strip():
             problems.append("Feld 'kategorie' fehlt oder ist leer.")
-        if standard_unit not in ALLOWED_UNITS:
+        if standard_unit not in STANDARD_UNITS:
             problems.append(f"Feld 'standardEinheit' ist ungültig: {standard_unit!r}.")
 
         for problem in problems:
@@ -190,11 +192,22 @@ def validate_recipes(catalog: dict[str, dict[str, Any]]) -> bool:
                 elif float(str(zutat.get("menge")).replace(",", ".")) < 0:
                     problems.append(f"{prefix}: 'menge' darf nicht negativ sein.")
 
+                # Neue CMS-Rezepte speichern keine Einheit mehr. Sie wird aus dem
+                # Zutatenkatalog ergänzt. Ein vorhandenes einheit-Feld wird nur für
+                # bestehende/alte Rezepte akzeptiert, damit deren Mengen nicht falsch
+                # interpretiert werden.
                 unit = zutat.get("einheit")
-                if not isinstance(unit, str) or not unit.strip():
-                    problems.append(f"{prefix}: 'einheit' fehlt oder ist leer.")
-                elif unit not in ALLOWED_UNITS:
-                    problems.append(f"{prefix}: unbekannte Einheit '{unit}'.")
+                if unit is not None:
+                    if not isinstance(unit, str) or not unit.strip():
+                        problems.append(f"{prefix}: vorhandenes 'einheit'-Feld ist leer oder ungültig.")
+                    elif unit not in LEGACY_UNITS:
+                        problems.append(f"{prefix}: unbekannte Legacy-Einheit '{unit}'.")
+                    elif unit not in STANDARD_UNITS:
+                        warning(
+                            path,
+                            f"{prefix}: Legacy-Einheit '{unit}' bleibt aus Kompatibilitätsgründen erhalten. "
+                            "Neue CMS-Rezepte verwenden nur noch g/ml aus dem Zutatenkatalog."
+                        )
 
         preparation = data.get("zubereitung")
         if preparation is not None:

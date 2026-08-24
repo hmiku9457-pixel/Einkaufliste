@@ -2,6 +2,6 @@
   "id": "schmand",
   "name": "Schmand",
   "kategorie": "Milchprodukte & Eier",
-  "standardEinheit": "Becher",
+  "standardEinheit": "g",
   "quelle": "grundausstattung"
 }

@@ -2,6 +2,6 @@
   "id": "toastbrot",
   "name": "Toastbrot",
   "kategorie": "Brot & Backwaren",
-  "standardEinheit": "Scheiben",
+  "standardEinheit": "g",
   "quelle": "grundausstattung"
 }
