@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta
+		name="description"
+		content="Ein Rezept für die gemeinsame Rezeptsammlung vorschlagen."
+	>
+	<link rel="stylesheet" href="assets/css/main.css">
+	<title>Rezept einreichen</title>
+</head>
+
+<body>
+	<a class="skip-link" href="#main-content">
+		Zum Hauptinhalt
+	</a>
+
+	<header class="site-header">
+		<div class="page-container header-content">
+			<div class="header-heading">
+				<p class="eyebrow">Rezeptvorschlag</p>
+				<h1>Rezept einreichen</h1>
+				<p class="header-description">
+					Der Vorschlag wird zuerst geprüft und nicht automatisch veröffentlicht.
+				</p>
+			</div>
+
+			<nav class="header-actions" aria-label="Seitennavigation">
+				<a href="rezept_uebersicht.html" class="button">
+					Rezepte
+				</a>
+				<a href="index.html" class="button">
+					Einkaufsliste
+				</a>
+			</nav>
+		</div>
+	</header>
+
+	<main id="main-content" class="page-container submission-page">
+		<section class="panel submission-panel" aria-labelledby="submission-heading">
+			<h2 id="submission-heading">Rezeptvorschlag erstellen</h2>
+
+			<p class="submission-intro">
+				Bestehende Zutaten werden beim Tippen vorgeschlagen. Mengen werden
+				wie im neuen Rezeptmodell ausschließlich in <strong>g</strong> oder
+				<strong>ml</strong> angegeben.
+			</p>
+
+			<p class="submission-intro">
+				Beim Absenden öffnet sich ein vorausgefüllter GitHub-Vorschlag.
+				Dafür müssen im Repository einmalig GitHub Issues aktiviert sein.
+			</p>
+
+			<form id="recipeSubmissionForm" class="submission-form">
+				<label class="submission-field">
+					<span>Name des Gerichts</span>
+					<input
+						type="text"
+						id="submissionRecipeName"
+						required
+						autocomplete="off"
+					>
+				</label>
+
+				<fieldset class="submission-group">
+					<legend>Kategorien</legend>
+					<div
+						id="submissionCategories"
+						class="submission-categories"
+					></div>
+				</fieldset>
+
+				<fieldset class="submission-group">
+					<legend>Zutaten</legend>
+					<small>
+						Bekannte Zutaten einfach anfangen zu tippen und auswählen.
+					</small>
+
+					<datalist id="ingredientSuggestions"></datalist>
+
+					<div
+						id="submissionIngredients"
+						class="submission-ingredients"
+					></div>
+
+					<div>
+						<button
+							type="button"
+							id="addSubmissionIngredient"
+							class="button"
+						>
+							+ Zutat hinzufügen
+						</button>
+					</div>
+				</fieldset>
+
+				<label class="submission-field">
+					<span>Zubereitung</span>
+					<small>Ein Schritt pro Zeile.</small>
+					<textarea
+						id="submissionPreparation"
+						required
+					></textarea>
+				</label>
+
+				<div class="submission-actions">
+					<button type="submit" class="button button-secondary">
+						Vorschlag an GitHub übergeben
+					</button>
+				</div>
+			</form>
+
+			<section
+				id="submissionPreview"
+				class="submission-preview"
+				hidden
+				aria-labelledby="submission-preview-heading"
+			>
+				<h2 id="submission-preview-heading">JSON-Vorschau</h2>
+				<p>
+					Das ist der strukturierte Vorschlag, der später geprüft und
+					ins CMS übernommen werden kann.
+				</p>
+				<textarea id="submissionJson" readonly></textarea>
+			</section>
+		</section>
+	</main>
+
+	<script src="assets/js/main.js"></script>
+</body>
+</html>

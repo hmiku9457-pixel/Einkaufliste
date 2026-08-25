@@ -18,7 +18,11 @@
 				<a href="index.html">
 					Einkaufsliste
 				</a>
-			</nav>
+			
+			<a href="rezept_einreichen.html" class="button button-secondary">
+				Rezept einreichen
+			</a>
+		</nav>
 		</header>
 
 
@@ -34,7 +38,27 @@
 					Wird automatisch durch main.js aus
 					data/gerichte/manifest.json gefüllt.
 				-->
-				<div id="rezeptListe"></div>
+				
+		<div class="filter-toolbar recipe-overview-filters" aria-label="Rezepte filtern">
+			<label class="filter-field">
+				<span>Suche</span>
+				<input
+					type="search"
+					id="rezeptSuche"
+					placeholder="Rezept oder Zutat suchen …"
+					autocomplete="off"
+				>
+			</label>
+
+			<label class="filter-field">
+				<span>Kategorie</span>
+				<select id="rezeptKategorie">
+					<option value="">Alle Kategorien</option>
+				</select>
+			</label>
+		</div>
+
+		<div id="rezeptListe"></div>
 
 			</section>
 

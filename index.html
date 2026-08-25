@@ -105,7 +105,27 @@
 						Wird durch main.js aus
 						data/gerichte/manifest.json gefüllt.
 					-->
-					<div
+					
+					<div class="filter-toolbar" aria-label="Gerichte filtern">
+						<label class="filter-field">
+							<span>Suche</span>
+							<input
+								type="search"
+								id="gerichtSuche"
+								placeholder="Rezept oder Zutat suchen …"
+								autocomplete="off"
+							>
+						</label>
+
+						<label class="filter-field">
+							<span>Kategorie</span>
+							<select id="gerichtKategorie">
+								<option value="">Alle Kategorien</option>
+							</select>
+						</label>
+					</div>
+
+<div
 						id="controls"
 						class="gerichte-liste"
 					></div>
@@ -130,14 +150,48 @@
 					</div>
 
 
-					<ul
+					
+					<div class="shopping-toolbar">
+						<div class="filter-toolbar filter-toolbar-shopping" aria-label="Zutaten filtern">
+							<label class="filter-field">
+								<span>Zutat suchen</span>
+								<input
+									type="search"
+									id="zutatenSuche"
+									placeholder="Zutat suchen …"
+									autocomplete="off"
+								>
+							</label>
+
+							<label class="filter-field">
+								<span>Kategorie</span>
+								<select id="zutatenKategorie">
+									<option value="">Alle Kategorien</option>
+								</select>
+							</label>
+						</div>
+
+						<label class="toggle-control">
+							<input
+								type="checkbox"
+								id="groupShoppingListToggle"
+							>
+							<span>Nach Gericht gruppieren</span>
+						</label>
+
+						<p
+							id="shoppingProgress"
+							class="shopping-progress"
+							aria-live="polite"
+						></p>
+					</div>
+
+					<div
 						id="zutatenListe"
 						aria-live="polite"
 					>
-						<li>
-							<em>Keine Zutaten ausgewählt</em>
-						</li>
-					</ul>
+						<p class="empty-state"><em>Keine Zutaten ausgewählt</em></p>
+					</div>
 				</section>
 
 

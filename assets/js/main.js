@@ -14,8 +14,31 @@ const GERICHTE_MANIFEST =
 const GERICHTE_PFAD =
 	"data/gerichte";
 
+const ZUTATEN_KATALOG =
+	"data/zutaten/00_katalog.json";
+
 const STORAGE_KEY =
 	"ausgewaehlteGerichte";
+
+const SHOPPING_CHECKED_KEY =
+	"abgehakteZutaten";
+
+const GROUPED_VIEW_KEY =
+	"einkaufslisteNachGericht";
+
+const RECIPE_SUBMISSION_ISSUES_URL =
+	"https://github.com/hmiku9457-pixel/Einkaufliste/issues/new";
+
+const RECIPE_CATEGORIES = [
+	"Fleisch",
+	"Fisch",
+	"Vegetarisch",
+	"Suppe",
+	"Pasta & Gnocchi",
+	"Reisgericht",
+	"Ofengericht"
+];
+
 
 
 /* ---------------------------------------------------------
@@ -97,6 +120,10 @@ const maps = {
 
 const gerichte =
 	new Map();
+const zutatenKatalog =
+	new Map();
+let zutatenKatalogGeladen =
+	false;
 
 let currentMap =
 	"none";
@@ -105,6 +132,135 @@ let currentMap =
 /* =========================================================
    GEMEINSAME FUNKTIONEN
    ========================================================= */
+
+
+
+/* ---------------------------------------------------------
+   4a. Zentralen Zutatenkatalog laden
+   --------------------------------------------------------- */
+async function loadZutatenKatalog() {
+
+	if (
+		zutatenKatalogGeladen
+	) {
+		return zutatenKatalog;
+	}
+
+	zutatenKatalog.clear();
+
+	const response =
+		await fetch(
+			ZUTATEN_KATALOG
+		);
+
+	if (!response.ok) {
+		throw new Error(
+			`Zutatenkatalog konnte nicht geladen werden: ${response.status}`
+		);
+	}
+
+	const katalog =
+		await response.json();
+
+	if (
+		!katalog ||
+		!katalog.zutaten ||
+		typeof katalog.zutaten !== "object" ||
+		Array.isArray(katalog.zutaten)
+	) {
+		throw new Error(
+			"Der Zutatenkatalog besitzt keine gültige Struktur."
+		);
+	}
+
+	Object.entries(
+		katalog.zutaten
+	).forEach(
+		([id, zutat]) => {
+			if (
+				typeof id !== "string" ||
+				!zutat ||
+				typeof zutat.name !== "string" ||
+				zutat.name.trim() === ""
+			) {
+				console.warn(
+					"Ungültiger Eintrag im Zutatenkatalog wurde übersprungen:",
+					id,
+					zutat
+				);
+				return;
+			}
+
+			zutatenKatalog.set(
+				id,
+				zutat
+			);
+		}
+	);
+
+	zutatenKatalogGeladen =
+		true;
+
+	return zutatenKatalog;
+}
+
+/**
+ * Ergänzt Name und Einheit einer Rezept-Zutat aus dem zentralen Katalog.
+ * Alte Rezeptdateien mit eigenem name-/einheit-Feld bleiben als Fallback kompatibel.
+ */
+function resolveZutatenNamen(
+	gericht
+) {
+
+	if (
+		!gericht ||
+		!Array.isArray(
+			gericht.zutaten
+		)
+	) {
+		return gericht;
+	}
+
+	gericht.zutaten =
+		gericht.zutaten.map(
+			zutat => {
+				if (
+					!zutat ||
+					typeof zutat !== "object"
+				) {
+					return zutat;
+				}
+
+				const id =
+					typeof zutat.id === "string"
+						? zutat.id.trim()
+						: "";
+
+				if (!id) {
+					return zutat;
+				}
+
+				const katalogEintrag =
+					zutatenKatalog.get(
+						id
+					);
+
+				return {
+					...zutat,
+					name:
+						katalogEintrag?.name ||
+						zutat.name ||
+						id,
+					einheit:
+						(typeof zutat.einheit === "string" && zutat.einheit.trim() !== "")
+							? zutat.einheit
+							: (katalogEintrag?.standardEinheit || "g")
+				};
+			}
+		);
+
+	return gericht;
+}
 
 
 /* ---------------------------------------------------------
@@ -123,6 +279,21 @@ let currentMap =
 async function loadGerichte() {
 
 	gerichte.clear();
+
+	try {
+		await loadZutatenKatalog();
+	} catch (error) {
+		/*
+		 * Die Seite bleibt auch bei einem Katalogfehler nutzbar.
+		 * Alte Rezepte verwenden ihr vorhandenes name-Feld;
+		 * neue Rezepte fallen notfalls auf die Zutaten-ID zurück.
+		 */
+		console.warn(
+			"Zutatenkatalog konnte nicht geladen werden. Fallback wird verwendet.",
+			error
+		);
+	}
+
 
 
 	const response =
@@ -198,6 +369,11 @@ async function loadGerichte() {
 
 			const gericht =
 				await response.json();
+
+			resolveZutatenNamen(
+				gericht
+			);
+
 
 
 			if (
@@ -419,6 +595,945 @@ function setOptionalBackgroundImage(
 }
 
 
+
+/* =========================================================
+   UX-HILFSFUNKTIONEN
+   UX-UPDATE-2026-08-25
+   ========================================================= */
+
+function normalizeFilterText(value) {
+	return String(value ?? "")
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.trim();
+}
+
+function uniqueStrings(values) {
+	return Array.from(
+		new Set(
+			values
+				.filter(Boolean)
+				.map(value => String(value).trim())
+				.filter(Boolean)
+		)
+	);
+}
+
+function getRezeptKategorien(gericht) {
+	const explicit = Array.isArray(gericht?.kategorien)
+		? uniqueStrings(gericht.kategorien)
+		: (
+			typeof gericht?.kategorie === "string"
+				? [gericht.kategorie.trim()].filter(Boolean)
+				: []
+		);
+
+	if (explicit.length > 0) {
+		return explicit;
+	}
+
+	const haystack = normalizeFilterText(
+		[
+			gericht?.name,
+			...(gericht?.zutaten ?? []).map(zutat => zutat?.name)
+		].join(" ")
+	);
+
+	const result = [];
+
+	if (/(lachs|fisch|thunfisch|garnele|forelle)/.test(haystack)) {
+		result.push("Fisch");
+	} else if (/(haehn|hahnchen|fleisch|hack|chorizo|wurst|speck|schinken|salami)/.test(haystack)) {
+		result.push("Fleisch");
+	} else {
+		result.push("Vegetarisch");
+	}
+
+	if (/suppe/.test(haystack)) {
+		result.push("Suppe");
+	}
+
+	if (/(spaghetti|nudel|pasta|gnocchi)/.test(haystack)) {
+		result.push("Pasta & Gnocchi");
+	}
+
+	if (/(^|\s)reis(\s|$)|reisgericht/.test(haystack)) {
+		result.push("Reisgericht");
+	}
+
+	if (/(ofen|ueberback|uberback|kruste)/.test(haystack)) {
+		result.push("Ofengericht");
+	}
+
+	return uniqueStrings(result);
+}
+
+function getCatalogIngredient(zutat) {
+	const id =
+		typeof zutat?.id === "string"
+			? zutat.id.trim()
+			: "";
+
+	if (!id) {
+		return null;
+	}
+
+	if (
+		typeof zutatenKatalog !== "undefined" &&
+		zutatenKatalog instanceof Map
+	) {
+		return zutatenKatalog.get(id) ?? null;
+	}
+
+	return null;
+}
+
+function getZutatKategorie(zutat) {
+	if (
+		typeof zutat?.kategorie === "string" &&
+		zutat.kategorie.trim()
+	) {
+		return zutat.kategorie.trim();
+	}
+
+	const catalog =
+		getCatalogIngredient(zutat);
+
+	if (
+		typeof catalog?.kategorie === "string" &&
+		catalog.kategorie.trim()
+	) {
+		return catalog.kategorie.trim();
+	}
+
+	const name = normalizeFilterText(zutat?.name);
+
+	const tests = [
+		[
+			"Obst",
+			/(zitrone|apfel|orange|limette|banane|mango|beere)/
+		],
+		[
+			"Gemüse",
+			/(tomat|paprika|zwiebel|knoblauch|champignon|kartoffel|zucchini|salat|spinat|brokkoli|karotte|mohre|gurke|aubergine|mais)/
+		],
+		[
+			"Fisch & Meeresfrüchte",
+			/(lachs|fisch|thunfisch|garnele|forelle|kabeljau)/
+		],
+		[
+			"Fleisch",
+			/(haehn|hahnchen|fleisch|hack|chorizo|wurst|speck|schinken|salami|pute)/
+		],
+		[
+			"Milchprodukte & Eier",
+			/(sahne|milch|kaese|kase|feta|frischkaese|frischkase|butter|joghurt|quark|ei\b|eier)/
+		],
+		[
+			"Getreide & Beilagen",
+			/(reis|nudel|spaghetti|pasta|gnocchi|mehl|brot|toast|couscous|bulgur|hafer)/
+		],
+		[
+			"Gewürze & Kräuter",
+			/(salz|pfeffer|gewuerz|gewurz|paprikapulver|curry|thymian|basilikum|oregano|rosmarin|oel|ol\b)/
+		],
+		[
+			"Öle, Saucen & Würzmittel",
+			/(bruehe|bruhe|senf|honig|tomatenmark|sauce|sojasauce|kokosmilch|essig|pesto)/
+		]
+	];
+
+	for (const [category, regex] of tests) {
+		if (regex.test(name)) {
+			return category;
+		}
+	}
+
+	return "Sonstiges";
+}
+
+function getIngredientKey(zutat) {
+	return `${zutat?.id ?? normalizeFilterText(zutat?.name)}::${zutat?.einheit ?? ""}`;
+}
+
+function loadCheckedIngredientKeys() {
+	try {
+		const raw = localStorage.getItem(SHOPPING_CHECKED_KEY);
+
+		if (!raw) {
+			return new Set();
+		}
+
+		const parsed = JSON.parse(raw);
+
+		return new Set(
+			Array.isArray(parsed)
+				? parsed.filter(value => typeof value === "string")
+				: []
+		);
+	} catch (error) {
+		console.warn(
+			"Abgehakte Zutaten konnten nicht geladen werden:",
+			error
+		);
+		return new Set();
+	}
+}
+
+function saveCheckedIngredientKeys(keys) {
+	localStorage.setItem(
+		SHOPPING_CHECKED_KEY,
+		JSON.stringify(Array.from(keys))
+	);
+}
+
+function setIngredientChecked(key, checked) {
+	const keys = loadCheckedIngredientKeys();
+
+	if (checked) {
+		keys.add(key);
+	} else {
+		keys.delete(key);
+	}
+
+	saveCheckedIngredientKeys(keys);
+}
+
+function populateSelect(select, values, emptyLabel) {
+	if (!select) {
+		return;
+	}
+
+	const oldValue = select.value;
+	const sorted = uniqueStrings(values)
+		.sort((a, b) => a.localeCompare(b, "de"));
+
+	select.innerHTML = "";
+
+	const all = document.createElement("option");
+	all.value = "";
+	all.textContent = emptyLabel;
+	select.appendChild(all);
+
+	sorted.forEach(value => {
+		const option = document.createElement("option");
+		option.value = value;
+		option.textContent = value;
+		select.appendChild(option);
+	});
+
+	if (
+		oldValue &&
+		sorted.includes(oldValue)
+	) {
+		select.value = oldValue;
+	}
+}
+
+function populateRecipeCategoryFilter(select) {
+	populateSelect(
+		select,
+		Array.from(gerichte.values())
+			.flatMap(getRezeptKategorien),
+		"Alle Kategorien"
+	);
+}
+
+function populateIngredientCategoryFilter(select, einkaufsliste) {
+	populateSelect(
+		select,
+		einkaufsliste.map(getZutatKategorie),
+		"Alle Kategorien"
+	);
+}
+
+function applyGerichtFilter(controls) {
+	const search = normalizeFilterText(
+		document.getElementById("gerichtSuche")?.value
+	);
+
+	const category =
+		document.getElementById("gerichtKategorie")?.value ?? "";
+
+	controls
+		.querySelectorAll(".gericht")
+		.forEach(container => {
+			const categories =
+				(container.dataset.categories ?? "")
+					.split("|")
+					.filter(Boolean);
+
+			const matchesSearch =
+				!search ||
+				normalizeFilterText(container.dataset.search)
+					.includes(search);
+
+			const matchesCategory =
+				!category ||
+				categories.includes(category);
+
+			container.hidden =
+				!(matchesSearch && matchesCategory);
+		});
+}
+
+function applyRezeptFilter(rezeptListe) {
+	const search = normalizeFilterText(
+		document.getElementById("rezeptSuche")?.value
+	);
+
+	const category =
+		document.getElementById("rezeptKategorie")?.value ?? "";
+
+	let visible = 0;
+
+	rezeptListe
+		.querySelectorAll(".rezept-card")
+		.forEach(card => {
+			const categories =
+				(card.dataset.categories ?? "")
+					.split("|")
+					.filter(Boolean);
+
+			const matchesSearch =
+				!search ||
+				normalizeFilterText(card.dataset.search)
+					.includes(search);
+
+			const matchesCategory =
+				!category ||
+				categories.includes(category);
+
+			card.hidden =
+				!(matchesSearch && matchesCategory);
+
+			if (!card.hidden) {
+				visible += 1;
+			}
+		});
+
+	let empty =
+		rezeptListe.querySelector(".recipe-filter-empty");
+
+	if (visible === 0) {
+		if (!empty) {
+			empty = document.createElement("p");
+			empty.className =
+				"recipe-filter-empty empty-state";
+			empty.textContent =
+				"Keine passenden Rezepte gefunden.";
+			rezeptListe.appendChild(empty);
+		}
+	} else {
+		empty?.remove();
+	}
+}
+
+function createGroupedShoppingList(controls) {
+	return getSelectedGerichte(controls)
+		.map(gericht => ({
+			gerichtId: gericht.id,
+			gerichtName: gericht.name,
+			zutaten: (gericht.zutaten ?? [])
+				.filter(zutat => zutat?.id && zutat?.name)
+				.map(zutat => ({
+					id: zutat.id,
+					name: zutat.name,
+					menge: Number(zutat.menge),
+					einheit: zutat.einheit ?? "",
+					kategorie:
+						zutat.kategorie ?? null
+				}))
+				.filter(zutat =>
+					Number.isFinite(zutat.menge)
+				)
+		}))
+		.filter(group => group.zutaten.length > 0);
+}
+
+function createShoppingItem(zutat, checkedKeys) {
+	const li =
+		document.createElement("li");
+
+	li.className =
+		"shopping-item";
+
+	const key =
+		getIngredientKey(zutat);
+
+	const checked =
+		checkedKeys.has(key);
+
+	if (checked) {
+		li.classList.add("is-done");
+	}
+
+	const label =
+		document.createElement("label");
+
+	const checkbox =
+		document.createElement("input");
+
+	checkbox.type =
+		"checkbox";
+
+	checkbox.className =
+		"shopping-item-checkbox";
+
+	checkbox.dataset.shoppingKey =
+		key;
+
+	checkbox.checked =
+		checked;
+
+	checkbox.setAttribute(
+		"aria-label",
+		`${zutat.name} als erledigt markieren`
+	);
+
+	const text =
+		document.createElement("span");
+
+	text.className =
+		"shopping-item-text";
+
+	const einheit =
+		zutat.einheit
+			? ` ${zutat.einheit}`
+			: "";
+
+	text.textContent =
+		`${formatMenge(zutat.menge)}${einheit} ${zutat.name}`;
+
+	label.appendChild(checkbox);
+	label.appendChild(text);
+	li.appendChild(label);
+
+	return li;
+}
+
+function ingredientMatchesFilters(zutat) {
+	const search = normalizeFilterText(
+		document.getElementById("zutatenSuche")?.value
+	);
+
+	const category =
+		document.getElementById("zutatenKategorie")?.value ?? "";
+
+	return (
+		(
+			!search ||
+			normalizeFilterText(zutat?.name)
+				.includes(search)
+		) &&
+		(
+			!category ||
+			getZutatKategorie(zutat) === category
+		)
+	);
+}
+
+function updateShoppingProgress(einkaufsliste) {
+	const target =
+		document.getElementById("shoppingProgress");
+
+	if (!target) {
+		return;
+	}
+
+	if (einkaufsliste.length === 0) {
+		target.textContent = "";
+		return;
+	}
+
+	const checked =
+		loadCheckedIngredientKeys();
+
+	const allKeys =
+		uniqueStrings(
+			einkaufsliste.map(getIngredientKey)
+		);
+
+	const done =
+		allKeys.filter(key =>
+			checked.has(key)
+		).length;
+
+	target.textContent =
+		`${done} von ${allKeys.length} Zutaten erledigt`;
+}
+
+function slugifyRecipeId(value) {
+	const words =
+		normalizeFilterText(value)
+			.replace(/[^a-z0-9]+/g, " ")
+			.trim()
+			.split(/\s+/)
+			.filter(Boolean);
+
+	if (words.length === 0) {
+		return "rezeptVorschlag";
+	}
+
+	return (
+		words[0] +
+		words
+			.slice(1)
+			.map(word =>
+				word.charAt(0).toUpperCase() +
+				word.slice(1)
+			)
+			.join("")
+	);
+}
+
+function collectIngredientSuggestions() {
+	const map =
+		new Map();
+
+	if (
+		typeof zutatenKatalog !== "undefined" &&
+		zutatenKatalog instanceof Map
+	) {
+		zutatenKatalog.forEach(
+			(item, id) => {
+				if (!item?.name) {
+					return;
+				}
+
+				map.set(
+					normalizeFilterText(item.name),
+					{
+						id,
+						name:
+							item.name,
+						kategorie:
+							item.kategorie ?? null,
+						standardEinheit:
+							item.standardEinheit ?? null
+					}
+				);
+			}
+		);
+	}
+
+	gerichte.forEach(gericht => {
+		(gericht.zutaten ?? [])
+			.forEach(zutat => {
+				if (!zutat?.name) {
+					return;
+				}
+
+				const key =
+					normalizeFilterText(
+						zutat.name
+					);
+
+				if (!map.has(key)) {
+					map.set(
+						key,
+						{
+							id:
+								zutat.id ??
+								slugifyRecipeId(zutat.name),
+							name:
+								zutat.name,
+							kategorie:
+								getZutatKategorie(zutat),
+							standardEinheit:
+								zutat.einheit ?? null
+						}
+					);
+				}
+			});
+	});
+
+	return map;
+}
+
+function createSubmissionIngredientRow(
+	container,
+	datalistId,
+	suggestions
+) {
+	const row =
+		document.createElement("div");
+
+	row.className =
+		"submission-ingredient-row";
+
+	const name =
+		document.createElement("input");
+
+	name.type =
+		"text";
+	name.className =
+		"submission-ingredient-name";
+	name.placeholder =
+		"Zutat";
+	name.setAttribute(
+		"list",
+		datalistId
+	);
+	name.required =
+		true;
+
+	const amount =
+		document.createElement("input");
+
+	amount.type =
+		"number";
+	amount.className =
+		"submission-ingredient-amount";
+	amount.placeholder =
+		"Menge";
+	amount.min =
+		"0.01";
+	amount.step =
+		"0.01";
+	amount.required =
+		true;
+
+	const unit =
+		document.createElement("select");
+
+	unit.className =
+		"submission-ingredient-unit";
+	unit.required =
+		true;
+
+	["g", "ml"].forEach(value => {
+		const option =
+			document.createElement("option");
+		option.value =
+			value;
+		option.textContent =
+			value;
+		unit.appendChild(option);
+	});
+
+	const syncUnitWithIngredient =
+		() => {
+			const match =
+				suggestions?.get(
+					normalizeFilterText(
+						name.value
+					)
+				);
+
+			if (
+				match?.standardEinheit === "g" ||
+				match?.standardEinheit === "ml"
+			) {
+				unit.value =
+					match.standardEinheit;
+				unit.disabled =
+					true;
+			} else {
+				unit.disabled =
+					false;
+			}
+		};
+
+	name.addEventListener(
+		"input",
+		syncUnitWithIngredient
+	);
+
+	const remove =
+		document.createElement("button");
+
+	remove.type =
+		"button";
+	remove.className =
+		"button submission-remove-ingredient";
+	remove.textContent =
+		"Entfernen";
+
+	remove.addEventListener(
+		"click",
+		() => {
+			if (
+				container.children.length > 1
+			) {
+				row.remove();
+			}
+		}
+	);
+
+	row.appendChild(name);
+	row.appendChild(amount);
+	row.appendChild(unit);
+	row.appendChild(remove);
+
+	container.appendChild(row);
+}
+
+async function initRezeptEinreichen() {
+	const form =
+		document.getElementById(
+			"recipeSubmissionForm"
+		);
+
+	if (!form) {
+		return;
+	}
+
+	const ingredientsContainer =
+		document.getElementById(
+			"submissionIngredients"
+		);
+
+	const addButton =
+		document.getElementById(
+			"addSubmissionIngredient"
+		);
+
+	const datalist =
+		document.getElementById(
+			"ingredientSuggestions"
+		);
+
+	const categoriesContainer =
+		document.getElementById(
+			"submissionCategories"
+		);
+
+	const preview =
+		document.getElementById(
+			"submissionPreview"
+		);
+
+	const previewOutput =
+		document.getElementById(
+			"submissionJson"
+		);
+
+	if (
+		!ingredientsContainer ||
+		!addButton ||
+		!datalist ||
+		!categoriesContainer ||
+		!preview ||
+		!previewOutput
+	) {
+		throw new Error(
+			"Das Rezeptvorschlagsformular ist unvollständig."
+		);
+	}
+
+	try {
+		await loadGerichte();
+	} catch (error) {
+		console.warn(
+			"Bestehende Zutaten konnten für die Vorschläge nicht geladen werden.",
+			error
+		);
+	}
+
+	const suggestions =
+		collectIngredientSuggestions();
+
+	suggestions.forEach(item => {
+		const option =
+			document.createElement("option");
+
+		option.value =
+			item.name;
+
+		datalist.appendChild(option);
+	});
+
+	RECIPE_CATEGORIES.forEach(category => {
+		const label =
+			document.createElement("label");
+
+		label.className =
+			"submission-category";
+
+		const input =
+			document.createElement("input");
+
+		input.type =
+			"checkbox";
+		input.name =
+			"submissionCategory";
+		input.value =
+			category;
+
+		const text =
+			document.createElement("span");
+
+		text.textContent =
+			category;
+
+		label.appendChild(input);
+		label.appendChild(text);
+
+		categoriesContainer.appendChild(label);
+	});
+
+	createSubmissionIngredientRow(
+		ingredientsContainer,
+		datalist.id,
+		suggestions
+	);
+
+	addButton.addEventListener(
+		"click",
+		() => {
+			createSubmissionIngredientRow(
+				ingredientsContainer,
+				datalist.id,
+				suggestions
+			);
+		}
+	);
+
+	form.addEventListener(
+		"submit",
+		event => {
+			event.preventDefault();
+
+			if (!form.reportValidity()) {
+				return;
+			}
+
+			const recipeName =
+				document.getElementById(
+					"submissionRecipeName"
+				).value.trim();
+
+			const ingredientRows =
+				Array.from(
+					ingredientsContainer
+						.querySelectorAll(
+							".submission-ingredient-row"
+						)
+				);
+
+			const ingredients =
+				ingredientRows
+					.map(row => {
+						const rawName =
+							row.querySelector(
+								".submission-ingredient-name"
+							).value.trim();
+
+						const match =
+							suggestions.get(
+								normalizeFilterText(
+									rawName
+								)
+							);
+
+						return {
+							id:
+								match?.id ??
+								slugifyRecipeId(
+									rawName
+								),
+							name:
+								match?.name ??
+								rawName,
+							menge:
+								Number(
+									row.querySelector(
+										".submission-ingredient-amount"
+									).value
+								),
+							einheit:
+								row.querySelector(
+									".submission-ingredient-unit"
+								).value,
+							kategorie:
+								match?.kategorie ?? null
+						};
+					})
+					.filter(item =>
+						item.name &&
+						Number.isFinite(item.menge) &&
+						item.menge > 0
+					);
+
+			const categories =
+				Array.from(
+					form.querySelectorAll(
+						'input[name="submissionCategory"]:checked'
+					)
+				)
+					.map(input =>
+						input.value
+					);
+
+			const preparation =
+				document.getElementById(
+					"submissionPreparation"
+				)
+					.value
+					.split(/\r?\n/)
+					.map(step =>
+						step.trim()
+					)
+					.filter(Boolean);
+
+			const proposal = {
+				id:
+					slugifyRecipeId(
+						recipeName
+					),
+				name:
+					recipeName,
+				kategorien:
+					categories,
+				zutaten:
+					ingredients,
+				zubereitung:
+					preparation
+			};
+
+			const json =
+				JSON.stringify(
+					proposal,
+					null,
+					2
+				);
+
+			previewOutput.value =
+				json;
+
+			preview.hidden =
+				false;
+
+			const issueTitle =
+				`[Rezeptvorschlag] ${recipeName}`;
+
+			const issueBody =
+				[
+					"## Rezeptvorschlag",
+					"",
+					"Dieser Vorschlag wurde über die öffentliche Rezeptseite erstellt.",
+					"Er wird **nicht automatisch** als Rezept veröffentlicht.",
+					"",
+					"```json",
+					json,
+					"```"
+				].join("\n");
+
+			const url =
+				`${RECIPE_SUBMISSION_ISSUES_URL}?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}`;
+
+			window.open(
+				url,
+				"_blank",
+				"noopener"
+			);
+		}
+	);
+}
+
+
 /* =========================================================
    EINKAUFSLISTE
    ========================================================= */
@@ -436,14 +1551,11 @@ function setOptionalBackgroundImage(
 function renderGerichte(
 	controls
 ) {
-
 	controls.innerHTML =
 		"";
 
-
 	gerichte.forEach(
 		gericht => {
-
 			const container =
 				document.createElement(
 					"div"
@@ -452,12 +1564,24 @@ function renderGerichte(
 			container.className =
 				"gericht";
 
+			container.dataset.search =
+				[
+					gericht.name,
+					...(gericht.zutaten ?? [])
+						.map(zutat =>
+							zutat?.name ?? ""
+						)
+				].join(" ");
+
+			container.dataset.categories =
+				getRezeptKategorien(
+					gericht
+				).join("|");
 
 			const label =
 				document.createElement(
 					"label"
 				);
-
 
 			const checkbox =
 				document.createElement(
@@ -473,31 +1597,61 @@ function renderGerichte(
 			checkbox.id =
 				`gericht-${gericht.id}`;
 
-
-			const text =
-				document.createTextNode(
-					` ${gericht.name}`
+			const textWrapper =
+				document.createElement(
+					"span"
 				);
 
+			textWrapper.className =
+				"gericht-text";
+
+			const name =
+				document.createElement(
+					"span"
+				);
+
+			name.className =
+				"gericht-name";
+
+			name.textContent =
+				gericht.name;
+
+			const categories =
+				document.createElement(
+					"small"
+				);
+
+			categories.className =
+				"gericht-categories";
+
+			categories.textContent =
+				getRezeptKategorien(
+					gericht
+				).join(" · ");
+
+			textWrapper.appendChild(
+				name
+			);
+
+			textWrapper.appendChild(
+				categories
+			);
 
 			label.appendChild(
 				checkbox
 			);
 
 			label.appendChild(
-				text
+				textWrapper
 			);
-
 
 			container.appendChild(
 				label
 			);
 
-
 			if (
 				gericht.bild
 			) {
-
 				const image =
 					document.createElement(
 						"img"
@@ -515,18 +1669,15 @@ function renderGerichte(
 				image.decoding =
 					"async";
 
-
 				container.appendChild(
 					image
 				);
-
 
 				loadOptionalImage(
 					image,
 					gericht.bild
 				);
 			}
-
 
 			controls.appendChild(
 				container
@@ -713,68 +1864,223 @@ function createShoppingList(
  */
 function renderShoppingList(
 	zutatenListe,
-	einkaufsliste
+	einkaufsliste,
+	groupedShoppingList = []
 ) {
-
 	zutatenListe.innerHTML =
 		"";
 
+	updateShoppingProgress(
+		einkaufsliste
+	);
 
 	if (
 		einkaufsliste.length === 0
 	) {
-
-		const li =
+		const empty =
 			document.createElement(
-				"li"
+				"p"
 			);
 
+		empty.className =
+			"empty-state";
 
-		const em =
-			document.createElement(
-				"em"
-			);
-
-		em.textContent =
-			"Keine Zutaten ausgewählt";
-
-
-		li.appendChild(
-			em
-		);
+		empty.innerHTML =
+			"<em>Keine Zutaten ausgewählt</em>";
 
 		zutatenListe.appendChild(
-			li
+			empty
 		);
 
 		return;
 	}
 
+	const grouped =
+		document.getElementById(
+			"groupShoppingListToggle"
+		)?.checked ?? false;
 
-	einkaufsliste.forEach(
-		zutat => {
+	const checkedKeys =
+		loadCheckedIngredientKeys();
 
-			const li =
+	const createSection =
+		(title, items, extraClass = "") => {
+			if (
+				items.length === 0
+			) {
+				return null;
+			}
+
+			const section =
 				document.createElement(
-					"li"
+					"section"
 				);
 
+			section.className =
+				`shopping-section ${extraClass}`.trim();
 
-			const einheit =
-				zutat.einheit
-					? ` ${zutat.einheit}`
-					: "";
+			const heading =
+				document.createElement(
+					"h3"
+				);
 
+			heading.textContent =
+				title;
 
-			li.textContent =
-				`${formatMenge(zutat.menge)}${einheit} ${zutat.name}`;
+			const list =
+				document.createElement(
+					"ul"
+				);
 
+			list.className =
+				"shopping-list";
+
+			items.forEach(
+				item => {
+					list.appendChild(
+						createShoppingItem(
+							item,
+							checkedKeys
+						)
+					);
+				}
+			);
+
+			section.appendChild(
+				heading
+			);
+
+			section.appendChild(
+				list
+			);
+
+			return section;
+		};
+
+	if (grouped) {
+		let visibleGroups =
+			0;
+
+		groupedShoppingList.forEach(
+			group => {
+				const items =
+					group.zutaten
+						.filter(
+							ingredientMatchesFilters
+						);
+
+				const section =
+					createSection(
+						group.gerichtName,
+						items,
+						"shopping-dish-group"
+					);
+
+				if (
+					section
+				) {
+					zutatenListe.appendChild(
+						section
+					);
+
+					visibleGroups +=
+						1;
+				}
+			}
+		);
+
+		if (
+			visibleGroups === 0
+		) {
+			const empty =
+				document.createElement(
+					"p"
+				);
+
+			empty.className =
+				"empty-state";
+
+			empty.textContent =
+				"Keine passenden Zutaten gefunden.";
 
 			zutatenListe.appendChild(
-				li
+				empty
 			);
 		}
-	);
+
+		return;
+	}
+
+	const filtered =
+		einkaufsliste
+			.filter(
+				ingredientMatchesFilters
+			);
+
+	const openItems =
+		filtered.filter(
+			item =>
+				!checkedKeys.has(
+					getIngredientKey(item)
+				)
+		);
+
+	const doneItems =
+		filtered.filter(
+			item =>
+				checkedKeys.has(
+					getIngredientKey(item)
+				)
+		);
+
+	const openSection =
+		createSection(
+			"Offen",
+			openItems
+		);
+
+	const doneSection =
+		createSection(
+			`Erledigt${doneItems.length ? ` (${doneItems.length})` : ""}`,
+			doneItems,
+			"shopping-done-section"
+		);
+
+	if (
+		openSection
+	) {
+		zutatenListe.appendChild(
+			openSection
+		);
+	}
+
+	if (
+		doneSection
+	) {
+		zutatenListe.appendChild(
+			doneSection
+		);
+	}
+
+	if (
+		!openSection &&
+		!doneSection
+	) {
+		const empty =
+			document.createElement(
+				"p"
+			);
+
+		empty.className =
+			"empty-state";
+
+		empty.textContent =
+			"Keine passenden Zutaten gefunden.";
+
+		zutatenListe.appendChild(
+			empty
+		);
+	}
 }
 
 
@@ -1235,18 +2541,28 @@ function updateEinkaufslisteView(
 	markersDiv,
 	popup
 ) {
-
 	const einkaufsliste =
 		createShoppingList(
 			controls
 		);
 
+	const groupedShoppingList =
+		createGroupedShoppingList(
+			controls
+		);
 
-	renderShoppingList(
-		zutatenListe,
+	populateIngredientCategoryFilter(
+		document.getElementById(
+			"zutatenKategorie"
+		),
 		einkaufsliste
 	);
 
+	renderShoppingList(
+		zutatenListe,
+		einkaufsliste,
+		groupedShoppingList
+	);
 
 	renderMap(
 		mapContainer,
@@ -1270,29 +2586,28 @@ function resetSelection(
 	markersDiv,
 	popup
 ) {
-
 	controls
 		.querySelectorAll(
 			'input[type="checkbox"]'
 		)
 		.forEach(
 			checkbox => {
-
 				checkbox.checked =
 					false;
 			}
 		);
 
-
 	localStorage.removeItem(
 		STORAGE_KEY
 	);
 
+	localStorage.removeItem(
+		SHOPPING_CHECKED_KEY
+	);
 
 	hidePopup(
 		popup
 	);
-
 
 	updateEinkaufslisteView(
 		controls,
@@ -1310,7 +2625,6 @@ function resetSelection(
    --------------------------------------------------------- */
 
 async function initEinkaufsliste() {
-
 	const controls =
 		document.getElementById(
 			"controls"
@@ -1361,6 +2675,30 @@ async function initEinkaufsliste() {
 			"marktAuswahl"
 		);
 
+	const gerichtSuche =
+		document.getElementById(
+			"gerichtSuche"
+		);
+
+	const gerichtKategorie =
+		document.getElementById(
+			"gerichtKategorie"
+		);
+
+	const zutatenSuche =
+		document.getElementById(
+			"zutatenSuche"
+		);
+
+	const zutatenKategorie =
+		document.getElementById(
+			"zutatenKategorie"
+		);
+
+	const groupToggle =
+		document.getElementById(
+			"groupShoppingListToggle"
+		);
 
 	if (
 		!controls ||
@@ -1374,58 +2712,61 @@ async function initEinkaufsliste() {
 		!overlayImg ||
 		!marktAuswahl
 	) {
-
 		throw new Error(
 			"Die Einkaufsliste enthält nicht alle benötigten HTML-Elemente."
 		);
 	}
 
-
 	await loadGerichte();
-
 
 	renderGerichte(
 		controls
 	);
 
-
 	loadState(
 		controls
 	);
 
+	populateRecipeCategoryFilter(
+		gerichtKategorie
+	);
+
+	applyGerichtFilter(
+		controls
+	);
 
 	const checkedMarket =
 		marktAuswahl.querySelector(
 			'input[name="markt"]:checked'
 		);
 
-
 	currentMap =
 		checkedMarket?.value ??
 		"none";
 
+	if (
+		groupToggle
+	) {
+		groupToggle.checked =
+			localStorage.getItem(
+				GROUPED_VIEW_KEY
+			) === "true";
+	}
 
-	/*
-	 * Änderung der Gericht-Auswahl.
-	 */
 	controls.addEventListener(
 		"change",
 		event => {
-
 			if (
 				!event.target.matches(
 					'input[type="checkbox"]'
 				)
 			) {
-
 				return;
 			}
-
 
 			saveState(
 				controls
 			);
-
 
 			updateEinkaufslisteView(
 				controls,
@@ -1438,30 +2779,21 @@ async function initEinkaufsliste() {
 		}
 	);
 
-
-	/*
-	 * Klick auf Rezeptbild.
-	 */
 	controls.addEventListener(
 		"click",
 		event => {
-
 			const image =
 				event.target.closest(
 					".icon"
 				);
 
-
 			if (
 				!image
 			) {
-
 				return;
 			}
 
-
 			event.stopPropagation();
-
 
 			openOverlay(
 				overlay,
@@ -1471,33 +2803,26 @@ async function initEinkaufsliste() {
 		}
 	);
 
-
-	/*
-	 * Markt wechseln.
-	 */
-	marktAuswahl.addEventListener(
-		"change",
-		event => {
-
-			if (
-				!event.target.matches(
-					'input[name="markt"]'
-				)
-			) {
-
-				return;
-			}
-
-
-			currentMap =
-				event.target.value;
-
-
-			hidePopup(
-				popup
+	gerichtSuche?.addEventListener(
+		"input",
+		() => {
+			applyGerichtFilter(
+				controls
 			);
+		}
+	);
 
+	gerichtKategorie?.addEventListener(
+		"change",
+		() => {
+			applyGerichtFilter(
+				controls
+			);
+		}
+	);
 
+	const updateShoppingFilters =
+		() => {
 			updateEinkaufslisteView(
 				controls,
 				zutatenListe,
@@ -1506,17 +2831,80 @@ async function initEinkaufsliste() {
 				markersDiv,
 				popup
 			);
+		};
+
+	zutatenSuche?.addEventListener(
+		"input",
+		updateShoppingFilters
+	);
+
+	zutatenKategorie?.addEventListener(
+		"change",
+		updateShoppingFilters
+	);
+
+	groupToggle?.addEventListener(
+		"change",
+		() => {
+			localStorage.setItem(
+				GROUPED_VIEW_KEY,
+				String(
+					groupToggle.checked
+				)
+			);
+
+			updateShoppingFilters();
 		}
 	);
 
+	zutatenListe.addEventListener(
+		"change",
+		event => {
+			const checkbox =
+				event.target.closest(
+					".shopping-item-checkbox"
+				);
 
-	/*
-	 * Auswahl zurücksetzen.
-	 */
+			if (
+				!checkbox
+			) {
+				return;
+			}
+
+			setIngredientChecked(
+				checkbox.dataset.shoppingKey,
+				checkbox.checked
+			);
+
+			updateShoppingFilters();
+		}
+	);
+
+	marktAuswahl.addEventListener(
+		"change",
+		event => {
+			if (
+				!event.target.matches(
+					'input[name="markt"]'
+				)
+			) {
+				return;
+			}
+
+			currentMap =
+				event.target.value;
+
+			hidePopup(
+				popup
+			);
+
+			updateShoppingFilters();
+		}
+	);
+
 	resetButton.addEventListener(
 		"click",
 		() => {
-
 			resetSelection(
 				controls,
 				zutatenListe,
@@ -1528,14 +2916,9 @@ async function initEinkaufsliste() {
 		}
 	);
 
-
-	/*
-	 * Bild-Overlay schließen.
-	 */
 	overlay.addEventListener(
 		"click",
 		() => {
-
 			closeOverlay(
 				overlay,
 				overlayImg
@@ -1543,28 +2926,20 @@ async function initEinkaufsliste() {
 		}
 	);
 
-
-	/*
-	 * Escape schließt Overlay und Popup.
-	 */
 	document.addEventListener(
 		"keydown",
 		event => {
-
 			if (
 				event.key !==
 				"Escape"
 			) {
-
 				return;
 			}
-
 
 			closeOverlay(
 				overlay,
 				overlayImg
 			);
-
 
 			hidePopup(
 				popup
@@ -1572,23 +2947,16 @@ async function initEinkaufsliste() {
 		}
 	);
 
-
-	/*
-	 * Klick außerhalb eines Markers schließt Popup.
-	 */
 	document.addEventListener(
 		"click",
 		event => {
-
 			if (
 				event.target.closest(
 					".marker"
 				)
 			) {
-
 				return;
 			}
-
 
 			hidePopup(
 				popup
@@ -1596,15 +2964,7 @@ async function initEinkaufsliste() {
 		}
 	);
 
-
-	updateEinkaufslisteView(
-		controls,
-		zutatenListe,
-		mapContainer,
-		mapImage,
-		markersDiv,
-		popup
-	);
+	updateShoppingFilters();
 }
 
 
@@ -1628,15 +2988,12 @@ async function initEinkaufsliste() {
 function renderRezeptUebersicht(
 	rezeptListe
 ) {
-
 	rezeptListe.innerHTML =
 		"";
-
 
 	if (
 		gerichte.size === 0
 	) {
-
 		const message =
 			document.createElement(
 				"p"
@@ -1645,7 +3002,6 @@ function renderRezeptUebersicht(
 		message.textContent =
 			"Keine Rezepte verfügbar.";
 
-
 		rezeptListe.appendChild(
 			message
 		);
@@ -1653,53 +3009,86 @@ function renderRezeptUebersicht(
 		return;
 	}
 
-
 	gerichte.forEach(
 		gericht => {
-
 			const card =
 				document.createElement(
 					"a"
 				);
 
-
 			card.className =
 				"rezept-card";
-
 
 			card.href =
 				`rezept.html?id=${encodeURIComponent(gericht.id)}`;
 
+			card.dataset.search =
+				[
+					gericht.name,
+					...(gericht.zutaten ?? [])
+						.map(zutat =>
+							zutat?.name ?? ""
+						)
+				].join(" ");
+
+			const categories =
+				getRezeptKategorien(
+					gericht
+				);
+
+			card.dataset.categories =
+				categories.join("|");
 
 			if (
 				gericht.bild
 			) {
-
 				setOptionalBackgroundImage(
 					card,
 					gericht.bild
 				);
 			}
 
+			const content =
+				document.createElement(
+					"span"
+				);
+
+			content.className =
+				"rezept-card-content";
 
 			const title =
 				document.createElement(
 					"span"
 				);
 
-
 			title.className =
 				"rezept-card-title";
-
 
 			title.textContent =
 				gericht.name;
 
+			const categoryText =
+				document.createElement(
+					"span"
+				);
 
-			card.appendChild(
+			categoryText.className =
+				"rezept-card-categories";
+
+			categoryText.textContent =
+				categories.join(" · ");
+
+			content.appendChild(
 				title
 			);
 
+			content.appendChild(
+				categoryText
+			);
+
+			card.appendChild(
+				content
+			);
 
 			rezeptListe.appendChild(
 				card
@@ -1714,27 +3103,55 @@ function renderRezeptUebersicht(
    --------------------------------------------------------- */
 
 async function initRezeptUebersicht() {
-
 	const rezeptListe =
 		document.getElementById(
 			"rezeptListe"
 		);
 
-
 	if (
 		!rezeptListe
 	) {
-
 		return;
 	}
 
+	const search =
+		document.getElementById(
+			"rezeptSuche"
+		);
+
+	const category =
+		document.getElementById(
+			"rezeptKategorie"
+		);
 
 	await loadGerichte();
-
 
 	renderRezeptUebersicht(
 		rezeptListe
 	);
+
+	populateRecipeCategoryFilter(
+		category
+	);
+
+	const apply =
+		() => {
+			applyRezeptFilter(
+				rezeptListe
+			);
+		};
+
+	search?.addEventListener(
+		"input",
+		apply
+	);
+
+	category?.addEventListener(
+		"change",
+		apply
+	);
+
+	apply();
 }
 
 
@@ -2246,12 +3663,16 @@ async function initRezept() {
  * welche Seite geöffnet wurde.
  */
 async function init() {
-
 	try {
+		if (
+			document.getElementById(
+				"recipeSubmissionForm"
+			)
+		) {
+			await initRezeptEinreichen();
+			return;
+		}
 
-		/*
-		 * Einkaufsliste
-		 */
 		if (
 			document.getElementById(
 				"controls"
@@ -2260,128 +3681,55 @@ async function init() {
 				"zutatenListe"
 			)
 		) {
-
 			await initEinkaufsliste();
-
 			return;
 		}
 
-
-		/*
-		 * Rezeptübersicht
-		 */
 		if (
 			document.getElementById(
 				"rezeptListe"
 			)
 		) {
-
 			await initRezeptUebersicht();
-
 			return;
 		}
 
-
-		/*
-		 * Einzelnes Rezept
-		 */
 		if (
 			document.getElementById(
 				"rezeptDetails"
 			)
 		) {
-
 			await initRezept();
-
 			return;
 		}
-
-
-		console.warn(
-			"Für diese Seite wurde keine bekannte Ansicht gefunden."
-		);
-
-	} catch (
-		error
-	) {
-
+	} catch (error) {
 		console.error(
-			"Die Anwendung konnte nicht initialisiert werden:",
+			"Initialisierung fehlgeschlagen:",
 			error
 		);
 
-
-		const controls =
-			document.getElementById(
-				"controls"
-			);
-
+		const main =
+			document.querySelector("main");
 
 		if (
-			controls
+			main &&
+			!main.querySelector(
+				".fatal-error"
+			)
 		) {
-
-			controls.innerHTML =
-				"";
-
-
 			const message =
 				document.createElement(
 					"p"
 				);
 
-			message.textContent =
-				"Die Gerichte konnten nicht geladen werden.";
-
-
-			controls.appendChild(
-				message
-			);
-		}
-
-
-		const rezeptListe =
-			document.getElementById(
-				"rezeptListe"
-			);
-
-
-		if (
-			rezeptListe
-		) {
-
-			rezeptListe.innerHTML =
-				"";
-
-
-			const message =
-				document.createElement(
-					"p"
-				);
+			message.className =
+				"fatal-error";
 
 			message.textContent =
-				"Die Rezepte konnten nicht geladen werden.";
+				"Die Daten konnten nicht vollständig geladen werden.";
 
-
-			rezeptListe.appendChild(
+			main.prepend(
 				message
-			);
-		}
-
-
-		const rezeptDetails =
-			document.getElementById(
-				"rezeptDetails"
-			);
-
-
-		if (
-			rezeptDetails
-		) {
-
-			renderRezeptError(
-				rezeptDetails,
-				"Das Rezept konnte nicht geladen werden."
 			);
 		}
 	}

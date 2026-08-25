@@ -34,10 +34,10 @@ content:
       rename: false
       delete: true
     view:
-      fields: [name, id]
+      fields: [name, kategorien, id]
       primary: name
       sort: [name, id]
-      search: [name, id]
+      search: [name, kategorien, id]
       default:
         sort: name
         order: asc
@@ -57,6 +57,24 @@ content:
         required: true
         options:
           maxlength: 160
+
+      - name: kategorien
+        label: Rezeptkategorien
+        type: select
+        required: true
+        description: "Eine oder mehrere Kategorien für Suche und Filter auswählen."
+        options:
+          multiple: true
+          min: 1
+          placeholder: "Kategorien auswählen"
+          values:
+            - Fleisch
+            - Fisch
+            - Vegetarisch
+            - Suppe
+            - Pasta & Gnocchi
+            - Reisgericht
+            - Ofengericht
 
       - name: bild
         label: Rezeptbild

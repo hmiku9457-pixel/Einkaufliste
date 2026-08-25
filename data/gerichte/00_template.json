@@ -2,20 +2,21 @@
   "id": "gerichtX",
   "name": "Name des Gerichts",
   "bild": "data/gerichte/bilder/icon2.png",
-
+  "kategorien": [
+    "Vegetarisch"
+  ],
   "zutaten": [
     {
       "id": "zutatA",
       "name": "Zutat A",
       "menge": 1,
-      "einheit": "Stk"
+      "einheit": "g"
     }
   ],
-
-	"zubereitung": [
-		"Schritt 1",
-		"Schritt 2",
-		"Schritt 3",
-		"Schritt 4"
-	]
+  "zubereitung": [
+    "Schritt 1",
+    "Schritt 2",
+    "Schritt 3",
+    "Schritt 4"
+  ]
 }
