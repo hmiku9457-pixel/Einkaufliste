@@ -26,6 +26,9 @@ const SHOPPING_CHECKED_KEY =
 const GROUPED_VIEW_KEY =
 	"einkaufslisteNachGericht";
 
+const SHOPPING_STARTED_KEY =
+	"einkaufGestartet";
+
 const RECIPE_SUBMISSION_ISSUES_URL =
 	"https://github.com/hmiku9457-pixel/Einkaufliste/issues/new";
 
@@ -1874,6 +1877,10 @@ function renderShoppingList(
 		einkaufsliste
 	);
 
+	syncGroupToggleAvailability(
+		einkaufsliste
+	);
+
 	if (
 		einkaufsliste.length === 0
 	) {
@@ -2605,8 +2612,45 @@ function resetSelection(
 		SHOPPING_CHECKED_KEY
 	);
 
+	localStorage.removeItem(
+		GROUPED_VIEW_KEY
+	);
+
+	localStorage.removeItem(
+		SHOPPING_STARTED_KEY
+	);
+
+	const groupToggle =
+		document.getElementById(
+			"groupShoppingListToggle"
+		);
+
+	if (groupToggle) {
+		groupToggle.checked =
+			false;
+		groupToggle.disabled =
+			true;
+	}
+
+	const marketNone =
+		document.querySelector(
+			'#marktAuswahl input[name="markt"][value="none"]'
+		);
+
+	if (marketNone) {
+		marketNone.checked =
+			true;
+	}
+
+	currentMap =
+		"none";
+
 	hidePopup(
 		popup
+	);
+
+	updateContinueButton(
+		controls
 	);
 
 	updateEinkaufslisteView(
@@ -2623,6 +2667,142 @@ function resetSelection(
 /* ---------------------------------------------------------
    18. Einkaufsliste initialisieren
    --------------------------------------------------------- */
+
+
+/* =========================================================
+   STEP-WORKFLOW-UPDATE-2026-08-25
+   Zweistufiger Einkauf
+   ========================================================= */
+
+function getShoppingCompletion(einkaufsliste) {
+	const checkedKeys =
+		loadCheckedIngredientKeys();
+
+	const allKeys =
+		uniqueStrings(
+			einkaufsliste.map(
+				getIngredientKey
+			)
+		);
+
+	const done =
+		allKeys.filter(key =>
+			checkedKeys.has(key)
+		).length;
+
+	return {
+		done,
+		total: allKeys.length,
+		complete:
+			allKeys.length > 0 &&
+			done === allKeys.length
+	};
+}
+
+function syncGroupToggleAvailability(einkaufsliste) {
+	const toggle =
+		document.getElementById(
+			"groupShoppingListToggle"
+		);
+
+	const hint =
+		document.getElementById(
+			"groupToggleHint"
+		);
+
+	if (!toggle) {
+		return;
+	}
+
+	const status =
+		getShoppingCompletion(
+			einkaufsliste
+		);
+
+	toggle.disabled =
+		!status.complete;
+
+	const wrapper =
+		toggle.closest(
+			".toggle-control"
+		);
+
+	wrapper?.classList.toggle(
+		"toggle-control-locked",
+		!status.complete
+	);
+
+	if (!status.complete) {
+		toggle.checked =
+			false;
+
+		localStorage.setItem(
+			GROUPED_VIEW_KEY,
+			"false"
+		);
+	}
+
+	if (hint) {
+		hint.textContent =
+			status.complete
+				? "Einkauf vollständig – die Zutaten können jetzt nach Gericht gruppiert werden."
+				: status.total > 0
+					? `Nach dem Einkauf verfügbar (${status.done}/${status.total} erledigt).`
+					: "Diese Ansicht wird verfügbar, sobald alles eingekauft ist.";
+	}
+}
+
+function updateContinueButton(controls) {
+	const button =
+		document.getElementById(
+			"confirmSelectionBtn"
+		);
+
+	if (!button) {
+		return;
+	}
+
+	button.disabled =
+		getSelectedGerichte(
+			controls
+		).length === 0;
+}
+
+function setPurchaseStep(step) {
+	const selectionStep =
+		document.getElementById(
+			"selectionStep"
+		);
+
+	const shoppingStep =
+		document.getElementById(
+			"shoppingStep"
+		);
+
+	const backButton =
+		document.getElementById(
+			"backToSelectionBtn"
+		);
+
+	const shoppingActive =
+		step === 2;
+
+	if (selectionStep) {
+		selectionStep.hidden =
+			shoppingActive;
+	}
+
+	if (shoppingStep) {
+		shoppingStep.hidden =
+			!shoppingActive;
+	}
+
+	if (backButton) {
+		backButton.hidden =
+			!shoppingActive;
+	}
+}
+
 
 async function initEinkaufsliste() {
 	const controls =
@@ -2653,11 +2833,6 @@ async function initEinkaufsliste() {
 	const popup =
 		document.getElementById(
 			"popup"
-		);
-
-	const resetButton =
-		document.getElementById(
-			"resetBtn"
 		);
 
 	const overlay =
@@ -2700,6 +2875,31 @@ async function initEinkaufsliste() {
 			"groupShoppingListToggle"
 		);
 
+	const continueButton =
+		document.getElementById(
+			"confirmSelectionBtn"
+		);
+
+	const backButton =
+		document.getElementById(
+			"backToSelectionBtn"
+		);
+
+	const resetModal =
+		document.getElementById(
+			"resetShoppingModal"
+		);
+
+	const cancelResetButton =
+		document.getElementById(
+			"cancelResetShoppingBtn"
+		);
+
+	const confirmResetButton =
+		document.getElementById(
+			"confirmResetShoppingBtn"
+		);
+
 	if (
 		!controls ||
 		!zutatenListe ||
@@ -2707,10 +2907,14 @@ async function initEinkaufsliste() {
 		!mapImage ||
 		!markersDiv ||
 		!popup ||
-		!resetButton ||
 		!overlay ||
 		!overlayImg ||
-		!marktAuswahl
+		!marktAuswahl ||
+		!continueButton ||
+		!backButton ||
+		!resetModal ||
+		!cancelResetButton ||
+		!confirmResetButton
 	) {
 		throw new Error(
 			"Die Einkaufsliste enthält nicht alle benötigten HTML-Elemente."
@@ -2735,6 +2939,10 @@ async function initEinkaufsliste() {
 		controls
 	);
 
+	updateContinueButton(
+		controls
+	);
+
 	const checkedMarket =
 		marktAuswahl.querySelector(
 			'input[name="markt"]:checked'
@@ -2744,14 +2952,35 @@ async function initEinkaufsliste() {
 		checkedMarket?.value ??
 		"none";
 
-	if (
-		groupToggle
-	) {
+	if (groupToggle) {
 		groupToggle.checked =
 			localStorage.getItem(
 				GROUPED_VIEW_KEY
 			) === "true";
 	}
+
+	const hasSelection =
+		getSelectedGerichte(
+			controls
+		).length > 0;
+
+	const shoppingStarted =
+		hasSelection &&
+		localStorage.getItem(
+			SHOPPING_STARTED_KEY
+		) === "true";
+
+	if (!hasSelection) {
+		localStorage.removeItem(
+			SHOPPING_STARTED_KEY
+		);
+	}
+
+	setPurchaseStep(
+		shoppingStarted
+			? 2
+			: 1
+	);
 
 	controls.addEventListener(
 		"change",
@@ -2765,6 +2994,10 @@ async function initEinkaufsliste() {
 			}
 
 			saveState(
+				controls
+			);
+
+			updateContinueButton(
 				controls
 			);
 
@@ -2787,9 +3020,7 @@ async function initEinkaufsliste() {
 					".icon"
 				);
 
-			if (
-				!image
-			) {
+			if (!image) {
 				return;
 			}
 
@@ -2846,6 +3077,12 @@ async function initEinkaufsliste() {
 	groupToggle?.addEventListener(
 		"change",
 		() => {
+			if (groupToggle.disabled) {
+				groupToggle.checked =
+					false;
+				return;
+			}
+
 			localStorage.setItem(
 				GROUPED_VIEW_KEY,
 				String(
@@ -2865,9 +3102,7 @@ async function initEinkaufsliste() {
 					".shopping-item-checkbox"
 				);
 
-			if (
-				!checkbox
-			) {
+			if (!checkbox) {
 				return;
 			}
 
@@ -2902,9 +3137,51 @@ async function initEinkaufsliste() {
 		}
 	);
 
-	resetButton.addEventListener(
+	continueButton.addEventListener(
 		"click",
 		() => {
+			if (
+				getSelectedGerichte(
+					controls
+				).length === 0
+			) {
+				return;
+			}
+
+			localStorage.setItem(
+				SHOPPING_STARTED_KEY,
+				"true"
+			);
+
+			setPurchaseStep(2);
+			updateShoppingFilters();
+
+			window.scrollTo({
+				top: 0,
+				behavior: "smooth"
+			});
+		}
+	);
+
+	backButton.addEventListener(
+		"click",
+		() => {
+			resetModal.showModal();
+		}
+	);
+
+	cancelResetButton.addEventListener(
+		"click",
+		() => {
+			resetModal.close();
+		}
+	);
+
+	confirmResetButton.addEventListener(
+		"click",
+		() => {
+			resetModal.close();
+
 			resetSelection(
 				controls,
 				zutatenListe,
@@ -2913,6 +3190,37 @@ async function initEinkaufsliste() {
 				markersDiv,
 				popup
 			);
+
+			if (gerichtSuche) {
+				gerichtSuche.value =
+					"";
+			}
+
+			if (gerichtKategorie) {
+				gerichtKategorie.value =
+					"";
+			}
+
+			if (zutatenSuche) {
+				zutatenSuche.value =
+					"";
+			}
+
+			if (zutatenKategorie) {
+				zutatenKategorie.value =
+					"";
+			}
+
+			applyGerichtFilter(
+				controls
+			);
+
+			setPurchaseStep(1);
+
+			window.scrollTo({
+				top: 0,
+				behavior: "smooth"
+			});
 		}
 	);
 

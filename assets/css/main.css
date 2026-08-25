@@ -1560,3 +1560,114 @@ input:focus-visible,
 		grid-template-columns: 1fr 80px;
 	}
 }
+
+/* =========================================================
+   STEP-WORKFLOW-UPDATE-2026-08-25
+   ========================================================= */
+
+.purchase-step[hidden],
+#backToSelectionBtn[hidden] {
+	display: none !important;
+}
+
+.step-panel {
+	max-width: 980px;
+	margin: 0 auto;
+}
+
+.step-actions {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 22px;
+	padding-top: 18px;
+	border-top: 1px solid var(--color-border);
+}
+
+.shopping-step-grid {
+	grid-template-columns:
+		minmax(340px, 1.5fr)
+		minmax(260px, 0.8fr) !important;
+}
+
+.toggle-control-locked {
+	opacity: 0.58;
+	cursor: not-allowed;
+}
+
+.toggle-control-locked input,
+.toggle-control input:disabled {
+	cursor: not-allowed;
+}
+
+.toggle-hint {
+	margin: 7px 0 0;
+	color: var(--color-text-muted);
+	font-size: 0.76rem;
+	line-height: 1.4;
+}
+
+.button:disabled,
+.button-disabled,
+.button-disabled:hover {
+	color: #73777d !important;
+	background: #e5e7eb !important;
+	border-color: #d1d5db !important;
+	box-shadow: none !important;
+	transform: none !important;
+	cursor: not-allowed !important;
+	opacity: 0.75;
+}
+
+.confirmation-modal {
+	width: min(92vw, 560px);
+	padding: 0;
+	color: var(--color-text);
+	background: transparent;
+	border: 0;
+}
+
+.confirmation-modal::backdrop {
+	background: rgba(0, 0, 0, 0.55);
+	backdrop-filter: blur(2px);
+}
+
+.confirmation-modal-card {
+	padding: 24px;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-medium);
+	box-shadow: var(--shadow-medium);
+}
+
+.confirmation-modal-card h2 {
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+
+.confirmation-modal-card > p:not(.panel-kicker) {
+	margin-top: 0;
+	color: var(--color-text-muted);
+}
+
+.confirmation-modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 22px;
+}
+
+.recipe-overview-heading {
+	margin-bottom: 14px;
+}
+
+@media (max-width: 800px) {
+	.shopping-step-grid {
+		grid-template-columns: 1fr !important;
+	}
+
+	.step-actions > *,
+	.confirmation-modal-actions > * {
+		width: 100%;
+	}
+}

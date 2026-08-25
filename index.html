@@ -32,27 +32,16 @@
 
 		<!-- ===================== HEADER ===================== -->
 		<header class="site-header">
-
 			<div class="page-container header-content">
-
 				<div class="header-heading">
-					<p class="eyebrow">
-						Essensplanung
-					</p>
-
+					<p class="eyebrow">Essensplanung</p>
 					<h1>Einkaufsliste</h1>
-
 					<p class="header-description">
-						Wähle Gerichte aus und erhalte automatisch
-						die passende Zutatenliste.
+						Wähle zuerst deine Gerichte aus und erledige danach den Einkauf Schritt für Schritt.
 					</p>
 				</div>
 
-
-				<nav
-					class="header-actions"
-					aria-label="Seitennavigation"
-				>
+				<nav class="header-actions" aria-label="Seitennavigation">
 					<a
 						href="rezept_uebersicht.html"
 						id="rezeptBtn"
@@ -63,49 +52,32 @@
 
 					<button
 						type="button"
-						id="resetBtn"
+						id="backToSelectionBtn"
 						class="button button-danger"
+						hidden
 					>
-						Auswahl zurücksetzen
+						Zurück zur Gerichtsauswahl
 					</button>
 				</nav>
-
 			</div>
-
 		</header>
 
 
 		<!-- ===================== HAUPTINHALT ===================== -->
-		<main
-			id="main-content"
-			class="page-container"
-		>
-
-			<div id="listen-container">
-
-				<!-- ===================== GERICHTE ===================== -->
-				<section
-					class="panel gerichte-panel"
-					aria-labelledby="gerichte-heading"
-				>
+		<main id="main-content" class="page-container">
+			<section
+				id="selectionStep"
+				class="purchase-step"
+				aria-labelledby="gerichte-heading"
+			>
+				<div class="panel gerichte-panel step-panel">
 					<div class="panel-header">
 						<div>
-							<p class="panel-kicker">
-								Schritt 1
-							</p>
-
-							<h2 id="gerichte-heading">
-								Gerichte auswählen
-							</h2>
+							<p class="panel-kicker">Schritt 1</p>
+							<h2 id="gerichte-heading">Gerichte auswählen</h2>
 						</div>
 					</div>
 
-
-					<!--
-						Wird durch main.js aus
-						data/gerichte/manifest.json gefüllt.
-					-->
-					
 					<div class="filter-toolbar" aria-label="Gerichte filtern">
 						<label class="filter-field">
 							<span>Suche</span>
@@ -125,177 +97,155 @@
 						</label>
 					</div>
 
-<div
-						id="controls"
-						class="gerichte-liste"
-					></div>
-				</section>
+					<div id="controls" class="gerichte-liste"></div>
 
-
-				<!-- ===================== ZUTATENLISTE ===================== -->
-				<section
-					class="panel zutaten-panel"
-					aria-labelledby="zutaten-heading"
-				>
-					<div class="panel-header">
-						<div>
-							<p class="panel-kicker">
-								Schritt 2
-							</p>
-
-							<h2 id="zutaten-heading">
-								Zutatenliste
-							</h2>
-						</div>
+					<div class="step-actions">
+						<button
+							type="button"
+							id="confirmSelectionBtn"
+							class="button button-secondary"
+							disabled
+						>
+							Weiter zur Einkaufsliste
+						</button>
 					</div>
-
-
-					
-					<div class="shopping-toolbar">
-						<div class="filter-toolbar filter-toolbar-shopping" aria-label="Zutaten filtern">
-							<label class="filter-field">
-								<span>Zutat suchen</span>
-								<input
-									type="search"
-									id="zutatenSuche"
-									placeholder="Zutat suchen …"
-									autocomplete="off"
-								>
-							</label>
-
-							<label class="filter-field">
-								<span>Kategorie</span>
-								<select id="zutatenKategorie">
-									<option value="">Alle Kategorien</option>
-								</select>
-							</label>
-						</div>
-
-						<label class="toggle-control">
-							<input
-								type="checkbox"
-								id="groupShoppingListToggle"
-							>
-							<span>Nach Gericht gruppieren</span>
-						</label>
-
-						<p
-							id="shoppingProgress"
-							class="shopping-progress"
-							aria-live="polite"
-						></p>
-					</div>
-
-					<div
-						id="zutatenListe"
-						aria-live="polite"
-					>
-						<p class="empty-state"><em>Keine Zutaten ausgewählt</em></p>
-					</div>
-				</section>
-
-
-				<!-- ===================== MARKTAUSWAHL ===================== -->
-				<section
-					class="panel markt-panel"
-					aria-labelledby="markt-heading"
-				>
-					<div class="panel-header">
-						<div>
-							<p class="panel-kicker">
-								Optional
-							</p>
-
-							<h2 id="markt-heading">
-								Markt auswählen
-							</h2>
-						</div>
-					</div>
-
-
-					<fieldset id="marktAuswahl">
-						<legend class="visually-hidden">
-							Karte eines Marktes auswählen
-						</legend>
-
-
-						<label class="markt-option">
-							<input
-								type="radio"
-								name="markt"
-								value="none"
-								checked
-							>
-
-							<span>Keine Karte</span>
-						</label>
-
-
-						<label class="markt-option">
-							<input
-								type="radio"
-								name="markt"
-								value="edeka"
-							>
-
-							<span>Edeka</span>
-						</label>
-
-
-						<label class="markt-option">
-							<input
-								type="radio"
-								name="markt"
-								value="lidl"
-							>
-
-							<span>Lidl</span>
-						</label>
-					</fieldset>
-				</section>
-
-			</div>
-
-
-			<!-- ===================== KARTE ===================== -->
-			<section
-				id="map-container"
-				class="map-section hidden"
-				aria-labelledby="map-heading"
-			>
-				<div class="map-header">
-					<p class="panel-kicker">
-						Orientierung
-					</p>
-
-					<h2 id="map-heading">
-						Marktkarte
-					</h2>
-				</div>
-
-
-				<div class="map-stage">
-					<img
-						id="mapImage"
-						src=""
-						alt="Karte des ausgewählten Marktes"
-					>
-
-					<div
-						id="markers"
-						aria-label="Positionen der ausgewählten Zutaten"
-					></div>
-
-					<div
-						id="popup"
-						class="popup"
-						role="status"
-						aria-live="polite"
-					></div>
 				</div>
 			</section>
 
+			<section
+				id="shoppingStep"
+				class="purchase-step"
+				aria-labelledby="zutaten-heading"
+				hidden
+			>
+				<div id="listen-container" class="shopping-step-grid">
+					<section class="panel zutaten-panel" aria-labelledby="zutaten-heading">
+						<div class="panel-header">
+							<div>
+								<p class="panel-kicker">Schritt 2</p>
+								<h2 id="zutaten-heading">Zutaten einkaufen</h2>
+							</div>
+						</div>
+
+						<div class="shopping-toolbar">
+							<div class="filter-toolbar filter-toolbar-shopping" aria-label="Zutaten filtern">
+								<label class="filter-field">
+									<span>Zutat suchen</span>
+									<input
+										type="search"
+										id="zutatenSuche"
+										placeholder="Zutat suchen …"
+										autocomplete="off"
+									>
+								</label>
+
+								<label class="filter-field">
+									<span>Kategorie</span>
+									<select id="zutatenKategorie">
+										<option value="">Alle Kategorien</option>
+									</select>
+								</label>
+							</div>
+
+							<label class="toggle-control toggle-control-locked">
+								<input
+									type="checkbox"
+									id="groupShoppingListToggle"
+									disabled
+								>
+								<span>Nach Gericht gruppieren</span>
+							</label>
+
+							<p id="groupToggleHint" class="toggle-hint">
+								Diese Ansicht wird verfügbar, sobald alles eingekauft ist.
+							</p>
+
+							<p
+								id="shoppingProgress"
+								class="shopping-progress"
+								aria-live="polite"
+							></p>
+						</div>
+
+						<div id="zutatenListe" aria-live="polite">
+							<p class="empty-state"><em>Keine Zutaten ausgewählt</em></p>
+						</div>
+					</section>
+
+					<section class="panel markt-panel" aria-labelledby="markt-heading">
+						<div class="panel-header">
+							<div>
+								<p class="panel-kicker">Optional</p>
+								<h2 id="markt-heading">Markt auswählen</h2>
+							</div>
+						</div>
+
+						<fieldset id="marktAuswahl">
+							<legend class="visually-hidden">Karte eines Marktes auswählen</legend>
+
+							<label class="markt-option">
+								<input type="radio" name="markt" value="none" checked>
+								<span>Keine Karte</span>
+							</label>
+
+							<label class="markt-option">
+								<input type="radio" name="markt" value="edeka">
+								<span>Edeka</span>
+							</label>
+
+							<label class="markt-option">
+								<input type="radio" name="markt" value="lidl">
+								<span>Lidl</span>
+							</label>
+						</fieldset>
+					</section>
+				</div>
+
+				<section
+					id="map-container"
+					class="map-section hidden"
+					aria-labelledby="map-heading"
+				>
+					<div class="map-header">
+						<p class="panel-kicker">Orientierung</p>
+						<h2 id="map-heading">Marktkarte</h2>
+					</div>
+
+					<div class="map-stage">
+						<img
+							id="mapImage"
+							src=""
+							alt="Karte des ausgewählten Marktes"
+						>
+						<div id="markers" aria-label="Positionen der ausgewählten Zutaten"></div>
+						<div id="popup" class="popup" role="status" aria-live="polite"></div>
+					</div>
+				</section>
+			</section>
 		</main>
+		<dialog
+			id="resetShoppingModal"
+			class="confirmation-modal"
+			aria-labelledby="resetShoppingModalTitle"
+		>
+			<form method="dialog" class="confirmation-modal-card">
+				<p class="panel-kicker">Einkauf zurücksetzen</p>
+				<h2 id="resetShoppingModalTitle">Zurück zur Gerichtsauswahl?</h2>
+				<p>
+					Die ausgewählten Gerichte und alle bereits abgehakten Zutaten werden gelöscht.
+				</p>
+
+				<div class="confirmation-modal-actions">
+					<button type="button" id="cancelResetShoppingBtn" class="button">
+						Abbrechen
+					</button>
+					<button type="button" id="confirmResetShoppingBtn" class="button button-danger">
+						Ja, Einkauf zurücksetzen
+					</button>
+				</div>
+			</form>
+		</dialog>
+
 
 
 		<!-- ===================== BILD-OVERLAY ===================== -->

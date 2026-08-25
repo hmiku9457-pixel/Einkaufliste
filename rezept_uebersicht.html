@@ -11,57 +11,64 @@
 
 	<body>
 
-		<header>
-			<h1>Rezepte</h1>
+		<header class="site-header">
+			<div class="page-container header-content">
+				<div class="header-heading">
+					<p class="eyebrow">Essensplanung</p>
+					<h1>Rezepte</h1>
+					<p class="header-description">
+						Durchsuche die Rezeptsammlung und öffne ein Gericht für die Zubereitung.
+					</p>
+				</div>
 
-			<nav aria-label="Seitennavigation">
-				<a href="index.html">
-					Einkaufsliste
-				</a>
-			
-			<a href="rezept_einreichen.html" class="button button-secondary">
-				Rezept einreichen
-			</a>
-		</nav>
+				<nav class="header-actions" aria-label="Seitennavigation">
+					<a href="index.html" class="button button-secondary">
+						Einkaufsliste
+					</a>
+
+					<button
+						type="button"
+						class="button button-disabled"
+						disabled
+						title="Diese Funktion ist aktuell deaktiviert."
+					>
+						Rezept einreichen
+					</button>
+				</nav>
+			</div>
 		</header>
 
 
-		<main>
-
+		<main id="main-content" class="page-container">
 			<section aria-labelledby="rezept-heading">
+				<div class="panel-header recipe-overview-heading">
+					<div>
+						<p class="panel-kicker">Kochbuch</p>
+						<h2 id="rezept-heading">Rezeptübersicht</h2>
+					</div>
+				</div>
 
-				<h2 id="rezept-heading">
-					Rezeptübersicht
-				</h2>
+				<div class="filter-toolbar recipe-overview-filters" aria-label="Rezepte filtern">
+					<label class="filter-field">
+						<span>Suche</span>
+						<input
+							type="search"
+							id="rezeptSuche"
+							placeholder="Rezept oder Zutat suchen …"
+							autocomplete="off"
+						>
+					</label>
 
-				<!--
-					Wird automatisch durch main.js aus
-					data/gerichte/manifest.json gefüllt.
-				-->
-				
-		<div class="filter-toolbar recipe-overview-filters" aria-label="Rezepte filtern">
-			<label class="filter-field">
-				<span>Suche</span>
-				<input
-					type="search"
-					id="rezeptSuche"
-					placeholder="Rezept oder Zutat suchen …"
-					autocomplete="off"
-				>
-			</label>
+					<label class="filter-field">
+						<span>Kategorie</span>
+						<select id="rezeptKategorie">
+							<option value="">Alle Kategorien</option>
+						</select>
+					</label>
+				</div>
 
-			<label class="filter-field">
-				<span>Kategorie</span>
-				<select id="rezeptKategorie">
-					<option value="">Alle Kategorien</option>
-				</select>
-			</label>
-		</div>
-
-		<div id="rezeptListe"></div>
-
+				<div id="rezeptListe"></div>
 			</section>
-
 		</main>
 
 
